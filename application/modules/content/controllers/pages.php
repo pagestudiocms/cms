@@ -91,7 +91,7 @@ class Pages extends Public_Controller
             // Set Metadata
             $this->template->set_meta_title(strip_tags($Page->title) . ' | ' . $this->settings->site_name)
                            ->set_meta_title($Page->meta_title)
-                           ->set_meta_description($Page->meta_description)
+                           ->set_meta_description( ($Page->meta_description) ? $Page->meta_description : $this->settings->site_description)
                            ->set_meta_keywords($Page->meta_keywords);
 
             // Set the content type's theme layout, css, and javascript
@@ -118,6 +118,9 @@ class Pages extends Public_Controller
 
             // Output Content Type
             $this->template->view('pages', $data);
+        }
+        elseif($this->uri->segment(1) === 'blog' && $this->uri->segment(2) === 'page') {
+            echo 'Pagination found.';
         }
         else
         {
