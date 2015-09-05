@@ -6,7 +6,7 @@
         <?php echo $this->template->metadata() ?>
 
         <!-- CSS FILES -->
-        <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/reset.css');  ?>" />
+        <!-- <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/reset.css');  ?>" /> -->
         <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/style.css');  ?>" />
 
         <!-- Controller Defined Stylesheets -->

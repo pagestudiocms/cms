@@ -1,0 +1,78 @@
+// --------------------------------------------------------------
+// Table of Contents
+// --------------------------------------------------------------
+
+// --------------------------------------------------------------
+// Colors
+// --------------------------------------------------------------
+$grey:         #6E6E6E;
+$light-grey:   #9b9b9b;
+$darkest-grey: #222;
+$charcoal:     #343434;
+$black:        #464646;
+$white:        #fff;
+$muted:        #777;
+
+$brand-primary:     #238baa;
+$brand-secondary:   #384551;
+$brand-tertiary:    #38ABE1;
+$brand-danger:      #e74c3c;
+$placeholder-text:  #bbbbbb; 
+
+// --------------------------------------------------------------
+// Scaffolding
+// Settings for some of the most global styles.
+// --------------------------------------------------------------
+
+// Background color for `<body>`.
+$body-bg:               #fff !default;
+
+// Global text color on `<body>`.
+$text-color:            $black;
+$text-highlight-color:  #38ABE1;
+
+// Global textual link color.
+$link-color:            $brand-primary !default;
+$link-hover-color:      darken($link-color, 15%) !default;
+$link-hover-decoration: underline !default;
+
+// --------------------------------------------------------------
+// Typography
+// --------------------------------------------------------------
+
+// $font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-family-sans-serif:  Verdana, Geneva, sans-serif;
+$font-family-serif:       Georgia, "Times New Roman", Times, serif !default;
+
+// Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
+$font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace !default;
+$font-family-base:      $font-family-sans-serif !default;
+$font-family-code:      $font-family-monospace;
+
+$font-size-small:       12px;
+$font-size-normal:      16px;
+$font-size-large:       18px;
+$font-size-x-large:     22px;
+$font-size-xx-large:    32px;
+$font-size-xxx-large:   64px;
+
+// Font-weights
+// ------------------------------
+$font-weight-thin:      100;
+$font-weight-light:     200;
+$font-weight-normal:    300;
+$font-weight-regular:   $font-weight-normal;
+$font-weight-medium:    400;
+$font-weight-bold:      600;
+$font-weight-bolder:    700;
+
+// --------------------------------------------------------------
+// Screen Size - Break points
+// --------------------------------------------------------------
+$mobile-small:      240px;
+$mobile-large:      320px;
+$tablet-small:      480px;
+$tablet-large:      768px;
+$screen-small:      860px;
+$screen-medium:     992px;
+$screen-large:      1280px; 
