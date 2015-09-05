@@ -23,6 +23,10 @@
                         <?php echo form_input(array('name' => 'site_name', 'id' => 'sitename', 'value' => set_value('site_name', isset($Settings->site_name->value) ? $Settings->site_name->value : ''))); ?>
                     </div>
                     <div>
+                        <?php echo form_label('<span class="required">*</span> Site Description:', 'sitedescription'); ?>
+                        <?php echo form_textarea(array('name' => 'site_description', 'id' => 'sitedescription', 'value' => set_value('site_description', isset($Settings->site_description->value) ? $Settings->site_description->value : ''))); ?>
+                    </div>
+                    <div>
                         <?php echo form_label('<span class="required">*</span> Notification Email:', 'notification_email'); ?>
                         <?php echo form_input(array('name' => 'notification_email', 'id' => 'notification_email', 'value' => set_value('notification_email', isset($Settings->notification_email->value) ? $Settings->notification_email->value : ''))); ?>
                     </div>

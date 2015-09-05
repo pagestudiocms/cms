@@ -51,6 +51,7 @@ class General_settings extends Admin_Controller
 
         // Form Validation Rules
         $this->form_validation->set_rules('site_name', 'Site Name', 'trim|required');
+        $this->form_validation->set_rules('site_description', 'Site Description', 'trim|required');
         $this->form_validation->set_rules('notification_email', 'Notification Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('content[site_homepage]', 'Site Homepage', 'trim|required');
         $this->form_validation->set_rules('content[custom_404]', 'Custom 404', 'trim|required');
