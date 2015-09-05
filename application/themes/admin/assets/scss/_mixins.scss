@@ -1,24 +1,4 @@
 // --------------------------------------------------------------
-// Font Selections
-// --------------------------------------------------------------
-@mixin serif-font() {
-  font-family: "Droid Serif", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-@mixin script-font() {
-  font-family: "Kaushan Script", "Helvetica Neue", Helvetica, Arial, cursive;
-}
-
-@mixin body-font() {
-  font-family: 'Roboto',"Helvetica Neue",Helvetica,Arial,sans-serif;
-}
-
-@mixin heading-font() {
-  font-family: 'Roboto',"Helvetica Neue",Helvetica,Arial,sans-serif;
-  text-transform: uppercase;
-}
-
-// --------------------------------------------------------------
 // Background mixins
 // --------------------------------------------------------------
 @mixin background-fullsize($image, $color:transparent) {
@@ -68,12 +48,12 @@
 }
 
 // Border radius
-@mixin border-radius($radius) {
-    -webkit-border-radius: $radius;
-       -moz-border-radius: $radius;
-        -ms-border-radius: $radius;
-            border-radius: $radius;
-}
+// @mixin border-radius($radius) {
+    // -webkit-border-radius: $radius;
+       // -moz-border-radius: $radius;
+        // -ms-border-radius: $radius;
+            // border-radius: $radius;
+// }
 
 @mixin transition($time) {
     -webkit-transition: $time;

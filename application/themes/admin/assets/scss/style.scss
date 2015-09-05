@@ -49,6 +49,7 @@
 @import "variables"; 
 @import "mixins";
 @import "css3-mixins.scss";
+// @import "_bootstrap";
 
 /*---------------------------------------------------------------
  1.0 Section Reset styles
@@ -397,119 +398,115 @@ body > #container {
 
 .box {
 	margin-bottom: 15px;
+    > .heading {
+        height: 38px;
+        padding-left: 7px;
+        padding-right: 7px;
+        border: 1px solid #DBDBDB; // #e6e6e6
+        background-color: #f0f0f0;
+        // background: url('../images/box.png') repeat-x;
+        @include border-radius-separate(2px, 2px, 0px, 0px);
+
+        > h1 {
+            margin: 0px;
+            padding: 11px 0px 0px 0px;
+            color: #003A88;
+            font-size: 16px;
+            float: left;
+            font-weight: bold;
+            img {
+                float: left;
+                margin-top: -1px;
+                margin-left: 3px;
+                margin-right: 8px;
+            }
+        }
+        
+        > .buttons {
+            float: right;
+            padding-top: 6px;
+            .button {
+                color: #fff;
+                font-weight: bold;
+                // padding-top: 6px; 
+                // padding-bottom: 6px; 
+                @include button-variant(#fff, #469ccf, #388abb);
+            }
+        }
+        
+        &.position_top {
+            position: fixed;
+            left: 30px;
+            right: 30px;
+            top: 0px;
+            border-radius: 0;
+            z-index: 100;
+        }
+    }
+
+    > .content {
+        padding: 10px;
+        border-left: 1px solid #CCCCCC;
+        border-right: 1px solid #CCCCCC;
+        border-bottom: 1px solid #CCCCCC;
+        
+        &.position_top {
+            padding-top: 48px;
+        }
+        h2 {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    }
+
 }
 
-.box > .heading {
-	height: 38px;
-	padding-left: 7px;
-	padding-right: 7px;
-	border: 1px solid #DBDBDB;
-	background: url('../images/box.png') repeat-x;
-	-webkit-border-radius: 7px 7px 0px 0px;
-	-moz-border-radius: 7px 7px 0px 0px;
-	-khtml-border-radius: 7px 7px 0px 0px;
-	border-radius: 7px 7px 0px 0px;
-}
-
-.box > .heading h1 {
-	margin: 0px;
-	padding: 11px 0px 0px 0px;
-	color: #003A88;
-	font-size: 16px;
-	float: left;
-    font-weight: bold;
-}
-
-.box > .heading h1 img {
-	float: left;
-	margin-top: -1px;
-	margin-left: 3px;
-	margin-right: 8px;
-}
-
-.box > .heading .buttons {
-	float: right;
-	padding-top: 7px;
-}
-
-.box > .heading.position_top {
-    position: fixed;
-    left: 30px;
-    right: 30px;
-    top: 0px;
-    border-radius: 0;
-    z-index: 100;
-}
-
-.box > .content {
-	padding: 10px;
-	border-left: 1px solid #CCCCCC;
-	border-right: 1px solid #CCCCCC;
-	border-bottom: 1px solid #CCCCCC;
-}
-
-.box > .content.position_top {
-    padding-top: 48px;
-}
-
-.box > .content h2 {
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-button.button {
-    border: 0;
-    padding: 0;
-    position: relative;
-    overflow: visible;
-}
-
-button::-moz-focus-inner {
-    border: none;  /* overrides extra padding in Firefox */
-    padding: 0px;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    /* Safari and Google Chrome only - fix margins */
-    button span {
-        margin-top: -1px;
+a, .list a,
+button {
+    &.button {
+        border: 0;
+        padding: 0;
+        position: relative;
+        overflow: visible;
+        display: inline-block;
+        color: #FFFFFF;
+        text-decoration: none;
+        margin-left: 2px;
+        padding: 6px 15px;
+        outline: none;
+        font-weight: 300;
+        cursor: pointer;
+        
+        // @include button-variant(#bcbcbe, #f6f6f6, #dfdfdf);
+        @include button-variant(#fff, #469ccf, #388abb);
+        // @include border-radius(3px);
+    }
+    &::-moz-focus-inner {
+        border: none;  /* overrides extra padding in Firefox */
+        padding: 0px;
+    }
+    span {
+        position: relative;
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            margin-top: -1px; /* Safari and Google Chrome only - fix margins */
+        }
     }
 }
 
-button.button span {
-    position: relative;
-}
-
-a.button, .list a.button, button.button {
-	text-decoration: none;
-	color: #FFFFFF;
-	display: inline-block;
-    margin-left: 2px;
-    background: #003A88;
-    border-radius: 10px;
-    -moz-border-radius: 10px 10px 10px 10px;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -webkit-border-bottom-left-radius: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    padding: 5px 15px;
-    outline: none;
-    text-decoration: none;
-}
-
 table.filter, div.filter {
-	background: #E7EFEF; 
-	border: 1px solid #C6D7D7; 
+	background: #f2f7fa; // #E7EFEF
+	border: 1px solid #dee2eb; 
 	margin-bottom: 15px;	
 }
 
-table.filter {
-	width: 100%;
-}
-
-table.filter td {
-	padding: 5px;
+table {
+    .filter {
+        width: 100%;
+        td {
+            padding: 5px;
+        }
+    }
 }
 
 div.filter {

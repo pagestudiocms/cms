@@ -20,12 +20,12 @@
 ::-moz-selection {
   color: #fff;
   text-shadow: none;
-  background: $brand-tertiary;
+  background: $text-highlight-color;
 }
 ::selection {
   color: #fff;
   text-shadow: none;
-  background: $brand-tertiary;
+  background: $text-highlight-color;
 }
 img {
   &::selection {

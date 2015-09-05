@@ -29,7 +29,7 @@ $body-bg:               #fff !default;
 
 // Global text color on `<body>`.
 $text-color:            $black;
-$text-highlight-color:  #38ABE1;
+$text-highlight-color:  #469ccf;
 
 // Global textual link color.
 $link-color:            $brand-primary !default;
@@ -65,6 +65,12 @@ $font-weight-regular:   $font-weight-normal;
 $font-weight-medium:    400;
 $font-weight-bold:      600;
 $font-weight-bolder:    700;
+
+// --------------------------------------------------------------
+// Buttons
+// --------------------------------------------------------------
+$btn-background:        #8ac6e2;
+$btn-background-hover:  #ccc;
 
 // --------------------------------------------------------------
 // Screen Size - Break points
