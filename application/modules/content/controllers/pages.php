@@ -11,6 +11,9 @@ class Pages extends Public_Controller
 	function index()
 	{
         $this->load->model('pages_model');
+        $this->load->helper('functions');
+        $this->load->helper('shortcodes');
+        $this->load->helper('shortcode_list');
 
         if ($this->settings->enable_profiler)
         {
@@ -87,6 +90,8 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Page->content_types->short_name);
 
             $data['_content'] = $Page->build_content();
+            $data['_content'] = shortcode_empty_paragraph_fix( $data['_content'] );
+            $data['_content'] = do_shortcode( $data['_content'] );
 
             // Set Metadata
             $this->template->set_meta_title(strip_tags($Page->title) . ' | ' . $this->settings->site_name)
@@ -100,7 +105,7 @@ class Pages extends Public_Controller
             // Output Page
             $this->template->view('pages', $data);
         }
-        else if (isset($Content_type) && $Content_type->exists())
+        elseif (isset($Content_type) && $Content_type->exists())
         {
             // Check and enforce access permissions
             $this->pages_model->check_permissions($Content_type);
