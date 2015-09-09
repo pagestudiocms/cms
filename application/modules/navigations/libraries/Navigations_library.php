@@ -660,11 +660,18 @@ class Navigations_library
         }
 
         $content = $this->_content;
+        $has_children = '';
 
         // Build unordered list of navigation
         foreach($array as $Item)
         {
-            $class = '';
+            if(is_array( $Item->sub)) {
+                if(! empty( $Item->sub)) {
+                    // var_dump($Item);
+                    $has_children = ' has-sub';
+                }
+            } 
+            $class = '' . $has_children;
 
             if ($array_count == 1)
             {
@@ -744,6 +751,7 @@ class Navigations_library
             }
 
             $array_count++;
+            $has_children = '';
         }
 
         if ($this->nested)
