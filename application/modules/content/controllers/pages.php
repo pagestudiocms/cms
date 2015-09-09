@@ -90,7 +90,9 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Page->content_types->short_name);
 
             $data['_content'] = $Page->build_content();
-            $data['_content'] = shortcode_empty_paragraph_fix( $data['_content'] );
+            $data['_content'] = shortcode_empty_paragraph_fix( 
+                html_entity_decode($data['_content'])
+            );
             $data['_content'] = do_shortcode( $data['_content'] );
 
             // Set Metadata
@@ -115,6 +117,11 @@ class Pages extends Public_Controller
 
             $data['title'] = $Content_type->title;
             $data['_content'] = $Content_type->build_content();
+            $data['_content'] = shortcode_empty_paragraph_fix( 
+                html_entity_decode($data['_content'])
+            );
+            $data['_content'] = do_shortcode( $data['_content'] );
+            
 
             $this->template->set('content_type', $Content_type->short_name);
 
@@ -124,7 +131,7 @@ class Pages extends Public_Controller
             // Output Content Type
             $this->template->view('pages', $data);
         }
-        elseif($this->uri->segment(1) === 'blog' && $this->uri->segment(2) === 'page') {
+        elseif($this->uri->segment(1) === 'news' && $this->uri->segment(2) === 'page') {
             echo 'Pagination found.';
         }
         else
@@ -152,6 +159,10 @@ class Pages extends Public_Controller
             $this->pages_model->content_type_template($Page->content_types);
 
             $data['_content'] = $Page->build_content();
+            $data['_content'] = shortcode_empty_paragraph_fix( 
+                html_entity_decode($data['_content'])
+            );
+            $data['_content'] = do_shortcode( $data['_content'] );
         }
         else
         {
