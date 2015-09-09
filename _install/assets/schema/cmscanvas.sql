@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `value` varchar(255) NOT NULL,
   `module` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `settings`
@@ -439,11 +439,11 @@ INSERT INTO `settings` (`id`, `slug`, `value`, `module`) VALUES
 (2, 'ga_account_id', '', NULL),
 (3, 'suspend', '0', NULL),
 (4, 'enable_admin_toolbar', '1', NULL),
-(10, 'custom_404', '2', 'content'),
 (6, 'site_homepage', '1', 'content'),
 (7, 'enable_registration', '0', 'users'),
 (8, 'default_group', '2', 'users'),
 (9, 'email_activation', '0', 'users'),
+(10, 'custom_404', '2', 'content'),
 (11, 'ga_email', '', NULL),
 (12, 'ga_password', '', NULL),
 (13, 'ga_profile_id', '', NULL),
@@ -452,7 +452,8 @@ INSERT INTO `settings` (`id`, `slug`, `value`, `module`) VALUES
 (16, 'enable_profiler', '0', NULL),
 (17, 'notification_email', '', NULL),
 (18, 'editor_stylesheet', 'assets/css/content.css', NULL),
-(19, 'enable_inline_editing', '0', NULL)
+(19, 'enable_inline_editing', '0', NULL),
+(20, 'site_description', '', NULL)
 ON DUPLICATE KEY UPDATE
 `id` = VALUES(`id`);
 
@@ -497,3 +498,29 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `calendar`
+--
+
+CREATE TABLE IF NOT EXISTS `calendar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_bin NOT NULL,
+  `description` text COLLATE utf8_bin NOT NULL,
+  `start` datetime NOT NULL,
+  `end` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `url` varchar(255) COLLATE utf8_bin NOT NULL,
+  `location` varchar(250) COLLATE utf8_bin NOT NULL,
+  `featured` varchar(255) COLLATE utf8_bin NOT NULL,
+  `event_author` int(11) NOT NULL,
+  `allDay` varchar(255) COLLATE utf8_bin NOT NULL,
+  `repeat` tinyint(1) NOT NULL DEFAULT '0',
+  `series_id` int(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `series_id` (`series_id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
