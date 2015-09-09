@@ -2,25 +2,18 @@
     <?php if ($content): ?>
         <?php echo $content; ?>
     <?php else: ?>
-        <div>
-            <label for="name">Name:</a>
-            <input type="text" name="name" id="name" />
-        </div>
 
-        <div>
-            <label for="email">Email:</a>
-            <input type="text" name="email" id="email" />
-        </div>
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" placeholder="" />
 
-        <div>
-            <label for="phone">Phone:</a>
-            <input type="text" name="phone" id="phone" />
-        </div>
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" placeholder="" />
 
-        <div>
-            <label for="message">Message:</a>
-            <textarea name="message" id="message"></textarea>
-        </div>
+            <label for="phone">Phone:</label>
+            <input type="text" name="phone" id="phone" placeholder="" />
+
+            <label for="message">Message:</label>
+            <textarea name="message" id="message" cols="3" rows="11"></textarea>
 
         <?php if ($captcha): ?>
             <div>
@@ -33,8 +26,8 @@
         <?php endif; ?>
 
         <div>
-            <label for="submit"></a>
-            <input type="submit" id="submit" value="Send" />
+            <label for="submit"></label>
+            <button name="submit" type="submit" id="submit" class="button lg">Submit</button>
         </div>
     <?php endif; ?>
 
