@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+	<!-- Basic Page Needs
+	================================================== -->
+	<meta charset="utf-8">
+    <title>Style Guide - Documentation</title>
+
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<!-- Mobile Specific Metas
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+	
+	<!-- CSS
+	<link rel="stylesheet" href="../assets/css/import.css">
+	================================================== -->
+	
+    <link rel="alternate" type="application/rss+xml" title="egrappler.com" href="feed/index.html">
+    <link href="http://fonts.googleapis.com/css?family=Raleway:700,400,300" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/prettify.css">
+
+    <script src="js/jquery.min.js"></script> 
+    <script src="js/prettify/prettify.js" type="text/javascript"></script> 
+    <!-- <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=css&skin=sunburst"></script> -->
+    <script src="js/layout.js"></script>
+    <script src="js/jquery.localscroll-1.2.7.js" type="text/javascript"></script>
+    <script src="js/jquery.scrollTo-1.4.3.1.js" type="text/javascript"></script>
+    <script src="js/functions.js" type="text/javascript"></script>
+    <script src="js/nav.js" type="text/javascript"></script>
+
+	<!-- Favicon
+	================================================== -->
+	<link rel="shortcut icon" href="assets/ico/favicon.ico">
+	<link rel="apple-touch-icon" sizes="57x57" href="assets/ico/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="assets/ico/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="assets/ico/apple-touch-icon-114x114.png">
+
+</head>
+<body>
+
+    <nav>
+        <div class="menu-wrapper">
+            <h1 class="logo">Doc</h1>
+            <div id="menu">
+                <ul class="toplinks">
+                    <li><a href="#">Docs</a></li>
+                    <li><a href="#">Website</a></a></li>
+                </ul>
+            </div>
+            <a id="menu-toggle" href="#" class=" ">&#9776;</a> 
+        </div>
+    </nav>
+    
+    <!-- START NAVIGATION -->
+    <div id="nav">
+        <div id="nav_inner">
+            <script type="text/javascript">create_menu('null');</script>
+        </div>
+    </div>
+    <div id="nav2">
+        <a name="top">&nbsp;</a>
+        <a href="#" id="toggle_toc">Table of Contents</a>
+    </div>
+    <!--
+    <header class="docs-hero">
+        <div class="container">
+            <h2 class="docs-header"> Page Studio - Documentation</h2>
+        </div>
+    </header>
+    -->
+    <section>
+        <div class="container">
+            <ul class="docs-nav" id="menu-left">
+                <li><strong>Getting Started</strong></li>
+                <li><a href="#welcome" class=" ">Welcome</a></li>
+                <li><a href="#benefits" class=" ">Benefits</a></li>
+                <li><a href="#features" class=" ">Features</a></li>
+                <li><a href="#license" class=" ">License</a></li>
+                <li class="separator"></li>
+                <li><strong>Customizing Opineo</strong></li>
+                <li><a href="#view_type" class=" ">View Type</a></li>
+                <li><a href="#animation_style" class=" ">Animation Styles</a></li>
+                <li><a href="#bars_text" class=" ">Bars Text</a></li>
+                <li><a href="#vote_counter" class=" ">Vote Counter</a></li>
+                <li><a href="#rating_icons" class=" ">Rating Icons</a></li>
+                <li><a href="#rating_titles" class=" ">Rating Titles</a></li>
+                <li><a href="#bar_colors" class=" ">Bar Colors</a></li>
+            </ul>
+            
+            <div class="docs-content">
+            
+                <header class="doc-title">
+                    <h1>Style Guide Documentation</h1>
+                </header>
+                <hr />
+                <div class="doc-description" id="whatAndWhy">
+                    <p class="lead">This page contains all the elements that are available for usage in this documentation template.</p>
+                </div>
+                <hr />
+                <article class="doc-section clearfix" id="utilities">
+
+                    <h1 class="article-title">Article</h1>
+
+                    <p class="article-lead">Create articles within your page.</p>
+
+                    <h2 id="usage"><a href="#usage" class="link-reset">Usage</a></h2>
+
+                    <p>The article component constists of the article itself, a title, meta data, an opening paragraph and dividers.</p>
+
+                    <div class="overflow-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Features</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Open&nbsp;Source</code></td>
+                                    <td>Built on open source technology. Featuring an MVC approach similar to <code>CodeIgniter</code>. Super light-weight and fast.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Easy&nbsp;To&nbsp;Use</code></td>
+                                    <td>Clean and powerful user interface to manage any type of site. PageStudio simplifies content editing by only showing what is essential while offering the more advanced functionality in other areas of the administration panel.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Simple&nbsp;Install</code></td>
+                                    <td>PageStudio has a very small learning curve and is great for beginner developers. The base install of PageStudio provides a great starting point and learning tool. Also PageStudio provides detailed documentation with lots of examples.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Mudular</code></td>
+                                    <td>Need additional features? Or want to extend the system? You can with ease with PS' modular framework.</td>
+                                </tr>
+                                <tr>
+                                    <td><code></code></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="article-subtitle">Example</h3>
+
+                    <div class="article">
+
+                        <h1 class="article-title">Article title</h1>
+
+                        <p class="article-meta">Written by Super User on 12 April 2012. Posted in Blog</p>
+
+                        <p class="article-lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <hr class="article-divider">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <a href="#">Read more</a>
+
+                    </div>
+
+                    <h3 class="article-subtitle">Markup</h3>
+
+<pre class="prettyprint lang-php">&lt;?php 
+    function foo() {
+        if($argument == true) {
+            ...
+        }
+    }
+?&gt;</pre>
+
+<pre class="prettyprint">&lt;article class="article"&gt;
+    &lt;h1 class="article-title"&gt;...&lt;/h1&gt;
+    &lt;p class="article-meta"&gt;...&lt;/p&gt;
+    &lt;p class="article-lead"&gt;...&lt;/p&gt;
+    ...
+    &lt;hr class="article-divider"&gt;
+    ...
+&lt;/article&gt;</pre>
+
+                </article>
+            
+                <h2> Getting Started</h2>
+                <h3 id="welcome"> Welcome</h3>
+                <p> Are you listening to your customers?</p>
+              
+                <p> As they say: You cannot improve what you cannot measure; but the paradox is you
+                    cannot measure everything – happiness, hatred, anger… but you can measure customer
+                    satisfaction. Yes, you can measure customer satisfaction by analyzing likes and
+                    dislikes of your customers. You can gauge popularity of your website or products.
+                    You can also:</p>
+                <ul>
+                    <li>See how many visitors like the new design of your website or logo</li>
+                    <li>Analyze what your readers want to see on your blog</li>
+                    <li>Understand how helpful the content on your support forum or website is</li>
+                    <li>Know the latest trends and user’s opinion before launching a new product or service</li>
+                </ul>
+                <p> Opineo allows you to do all of this and much more without signing up for an account
+                    or hire an expert. This DIY tool enables you to listen to your customers’ voice
+                    easily and instantly. All you have to do is go online, design your widget and place
+                    it on your website. </p>
+             
+<pre class="prettyprint">&lt;script&gt;
+    $(document).ready(function (){
+        $('#DefaultOptions').opineo('results.php', {curvalue:3,
+            view: 'detailed',
+            animation_speed: 'super',
+            show_total_votes_counter: false,
+            show_overall_rating: true
+        });
+    })
+&lt;/script&gt;</pre>
+
+                <ul>
+                    <li>Compact View</li>
+                </ul>
+                <h3 id="bar_colors"> Bar Colors</h3>
+                <ul>
+                    <li>Colors of Red Bar</li>
+                    <li>Colors of Yellow Bar</li>
+                    <li>Colors of Green Bar</li>
+                </ul>
+                
+                <p>Edit the template $config array as needed:</p>
+                <ul>
+                    <li><var>$config['parser_enabled']</var> - When set to <kbd>TRUE</kbd> this will use the Parser library.</li>
+                    <li><var>$config['parser_body_enabled']</var> - The parser can be enabled for the layouts but disabled for the body view files by setting this to <kbd>FALSE</kbd>.</li>
+                    <li><var>$config['title_separator']</var> - What string should be used to separate title segments sent via <kbd>$this->template->title('Foo', 'Bar');</kbd>.</li>
+                    <li><var>$config['theme']</var> - Which theme should be used by default, empty for none.</li>
+                    <li><var>$config['theme_locations']</var> - Store your themes in many places, similar to the way "Application Packages" are used.</li>
+                </ul>
+                
+                <p class="important"><strong>NOTE:</strong> You can only use the Parser if you have also installed a Parser extensions like <a href="http://philsturgeon.co.uk/code/codeigniter-dwoo" target="_blank">codeigniter-dwoo</a>. This is because CI_Parser does not play nicely with arrays.</p>
+              
+            </div> <!-- End .docs-content -->
+        </div><!-- End .container -->
+    </section>
+
+    <footer>
+        <div class="container">
+            <p> &copy; 2015 PageStudio.com </p>
+        </div>
+    </footer>
+    
+</body>
+</html>
