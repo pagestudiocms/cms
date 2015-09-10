@@ -703,15 +703,19 @@ class Navigations_library
             // Check if content was provided to use
             if ( ! empty($this->_content))
             {
+                $the_url = ( $Item->url === 'home') ? '/' : $Item->url;
+                $the_url = (($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($the_url) : $the_url);
+                
                 $item_array = array(
                     'node_id' => $Item->id,
                     'title' => $Item->title,
                     'target' => $Item->target,
                     'id' => $Item->tag_id,
                     'class' => $class,
-                    'url' => ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url,
-                    'path' => ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url,
+                    'url' => $the_url,
+                    'path' => ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($the_url) : $the_url,
                 );
+                
 
                 // Backspace last element if backspace specified
                 if ($array_count == $array_size && $this->backspace)
@@ -723,7 +727,9 @@ class Navigations_library
             }
             else
             {
-                $nav .= '<a ' . (($Item->target) ? 'target="' . $Item->target . '"': '') . ' href="' . (($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($Item->url) : $Item->url) . '">' . $Item->title . '</a>';
+                $the_url = ($Item->url == 'home') ? '/' : $Item->url;
+                $the_url = (($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($the_url) : $the_url);
+                $nav .= '<a ' . (($Item->target) ? 'target="' . $Item->target . '"': '') . ' href="' . $the_url . '">' . $Item->title . '</a>';
             }
 
             // Check if subnav visibility overridden by parameter else use default settings
