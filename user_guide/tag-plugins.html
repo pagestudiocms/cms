@@ -62,7 +62,7 @@
     <!-- START NAVIGATION -->
     <div id="nav">
         <div id="nav_inner">
-            <script type="text/javascript">create_menu('');</script>
+            <script type="text/javascript">create_menu('null');</script>
         </div>
     </div>
     <div id="nav2">
@@ -80,111 +80,78 @@
         <div class="container">
             <ul class="docs-nav" id="menu-left">
                 <li><strong>Tags</strong></li>
-                <li><a href="helper-plugin.html" class=" ">Month Tag</a></li>
-                <li><a href="helper-plugin.html" class=" ">Events Tag</a></li>
+                <li><a href="helper-plugin.html" class=" ">Date Tag</a></li>
+                <li><a href="helper-plugin.html" class=" ">Site URL Tag</a></li>
+                <li><a href="helper-plugin.html" class=" ">Current URL Tag</a></li>
+                <li><a href="helper-plugin/image-thumbnail.html" class=" ">Image Thumbnail Tag</a></li>
+                <li><a href="helper-plugin.html" class=" ">URI Segment Tag</a></li>
+                <li><a href="helper-plugin.html" class=" ">Ellipsis Tag</a></li>
             </ul>
             
             <div class="docs-content">
             
                 <header class="doc-title">
-                    <h1>Calendar Plugin Tag</h1>
+                    <h1>Tags</h1>
                 </header>
                 <hr />
-                <div class="doc-description" id="whatAndWhy">
-                    <p class="lead">Generates a 30 day calendar or a list of upcoming events on pages where embeded.</p>
-                </div>
-                <hr />                
             
-                <h2 id="usage">30 Day Calendar</h2>
-                <p>Allows you to display a 30-day calendar on your website. This tag is inserted in your template.</p>
+                <h2 id="usage">Tags Plugins</h2>
+
+                <p></p>
                 
-                <h3>Optional Parameters</h3>
                 <div class="overflow-container">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Parameter</th>
+                                <th>Tag</th>
                                 <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><code>status=</code></td>
-                                <td>
-                                    Specifies the status of the events to be displayed. Options <code>published</code>, <code>draft</code>. <b>*Not required</b>.
-                                </td>
+                                <td><code>Contact Plugin</code></td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <td><code>segment=</code></td>
-                                <td>The URL segment and page name to match against with the <code>|</code> as the delimeter. <small>Example:</small> <code>segment="2|calendar"</code> <b>*Not Required</b>.</td>
+                                <td><code>Content Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Galleries Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><a href="helper-plugin/image-thumbnail.html"><code>Helper Plugin</code></a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Navigations Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Secure Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Settings Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Template Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Theme Plugin</code></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><code>Users Plugin</code></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
-                <p class="important"><b>Note:</b> When the optional parameter <b>segment</b> is not set, the tag returns the 30-day calendar on any page that uses the template it's embeded into.</p>
-                
-                <h3 class="article-subtitle">Example</h3>
-                
-<pre class="prettyprint lang-php">
-{{ calendar:month status="published" segment="1|calendar" }}
-</pre>
-
-                <br />
-                <h2 id="usage">Calendar Event Listing</h2>
-                <p>Allows you to display a set of events from the calendar table. Use this when you want to embed a listing of events in a section of your template.</p>
-                
-                <h3>Optional Parameters</h3>
-                <div class="overflow-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Parameter</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>status=</code></td>
-                                <td>
-                                    Specifies the status of the events to be displayed. Options <code>published</code>, <code>draft</code>.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><code>segment=</code></td>
-                                <td>The URL segment and page name to match against with the <code>|</code> as the delimeter. <small>Example:</small> <code>segment="2|calendar"</code>.
-                                When not set the system shows the results on any page the tag is embeded.</td>
-                            </tr>
-                            <tr>
-                                <td><code>sort=</code></td>
-                                <td>Let's you define the sort order of the result set. Options are <code>asc</code>, or <code>desc</code>, default is <code>asc</code>.</td>
-                            </tr>
-                            <tr>
-                                <td><code>limit=</code></td>
-                                <td>Sets the limit of the number of events to be displayed.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <p class="important"><b>Note:</b> The default options for the optional parameters are as follows: <b>sort = asc</b>, <b>limit = 5</b>.</p>
-
-                <h3 class="article-subtitle">Example Without Optional Parameters</h3>
-                
-<pre class="prettyprint lang-php">
-{{ calendar:events }}
-    &lt;a href="{{ url }}"&gt;{{ title }}&lt;/a&gt;
-{{ /calendar:events }}
-</pre>
-
-                <h3 class="article-subtitle">Example With Optional Parameters</h3>
-                
-<pre class="prettyprint lang-php">
-{{ calendar:events segment="1|calendar" status="published" sort="desc" limit="5" }}
-    &lt;a href="{{ url }}"&gt;{{ title }}&lt;/a&gt;
-{{ /calendar:events }}
-</pre>
-              <p>The above example will only display on pages where segment [ 1 ] is [ calendar ]. It will not be displayed on any other page.</p>
+              
             </div> <!-- End .docs-content -->
         </div><!-- End .container -->
     </section>

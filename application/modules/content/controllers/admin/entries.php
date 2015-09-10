@@ -274,6 +274,7 @@ class Entries extends Admin_Controller {
         $this->form_validation->set_rules('status', 'Status', 'trim|required');
         $this->form_validation->set_rules('title', 'Entry Title', 'trim|required|max_length[100]');
         $this->form_validation->set_rules('created_date', 'Date Created', 'trim|required');
+        $this->form_validation->set_rules('published_date', 'Date Published', 'trim|required');
 
         // Validate url title if content type has a dynamic route
         if ($Content_type->dynamic_route != '')
@@ -291,6 +292,7 @@ class Entries extends Admin_Controller {
             $Entry->from_array($this->input->post());
             $Entry->modified_date = date('Y-m-d H:i:s');
             $Entry->created_date = date('Y-m-d H:i:s', strtotime($this->input->post('created_date')));
+            $Entry->published_date = date('Y-m-d H:i:s', strtotime($this->input->post('published_date')));
             $Entry->slug = ($this->input->post('slug') != '') ? $this->input->post('slug') : NULL;
             $Entry->url_title = ($this->input->post('url_title') != '') ? $this->input->post('url_title') : NULL;
             $Entry->meta_title = ($this->input->post('meta_title') != '') ? $this->input->post('meta_title') : NULL;
