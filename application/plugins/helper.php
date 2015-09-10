@@ -49,31 +49,28 @@ class Helper_plugin extends Plugin
     {
         // -----------------------------------------
         // Additions by Cosmo Mathieu
-        // Allows for the parsing of template tag {{ html_image }} variables
+        // Allows for the parsing of template tags {{ html_image }}
         // str_replace('"', "", $string);
         // str_replace("'", "", $string);
         // -----------------------------------------
-        $src = '';
         $image = $this->attribute('image');
-        if($this->attribute('source', 0) === 'true') {            
-            preg_match_all('/(alt|title|src)=("[^"]*")/',$image, $img);
-            foreach($img[1] as $key => $item) {
-                switch($item) {
-                    case 'src':
-                        $src = str_replace('"', "", $img[2][$key]);
-                        break;
-                    case 'title':
-                        $title = $img[2][$key];
-                        break;
-                    case 'alt':
-                        $alt = $img[2][$key];
-                        break;
-                }
+        preg_match_all('/(alt|title|src)=("[^"]*")/',$image, $img);
+        foreach($img[1] as $key => $item) {
+            switch($item) {
+                case 'src':
+                    $src = str_replace('"', "", $img[2][$key]);
+                    break;
+                case 'title':
+                    $title = $img[2][$key];
+                    break;
+                case 'alt':
+                    $alt = $img[2][$key];
+                    break;
             }
-            
-            if( ! empty($img)) {
-                $image = $src;
-            }
+        }
+        
+        if( ! empty($img)) {
+            $image = $src;
         }
         // -----------------------------------------
         // End of additions
@@ -88,40 +85,15 @@ class Helper_plugin extends Plugin
         return $CI->uri->segment($this->attribute('segment'));
     }
 
-    /**
-     * Update: Added support for content found in template tags / {{ braces }}
-     *         Allows for usage of:
-     *         {{ helper:ellipsis length="200" words="true" }}
-     *             {{ content }}
-     *         {{ /helper:ellipsis }}
-     *
-     * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
-     * @return     string 
-     */
     public function ellipsis($data)
     {
         // Recieve inherited data passed to plugin from parent plugin
         $CI =& get_instance();
         $CI->load->library('parser');
         $CI->load->helper('text');
-        
-        $content = $this->content();       
-        $attributes = $this->attributes(); // the tag parameters
-        $attributes['_content'] = $this->content(); // the tags e.g. {{ conent }}
-        
-        // Check if we received a string or a tag with {{ open-and-close-braces }}
-        // Match the tag key in the $data array and parse the corresponding info.
-        if ((strpos($content,'{{') && strpos($content,'}}'))!== false) {
-            $array = array (
-                '{{' => '',
-                '}}' => ''
-            );
-            $tag = trim(strtr( $content, $array ));
-            $parsed_content = $data[$tag];
-        } else {
-            $parsed_content = $CI->parser->parse_string($content, $data, TRUE);
-        }
-        
+
+        $content = $this->content();
+        $parsed_content = $CI->parser->parse_string($content, $data, TRUE);
         return ellipsize($parsed_content, $this->attribute('length'));
     }
 

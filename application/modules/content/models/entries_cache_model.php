@@ -79,7 +79,6 @@ class Entries_cache_model extends CI_Model
             $Object->meta_description = $this->meta_description;
             $Object->meta_keywords = $this->meta_keywords;
             $Object->created_date = $this->created_date;
-            $Object->published_date = $this->published_date;
             $Object->modified_date = $this->modified_date;
             $Object->author_id = $this->author_id;
 

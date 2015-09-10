@@ -141,10 +141,6 @@
                         <?php echo form_input(array('name'=>'created_date', 'class'=>'datetime', 'id'=>'created_date', 'value'=>set_value('created_date', !empty($Entry->created_date) ? date('m/d/Y h:i:s a', strtotime($Entry->created_date)) : date('m/d/Y h:i:s a')))); ?>
                     </div>
                     <div>
-                        <?php echo form_label('<span class="required">*</span> Date Published:', 'published_date'); ?>
-                        <?php echo form_input(array('name'=>'published_date', 'class'=>'datetime', 'id'=>'published_date', 'value'=>set_value('published_date', !empty($Entry->published_date) ? date('m/d/Y h:i:s a', strtotime($Entry->published_date)) : date('m/d/Y h:i:s a')))); ?>
-                    </div>
-                    <div>
                         <?php echo form_label('Author:', 'author_id'); ?>
                         <?php if ($edit_mode): ?>
                             <?php echo form_dropdown('author_id', $authors, set_value('author_id', !empty($Entry->author_id) ? $Entry->author_id : ''), 'id=\'author_id\'')?>

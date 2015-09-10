@@ -38,7 +38,6 @@ class Entries_library
         $this->CI->parser->set_callback('categories', array($this, 'categories_callback'));
         $this->CI->parser->set_callback('author', array($this, 'author_callback'));
         $this->CI->parser->set_callback('created_date', array($this, 'date_format_callback'));
-        $this->CI->parser->set_callback('published_date', array($this, 'date_format_callback'));
         $this->CI->parser->set_callback('modified_date', array($this, 'date_format_callback'));
     }
 
@@ -199,7 +198,6 @@ class Entries_library
 
             $content['title'] = $Entry->title;
             $content['created_date'] = $Entry->created_date;
-            $content['published_date'] = $Entry->published_date;
             $content['modified_date'] = $Entry->modified_date;
             $content['url_title'] = $Entry->url_title;
             $content['slug'] = $Entry->slug;

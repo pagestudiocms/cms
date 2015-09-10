@@ -148,54 +148,6 @@ function smp_map_it($atts,$content=null)
 }
 
 /**
- * This function copies the file containing the next live video countdown date.
- * DOES NOT NEED TO BE REGISTERED.
- * 
- * @syntax     copy_remote_file( file_directory_and_new_name, remote_file_dir_and_name ) 
- * @param      string $remote_file, 
- * @param      string $local_file
- * @modified   09/04/2014
- */ 
-function copy_remote_file(
-	$remote_file = 'http://www.sundaystreams.com/api/countdownxml/18/73422281/817/97799999/date.xml',
-	$local_file = 'date.xml'
-) {	
-	/**
-	 * Check if local file exists. Create a copy otherwise. 
-	 */
-	if (file_exists($local_file)) {
-		$todays_date = date('Y-m-d');
-		/**
-		 * Get date file was last modified.
-		 */
-		$date_modified = date("Y-m-d", filemtime($local_file));
-		
-		if( $date_modified !== $todays_date ) {
-			/**
-			 * Delete original file
-			 */
-			unlink($local_file);
-			/**
-			 * Copy remote file to local directory.
-			 */
-			copy($remote_file, $local_file);
-		}		
-	} else {		
-		/**
-		 * The directory does not have a date file, create a copy. 
-		 */ 
-		copy($remote_file, $local_file);
-	}	
-}
-
-/** 
- * Copy date.xml file from a remote location.
- * Used for the next_live_sermon shortcode.
- * @see         shortcode_list.php 
- */ 
-// copy_remote_file();	
-
-/**
  * Next Live Sermon Countdown
  *
  * This shortcode adds a countdown to the next live sermon
@@ -231,6 +183,19 @@ function next_live_sermon_counter($atts,$content=null)
 			</li>
 		</ul>
 		';
+}
+
+/**
+ * Remove shortcode tags from text
+ *
+ * This shortcode doesn't return anything. Its purpose is to clean up the text.
+ *
+ * @param     (string) $atts (Required)
+ * @return    Nothing.
+ */
+function staff_member_picture( $atts, $content = null ) 
+{
+	//return '<button class="button">'.$content.'</button>';
 }
 
 /**
@@ -310,12 +275,10 @@ function add_button( $atts, $content=null )
 	extract( shortcode_atts(array(
        'text' => 'button',
        'size' => 'btn-default',
-       'alt' => '',
-       'target' => 'self',
        'link' => '#'
     ), $atts) );
 	
-	return '<a href="' . $link . '" class="button lg" target="'.$target.'">' . $text . '</a>';	
+	return '<a href="' . $link . '" class="button lg">' . $text . '</a>';	
 }
 
 function lorem_function() {
@@ -348,3 +311,4 @@ add_shortcode('button','add_button');
 add_shortcode('one_half', 'one_half');
 add_shortcode('cols_3', 'cols_3');
 add_shortcode('live_sermon_counter', 'next_live_sermon_counter');
+add_shortcode('member_picture', 'staff_member_picture');

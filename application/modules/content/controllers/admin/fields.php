@@ -232,7 +232,7 @@ class Fields extends Admin_Controller {
 
     function unique_short_tag($short_tag, $current_short_tag = '')
     {
-        $reserved = array('site_url', 'base_url', 'theme_url', 'title', 'created_date', 'published_date', 'modified_date', 'url_title', 'slug', 'dynamic_route', 'content_type', 'count', 'total_results', 'author_id', 'meta_title', 'meta_description', 'meta_keywords', '_content', '_callbacks');
+        $reserved = array('site_url', 'base_url', 'theme_url', 'title', 'created_date', 'modified_date', 'url_title', 'slug', 'dynamic_route', 'content_type', 'count', 'total_results', 'author_id', 'meta_title', 'meta_description', 'meta_keywords', '_content', '_callbacks');
 
         if ($this->config->item('global_tags') && is_array($this->config->item('global_tags')))
         {

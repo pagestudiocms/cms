@@ -147,17 +147,16 @@
                             <tr>
                                 <td><code>status=</code></td>
                                 <td>
-                                    Specifies the status of the events to be displayed. Options <code>published</code>, <code>draft</code>.
+                                    Specifies the status of the events to be displayed. Options <code>published</code>, <code>draft</code>. <b>*Not required</b>.
                                 </td>
                             </tr>
                             <tr>
                                 <td><code>segment=</code></td>
-                                <td>The URL segment and page name to match against with the <code>|</code> as the delimeter. <small>Example:</small> <code>segment="2|calendar"</code>.
-                                When not set the system shows the results on any page the tag is embeded.</td>
+                                <td>The URL segment and page name to match against with the <code>|</code> as the delimeter. <small>Example:</small> <code>segment="2|calendar"</code> <b>*Not Required</b>.</td>
                             </tr>
                             <tr>
                                 <td><code>sort=</code></td>
-                                <td>Let's you define the sort order of the result set. Options are <code>asc</code>, or <code>desc</code>, default is <code>asc</code>.</td>
+                                <td>Allows you to specify the field you wish to to sort by.</td>
                             </tr>
                             <tr>
                                 <td><code>limit=</code></td>
@@ -166,25 +165,13 @@
                         </tbody>
                     </table>
                 </div>
-                
-                <p class="important"><b>Note:</b> The default options for the optional parameters are as follows: <b>sort = asc</b>, <b>limit = 5</b>.</p>
 
-                <h3 class="article-subtitle">Example Without Optional Parameters</h3>
+                <h3 class="article-subtitle">Example</h3>
                 
 <pre class="prettyprint lang-php">
-{{ calendar:events }}
-    &lt;a href="{{ url }}"&gt;{{ title }}&lt;/a&gt;
-{{ /calendar:events }}
+{{ calendar:events segment="1|calendar" status="published" sort="date|desc" limit="10" }}
 </pre>
-
-                <h3 class="article-subtitle">Example With Optional Parameters</h3>
-                
-<pre class="prettyprint lang-php">
-{{ calendar:events segment="1|calendar" status="published" sort="desc" limit="5" }}
-    &lt;a href="{{ url }}"&gt;{{ title }}&lt;/a&gt;
-{{ /calendar:events }}
-</pre>
-              <p>The above example will only display on pages where segment [ 1 ] is [ calendar ]. It will not be displayed on any other page.</p>
+              
             </div> <!-- End .docs-content -->
         </div><!-- End .container -->
     </section>
