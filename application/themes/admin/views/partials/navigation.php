@@ -25,6 +25,11 @@
                 ),
         ),
         array(
+            'title' => 'Calendar',
+            'url' => 'calendar/entries',
+            'sub' => array()
+        ),
+        array(
             'title' => 'Users',
             'url'   => 'users',
             'sub'   => array(
