@@ -5,16 +5,7 @@
         <div class="buttons">
             <ul id="add_entry_btn">
                 <li id="add_entry_li">
-                    <a class="button" rel="#entry_content_types" id="add_entry" href="javascript:void(0);"><span>Add Entry</span></a>
-                    <ul id="content_types_dropdown">
-                        <?php if ( ! empty($content_types_add_entry)): ?>
-                            <?php foreach($content_types_add_entry as $content_type_id => $content_type_title): ?>
-                                <li><a href="<?php echo site_url(ADMIN_PATH . '/content/entries/edit/' . $content_type_id); ?>"><?php echo $content_type_title; ?></a></li>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <li><div id="no_content_types_added">No content types added</div></li>
-                        <?php endif; ?>
-                    </ul>
+                    <a class="button" id="add_entry" href="<?php echo site_url(ADMIN_PATH . '/calendar/entries/add'); ?>"><span>Add Entry</span></a>
                 </li>
                 <li>
                     <a class="button delete" href="#"><span>Delete</span></a>

@@ -141,6 +141,91 @@ class Entries extends Admin_Controller {
      * @access     public 
      * @return     void
      */
+    public function add()
+    {
+        // Init
+        $data = array();
+        $data['edit_mode']  = $edit_mode = FALSE;
+        $data['breadcrumb'] = set_crumbs(array('calendar/entries' => 'Calendar', current_url() => 'Add Event'));
+        $data['id']         = $event_id = $this->uri->segment(5);
+        // Load Model
+        $this->model = $this->load->model('calendar_model');
+
+        // Load content fields library
+        $query = $this->db->get_where('calendar', array('id' => $event_id), 1);
+        $EventInfo = $query->result();
+        $data['Event'] = ( ! empty($EventInfo)) ? $EventInfo[0] : array();
+
+        // Get Admins and Super Admins for the setting's
+        // author dropdown
+        // $Users = $this->users_model->where_in_related('groups', 'type', array(SUPER_ADMIN, ADMINISTRATOR))->order_by('first_name')->get();
+        // $data['authors'] = array('' => '');
+        // foreach ($Users as $User) {
+            // $data['authors'][$User->id] = $User->full_name();
+        // }
+        
+        if($this->input->post()) {
+            // Form Validation Rules
+            $this->form_validation->set_rules('title', 'Event Title', 'trim|required');
+            $this->form_validation->set_rules('description', 'Event Description', 'trim|required');
+
+            // Validation and process form
+            if ($this->form_validation->run() == TRUE)
+            {
+                $Event = array();
+                // Populate from post and prep for insert / update
+                $post = $this->input->post();
+                $Event['modified']  = date('Y-m-d H:i:s');
+                $Event['start']     = date('Y-m-d H:i:s', strtotime($this->input->post('start')));
+                $Event['end']       = date('Y-m-d H:i:s', strtotime($this->input->post('end')));
+                $Event['title']     = ($this->input->post('title') != '') ? $this->input->post('title') : NULL;
+                $Event['description'] = ($this->input->post('description') != '') ? $this->input->post('description') : NULL;
+                $Event['featured_image']  = ($this->input->post('featured_image') != '') ? $this->input->post('featured_image') : NULL;
+                // var_dump($post);
+                
+                // Ensure the id wasn't overwritten by an id in the post
+                if ($edit_mode) {
+                    $Event->id = $event_id;
+                }
+                
+                // Set a success message
+                // if ($this->model->update($event_id, $Event)) {  
+                if ($this->db->insert('calendar', $Event)) {
+                    $this->session->set_flashdata('message', '<p class="success">Changes Saved.</p>');
+                } else {
+                    $this->session->set_flashdata('message', '<p class="error">Changes were not saved.</p>');
+                }
+                
+                // Deteremine where to redirect user
+                if ($this->input->post('save_exit')) {
+                    redirect(ADMIN_PATH . "/calendar/entries");
+                } else {
+                    redirect(ADMIN_PATH . "/calendar/entries/edit/" . $this->db->insert_id());
+                }
+            }
+        }
+
+        $_SESSION['KCFINDER'] = array();
+        $_SESSION['KCFINDER']['disabled'] = false;
+        $_SESSION['isLoggedIn'] = true;
+        // $this->template->add_javascript('/application/modules/content/content_fields/assets/js/ckeditor/ckeditor.js');
+        // $this->template->add_javascript('/application/modules/content/content_fields/assets/js/ckeditor_inline_editable.js');
+        $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image.js');
+        $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image_inline_editable.js');
+        $this->template->view('admin/entries/edit', $data);
+    }
+
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Edit
+     *
+     * Add and edit entries
+     *
+     * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
+     * @access     public 
+     * @return     void
+     */
     public function edit()
     {
         // Init

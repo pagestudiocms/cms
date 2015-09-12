@@ -195,6 +195,9 @@ if( ! function_exists('shorten_phrase')) {
         //		$short_string = substr($short_string, 0, 50) . '...';
         
         //[OPTION 2] Keeps whole word after N'th character
+        if(strlen($phrase) <= $max_words){
+            return $phrase;
+        }
         $short_string = strpos($phrase, ' ', $max_words);
         $short_string = substr($phrase, 0, $short_string ) . '...'; 
         

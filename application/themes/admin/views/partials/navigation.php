@@ -14,20 +14,25 @@
                         'title' => 'Entries',
                         'url'   => 'content/entries',
                     ),
-                    array(
-                        'title' => 'Navigations',
-                        'url'   => 'navigations',
-                    ),
-                    array(
-                        'title' => 'Galleries',
-                        'url'   => 'galleries',
-                    ),
                 ),
         ),
         array(
-            'title' => 'Calendar',
-            'url' => 'calendar/entries',
-            'sub' => array()
+            'title' => 'Plugins',
+            'url'   => '#',
+            'sub'   => array(
+                array(
+                    'title' => 'Calendar',
+                    'url'   => 'calendar/entries',
+                ),
+                array(
+                    'title' => 'Galleries',
+                    'url'   => 'galleries',
+                ),
+                array(
+                    'title' => 'Navigations',
+                    'url'   => 'navigations',
+                ),
+            ),
         ),
         array(
             'title' => 'Users',
