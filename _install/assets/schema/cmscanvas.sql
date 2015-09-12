@@ -511,7 +511,7 @@ CREATE TABLE IF NOT EXISTS `calendar` (
   `description` text COLLATE utf8_bin NOT NULL,
   `start` datetime NOT NULL,
   `end` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `url` varchar(255) COLLATE utf8_bin NOT NULL,
   `location` varchar(250) COLLATE utf8_bin NOT NULL,
