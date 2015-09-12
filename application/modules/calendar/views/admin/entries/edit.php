@@ -80,13 +80,13 @@
                         <div>
                             <div style="width: 150px; text-align: center; float: left;">
                                 <a class="choose_image" href="javascript:void(0);" style="display: block; margin-bottom: 5px;">
-                                    <img class="image_thumb" src="<?php echo ! empty($Event->featured) ? $Event->featured : 
+                                    <img class="image_thumb" src="<?php echo ! empty($Event->featured_image) ? $Event->featured_image : 
                                     theme_url() . '/assets/images/no_image.jpg'; ?>" />
                                 </a>
 
                                 <a class="remove_image" href="javascript:void(0);">Remove Image</a><br />
                                 <a class="choose_image" href="javascript:void(0);">Add Image</a>
-                                <input class="hidden_file" type="hidden" value="" name="featured" />
+                                <input class="hidden_file" type="hidden" value="" name="featured_image" />
                             </div>
                             <!--
                             <div style="float: left; margin-left: 15px; width: 220px;">

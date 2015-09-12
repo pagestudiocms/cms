@@ -24,6 +24,7 @@
     </div>
     <div class="content">
         <?php echo form_open(); ?>
+        <!--
         <div class="filter">
             <div class="left">
                 <div><label>Search:</label></div> 
@@ -45,7 +46,8 @@
                 <button name="clear_filter" value="1" class="button" type="submit"><span>Clear</span></button>
             </div>
             <div class="clear"></div>
-        </div>
+        </div> 
+        -->
         <?php echo form_close(); ?>
 
         <?php echo form_open(null, 'id="form"'); ?>

@@ -43,7 +43,7 @@ class Pages extends Public_Controller
             // the URI segments from cache/db
             if (isset($all_pages[$slug]))
             {
-                $Page = $this->cache->model('entries_cache_model', 'cacheable_get_by', array('id' => $all_pages[$slug]), 'entries');
+                $Page = $this->cache->model('entries_cache_model', 'cacheable_get_by', array('id' => $all_pages[$slug]), 'entries');                
             }
             else
             {
@@ -82,6 +82,20 @@ class Pages extends Public_Controller
                     return $this->_404_error();
                 }
             }
+            
+            /**
+             * Applying Shortcodes to all content_types tag content
+             *
+             * @since       Version 1.1.6
+             * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+             */
+            foreach($Page->content_fields as $key => $field) {
+                $id = 'field_id_'.$field->id;
+                $Page->entry_data->$id = do_shortcode( 
+                    shortcode_empty_paragraph_fix( 
+                        html_entity_decode($Page->entry_data->$id)
+                    ));
+            }
 
             // Display admin toolbar
             $this->pages_model->admin_toolbar($Page->content_type_id, $Page->id);
@@ -90,10 +104,6 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Page->content_types->short_name);
 
             $data['_content'] = $Page->build_content();
-            $data['_content'] = shortcode_empty_paragraph_fix( 
-                html_entity_decode($data['_content'])
-            );
-            $data['_content'] = do_shortcode( $data['_content'] );
 
             // Set Metadata
             $this->template->set_meta_title(strip_tags($Page->title) . ' | ' . $this->settings->site_name)
@@ -129,6 +139,52 @@ class Pages extends Public_Controller
             $this->pages_model->content_type_template($Content_type);
 
             // Output Content Type
+            $this->template->view('pages', $data);
+        }
+        // ------------------------------------------------------------
+        // Added to support the calendar events rendering as a page
+        // @todo    Pull content type from the content_type table
+        // @author  Cosmo Mathieu <cosmo@cosmointeractive.co>
+        // ------------------------------------------------------------
+        elseif($this->uri->segment(1) === 'calendar' && $this->uri->segment(2)) {
+            
+            // Get the event id from the url 
+            $segment       = explode('-', $this->uri->segment(2));
+            $event_id       = trim($segment[0]);
+            
+            $query          = $this->db->get_where('calendar', array('id' => $event_id), 1);
+            $EventInfo      = $query->result();
+            $data['Event']  = $EventInfo[0];
+            $event          = $data['Event'];
+            
+            $query          = $this->db->get_where('content_types', ['id' => 12], 1);
+            $result         = $query->result();
+            $content_type   = $result[0];
+
+            // Display admin toolbar
+            // $this->pages_model->admin_toolbar($Page->content_type_id, $Page->id);
+
+            $this->template->set('event_id', $event->id);
+            $this->template->set('content_type', $content_type->short_name);
+            $this->template->set('title', $event->title);
+            $this->template->set('featured_image', '<img src="'.$event->featured_image.'" />');
+
+            // $data['_content'] = $Page->build_content();
+            $data['_content'] = do_shortcode( 
+                shortcode_empty_paragraph_fix( 
+                    html_entity_decode($event->description)
+                ));
+
+            // Set Metadata
+            $this->template->set_meta_title(strip_tags($event->title) . ' | ' . $this->settings->site_name);
+                           // ->set_meta_title($event->meta_title)
+                           // ->set_meta_description( ($event->meta_description) ? $event->meta_description : $this->settings->site_description)
+                           // ->set_meta_keywords($event->meta_keywords);
+
+            // Set the content type's theme layout, css, and javascript
+            $this->pages_model->content_type_template($content_type);
+            
+            // Output Page
             $this->template->view('pages', $data);
         }
         elseif($this->uri->segment(1) === 'news' && $this->uri->segment(2) === 'page') {

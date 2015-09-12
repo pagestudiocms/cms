@@ -180,7 +180,7 @@ class Entries extends Admin_Controller {
                 $Event['end']       = date('Y-m-d H:i:s', strtotime($this->input->post('end')));
                 $Event['title']     = ($this->input->post('title') != '') ? $this->input->post('title') : NULL;
                 $Event['description'] = ($this->input->post('description') != '') ? $this->input->post('description') : NULL;
-                $Event['featured']  = ($this->input->post('featured') != '') ? $this->input->post('featured') : NULL;
+                $Event['featured_image']  = ($this->input->post('featured_image') != '') ? $this->input->post('featured_image') : NULL;
                 // var_dump($post);
                 
                 // Ensure the id wasn't overwritten by an id in the post

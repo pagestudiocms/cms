@@ -9,13 +9,13 @@
  * 
  * @category   helper functions
  * @package    PageStudio 
- * @author     Cosmo Mathieu <cosmo@cimwebdesigns.com>
+ * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
  * @copyright  Company Name (c) 2011 http://www.cimwebdesigns.com/
  * @see        shortcodes_helper.php, functions_helper.php
  * @since      1.1.0
  * @date       06/12/2014
  * @version    1.1.0
- * @modified   File updated 06/17/2015
+ * @modified   File updated 09/11/2015
  *
  * -------------------------
  * Table of Contents:
@@ -193,7 +193,7 @@ function copy_remote_file(
  * Used for the next_live_sermon shortcode.
  * @see         shortcode_list.php 
  */ 
-// copy_remote_file();	
+copy_remote_file();	
 
 /**
  * Next Live Sermon Countdown
@@ -331,16 +331,37 @@ function random_picture($atts) {
     return '<img src="http://placehold.it/'. $width . 'x'. $height . '" />';
 }
 
+function add_slideshow($atts) {
+    extract(shortcode_atts(array(
+       'id' => 1,
+       'width' => 400,
+       'height' => 200,
+    ), $atts));
+	
+    return '
+        <!-- flexSlider -->
+        <div class="flexslider">
+            <ul class="slides">
+                {{ galleries:gallery gallery_id="'.$id.'" }}
+                <li>
+                    <img src="{{ helper:image_thumb image=image crop="false"}}" alt="{{ alt }}" />
+                </li>
+                {{ /galleries:gallery }}
+            </ul>
+        </div>';
+}
+
 /** 
  * Register shortcodes.
  *
  * @usage    add_shortcode( name, function_name )
  */
+add_shortcode('slideshow', 'add_slideshow');
 add_shortcode('media', 'add_post_cover_img');
 add_shortcode('post_cover', 'add_post_cover_img');
 add_shortcode('home_blurb', 'home_blurb');
 add_shortcode('page_excerpt', 'page_excerpt');
-add_shortcode('featured_heading', 'featured_heading');
+add_shortcode('callout', 'featured_heading');
 add_shortcode('lorem', 'lorem_function');
 add_shortcode('picture', 'random_picture');
 add_shortcode('map-it','smp_map_it');

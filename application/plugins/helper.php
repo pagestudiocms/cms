@@ -95,6 +95,8 @@ class Helper_plugin extends Plugin
      *             {{ content }}
      *         {{ /helper:ellipsis }}
      *
+     * @todo       ellipsis after words and not characters. 
+     *
      * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
      * @return     string 
      */

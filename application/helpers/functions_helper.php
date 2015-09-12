@@ -175,30 +175,31 @@ function shorten_string($phrase, $max_words)
 	return $phrase;
 }
 
-/*****************************************************************************
-*         Name: shorten_phrase
-*       Syntax: shorten_phrase($phrase, 300) 
-*  Description: Shortens passed @phrase by $max_words. With options to keep
-* 				and not to keep the last word whole. 
-* 				Then returns the @param to the caller.
-*   Parameters:
-*               $phrase   (required): The @param to be processed
-*               $max_words   (required): The @param of desired word count
-*
-*	   Updated: 03/09/2014
-*Return Values: $short_string
-******************************************************************************/
-function shorten_phrase($phrase, $max_words) 
-{
-	//[OPTION 1] Breaks up whole word after N'th character
-	//		$short_string = strip_tags(trim("{$phrase}")); 
-	//		$short_string = substr($short_string, 0, 50) . '...';
-	
-	//[OPTION 2] Keeps whole word after N'th character
-	$short_string = strpos($phrase, ' ', $max_words);
-	$short_string = substr($phrase, 0, $short_string ) . '...'; 
-	
-	return $short_string;
+// ------------------------------------------------------------------------
+
+/**
+ * shorten_phrase
+ *
+ * Shortens passed @phrase by $max_words. With options to keep and not to 
+ * keep the last word whole. Then returns the @param to the caller.
+ *  
+ * @example     shorten_phrase($phrase, 300) 
+ * @param       string $phrase (required) The string to be processed
+ * @param       string $max_words (required) The desired word count
+ * @return      string
+ */
+if( ! function_exists('shorten_phrase')) {
+    function shorten_phrase($phrase, $max_words) {
+        //[OPTION 1] Breaks up whole word after N'th character
+        //		$short_string = strip_tags(trim("{$phrase}")); 
+        //		$short_string = substr($short_string, 0, 50) . '...';
+        
+        //[OPTION 2] Keeps whole word after N'th character
+        $short_string = strpos($phrase, ' ', $max_words);
+        $short_string = substr($phrase, 0, $short_string ) . '...'; 
+        
+        return $short_string;
+    }
 }
 
 /*****************************************************************************

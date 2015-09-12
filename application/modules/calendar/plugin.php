@@ -111,6 +111,23 @@ class Calendar_plugin extends Plugin
     
     public function javascript()
     {   
+        $events = '';
+        $now    = date("Y-m-d G:i:s");
+        $CI     =& get_instance();
+        
+        $query  = $CI->db->order_by("start", 'asc')->get_where('calendar', array('start >=' => $now)); 
+        $result = $query->result();
+        
+        foreach($result as $key => $val) {
+            $events .= "{ 
+                title: '". $val->title ."', 
+                url: '". site_url() . "calendar/" . $val->id . "-" . date("Y-m-d", strtotime($val->created)) ."', 
+                start: '". $val->start ."', 
+                end: '". $val->end ."', 
+                description: '". shorten_phrase( $val->description, 50 ) ."' 
+            },";
+        }
+        
         $output  = '';
         $scripts = array();
         $scripts[] = site_url() . 'application/modules/calendar/assets/js/moment.min.js';
@@ -127,36 +144,13 @@ class Calendar_plugin extends Plugin
                         header: {
                             left: 'prev,next today',
                             center: 'title',
-                            right: 'month,basicWeek,basicDay'
+                            right: 'month,basicWeek,'
                         },
                         //defaultDate: '2014-09-12',
                         editable: false,
                         eventLimit: true, // allow \"more\" link when too many events
                         events: [
-                            {
-                                 title: 'Welcome Committee Meeting',
-                                 url: '2014/10/15/welcome-committee-meeting/',
-                                 start: '2015-09-15',
-                                 description: 'The Welcome Committee Meetting At 10:00am ' 
-                            },
-                            {
-                                 title: 'Praesent Convallis',
-                                 url: '2014/9/30/praesent-convallis/',
-                                 start: '2015-09-30',
-                                 description: 'Suspendisse Potenti. Integer Placerat Justo Ac...' 
-                            },
-                            {
-                                 title: 'Lorem Ipsum Dolor ',
-                                 url: '2014/10/30/lorem-ipsum-dolor/',
-                                 start: '2015-09-30',
-                                 description: 'Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing' 
-                            },
-                            {
-                                 title: 'Golf Image',
-                                 url: '2014/10/30/golf-image/',
-                                 start: '2015-09-30',
-                                 description: 'There Is This New Event Taking Place Near You' 
-                            },
+                            ".$events."
                         ], 
                         // Load events in a modal for viewing
                         // Source: http://www.mikesmithdev.com/fullcalendar-jquery-ui-modal/
