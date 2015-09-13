@@ -49,7 +49,8 @@
 @import "variables"; 
 @import "mixins";
 @import "css3-mixins.scss";
-// @import "_bootstrap";
+@import "_bootstrap"; 
+@import "_jasny-bootstrap";  
 
 /*---------------------------------------------------------------
  1.0 Section Reset styles

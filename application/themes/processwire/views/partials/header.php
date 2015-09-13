@@ -4,12 +4,11 @@
     <meta charset="UTF-8" /> 
     <?php echo $this->template->metadata() ?>
 
-    <!-- CSS FILES -->
-    <!-- <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/reset.css');  ?>" /> -->
-    <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/style.css');  ?>" />
+    <!-- Core Stylesheets - Include with every page -->
+    <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/style.css'); ?>" />
 
     <!-- Controller Defined Stylesheets -->
-    <?php echo $this->template->stylesheets() ?>
+    <?php echo $this->template->stylesheets(); ?>
 
     <script type="text/javascript">
         var ADMIN_PATH = '<?php echo ADMIN_PATH; ?>';
@@ -17,136 +16,70 @@
         var THEME_URL = '<?php echo theme_url(); ?>';
     </script>
 
-    <!-- Controller Defined JS Files -->
-    <?php echo $this->template->javascripts() ?>
-
+    <!-- Core Scripts - Include with every page -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="<?php echo theme_url('assets/js/jasny-bootstrap/jasny-bootstrap.min.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/helpers.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/superfish.js'); ?>"></script>
 
+    <!-- Controller Defined JS Files -->
+    <?php echo $this->template->javascripts(); ?>
+
     <!-- Google Analytics -->
-    <?php echo $this->template->analytics() ?>
+    <?php echo $this->template->analytics(); ?>
 </head>
 <body>
     <div id="container">
 
-        <!-- Header -->
-        <div id="header">
-            <div class="div1">
-                <div class="div2"><span id="site_name"><?php echo $this->settings->site_name ?></span> | ADMINISTRATION</div>
-                <?php if ($this->secure->is_auth()): ?>
-                    <div class="div3"><img src="<?php echo theme_url('assets/images/lock.png'); ?>" alt="" style="position: relative; top: 3px;" />&nbsp;You are logged in as <?php echo $this->secure->get_user_session()->first_name . ' ' . $this->secure->get_user_session()->last_name ; ?></div>
-                <?php endif; ?>
-            </div>
+        <div id="wrapper">
             <?php if ($this->secure->is_auth()): ?>
-                <div id="menu">
-
-                    <?php echo theme_partial('navigation'); ?>
-
-                    <ul class="right">
-                        <li id="store"><a class="top" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>">Visit Site</a></li>
-                        <li id="store"><a class="top" href="<?php echo site_url('users/logout'); ?>">Logout</a></li>
-                    </ul>
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-                            $('#menu > ul').superfish({
-                                hoverClass	 : 'sfHover',
-                                pathClass	 : 'overideThisToUse',
-                                delay		 : 0,
-                                animation	 : {height: 'show'},
-                                speed		 : 'normal',
-                                autoArrows   : false,
-                                dropShadows  : false, 
-                                disableHI	 : false, /* set to true to disable hoverIntent detection */
-                                onInit		 : function(){},
-                                onBeforeShow : function(){},
-                                onShow		 : function(){},
-                                onHide		 : function(){}
-                            });
-                            
-                            $('#menu > ul').css('display', 'block');
-                        });
-                    </script>
+            <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">CMS</a>
                 </div>
-            <?php endif; ?>
-        </div>
+                <!-- /.navbar-header -->
 
-    <?php 
-    require_once APPPATH . 'libraries/FlexiMenu/Flex_Menu.php';
-    require_once APPPATH . 'libraries/FlexiMenu/Flex_Item.php';
-    require_once APPPATH . 'libraries/FlexiMenu/Flex_Link.php';
+                <ul class="nav navbar-top-links navbar-left">
+                    <li><a class="top" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>">Visit Site</a></li>
+                </ul>
+                <!-- /.navbar-top-links -->
 
-    function bootstrapItems($items) {
-        
-        // Starting from items at root level
-        if( !is_array($items) ) {
-            $items = $items->roots();
-        }
-        
-        foreach( $items as $item ) {
-        ?>
-            <li<?php if($item->hasChildren()): ?> class="dropdown"<?php endif ?>>
-            <a href="<?php echo $item->link->get_url() ?>" <?php if($item->hasChildren()): ?> class="dropdown-toggle" data-toggle="dropdown" <?php endif ?>>
-             <?php echo $item->link->get_text() ?> <?php if($item->hasChildren()): ?> <b class="caret"></b> <?php endif ?></a>
-            <?php if($item->hasChildren()): ?>
-            <ul class="dropdown-menu">
-            <?php bootstrapItems( $item->children() ) ?>
-            </ul> 
-            <?php endif ?>
-            </li>
-        <?php
-        }
-    }
-    
-    // $menu #1
-    $main = new Flex_Menu;
+                <ul class="nav navbar-top-links navbar-right">
+                    <?php if ($this->secure->is_auth()): ?>
+                    <!-- .dropdown -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Howdy, <?php echo $this->secure->get_user_session()->first_name; ?> <i class="fa fa-user fa-fw"></i> 
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="<?php echo site_url('users/logout'); ?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                    <?php endif; ?>
+                </ul>
+                <!-- /.navbar-top-links -->
 
-    $main->add('<span class="glyphicon glyphicon-home"></span>', '');
-    $about = $main->add('about', 'about');
-       $about->add('Who we are?', 'who-we-are?');
-       $about->add('What we do?', 'what-we-do?');
-    $main->add('Services', 'services');
-    $main->add('Portfolio', 'portfolio');
-    $main->add('Contact', 'contact');
-
-    // menu #2
-    $user = new Flex_Menu;
-
-    $user->add('login', 'login');
-    $profile = $user->add('Profile', 'profile');
-      $profile->add('Account', 'account')
-              ->link->prepend('<span class="glyphicon glyphicon-user"></span> ');
-      
-      $profile->add('Settings', 'settings')
-              ->link->prepend('<span class="glyphicon glyphicon-cog"></span> ');
-              
-    ?>    
-    <nav class="navbar navbar-default" role="navigation">
-      <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Sitepoint</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <?php echo bootstrapItems($main); ?>
-          </ul>
-          <form class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-          </form>
-          <ul class="nav navbar-nav navbar-right">
-                <?php echo bootstrapItems($user); ?>
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
+            </nav>
+            <!-- /.navbar-static-top -->
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <?php echo theme_partial('sidebar'); ?>                
+                </div>
+                <!-- /.sidebar-collapse -->
+            </nav>
+            <!-- /.navbar-static-side -->
+             <?php endif; ?>
