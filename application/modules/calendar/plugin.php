@@ -71,20 +71,25 @@ class Calendar_plugin extends Plugin
             $segment = $CI->uri->segment($key);
 
             if($segment === $match || $match === 'home') {
-                $query  = $CI->db->order_by("start", $sort)->get_where('calendar', array('start >=' => $now), $limit); 
+                $query  = $CI->db->order_by("start", $sort)->get_where('calendar', array('end >=' => $now), $limit); 
                 $result = $query->result();
-                
-                foreach($result as $key) {            
+                foreach($result as $key) {  
+                    if( $key->start <= $now ) {
+                        $key->start = 'Now';
+                    }
                     $events[] = (array) $key;
                 }
                 
                 return $events;
             }
         } else {
-            $query  = $CI->db->order_by("start", $sort)->get_where('calendar', array('start >=' => $now), $limit); 
+            $query  = $CI->db->order_by("start", $sort)->get_where('calendar', array('end >=' => $now), $limit); 
             $result = $query->result();
             
-            foreach($result as $key) {            
+            foreach($result as $key) {  
+                if( $key->start <= $now ) {
+                    $key->start = 'Now';
+                }
                 $events[] = (array) $key;
             }
             
@@ -115,7 +120,7 @@ class Calendar_plugin extends Plugin
         $now    = date("Y-m-d G:i:s");
         $CI     =& get_instance();
         
-        $query  = $CI->db->order_by("start", 'asc')->get_where('calendar', array('start >=' => $now)); 
+        $query  = $CI->db->order_by("start", 'asc')->get_where('calendar', array('end >=' => $now)); 
         $result = $query->result();
         
         foreach($result as $key => $val) {
