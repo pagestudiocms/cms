@@ -7,7 +7,7 @@
         <div class="buttons">
             <a class="button" href="javascript:void(0);" id="save"><span>Save</span></a>
             <a class="button" href="javascript:void(0);" id="save_exit"><span>Save &amp; Exit</span></a>
-            <a class="button" href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>"><span>Cancel</span></a>
+            <a class="button" href="<?php echo site_url(ADMIN_PATH . '/calendar/entries'); ?>"><span>Cancel</span></a>
         </div>
     </div>
     <div class="content">
@@ -24,8 +24,10 @@
         <div class="tabs">
             <ul class="htabs">
                 <li><a href="#content-tab">Content</a></li>
+                <!-- 
                 <li><a href="#categories-tab">Categories</a></li>
                 <li><a href="#settings-tab">Settings</a></li>
+                -->
             </ul>
             <!-- Content Tab -->
             <div id="content-tab">
@@ -108,7 +110,7 @@
             <!-- Page Tab -->
             <div id="settings-tab">
                 <div class="form">
-                    <?php var_dump($Event); ?>
+                    
                 </div>
                 <!--
                 <div class="form">

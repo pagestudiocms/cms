@@ -91,11 +91,11 @@
 
             if (sort.hasClass('asc'))
             {
-                window.location.href = "<?php echo site_url(ADMIN_PATH . '/content/entries/index') . '?'; ?>&sort=" + sort.attr('rel') + "&order=desc";
+                window.location.href = "<?php echo site_url(ADMIN_PATH . '/calendar/entries/index') . '?'; ?>&sort=" + sort.attr('rel') + "&order=desc";
             }
             else
             {
-                window.location.href = "<?php echo site_url(ADMIN_PATH . '/content/entries/index') . '?';  ?>&sort=" + sort.attr('rel') + "&order=asc";
+                window.location.href = "<?php echo site_url(ADMIN_PATH . '/calendar/entries/index') . '?';  ?>&sort=" + sort.attr('rel') + "&order=asc";
             }
 
             return false;
@@ -111,7 +111,7 @@
         $('.delete').click( function() {
             if (confirm('Delete cannot be undone! Are you sure you want to do this?'))
             {
-                $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/content/entries/delete'); ?>').submit()
+                $('#form').attr('action', '<?php echo site_url(ADMIN_PATH . '/calendar/entries/delete'); ?>').submit()
             }
             else
             {
