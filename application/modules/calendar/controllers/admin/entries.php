@@ -180,7 +180,9 @@ class Entries extends Admin_Controller {
                 $Event['end']       = date('Y-m-d H:i:s', strtotime($this->input->post('end')));
                 $Event['title']     = ($this->input->post('title') != '') ? $this->input->post('title') : NULL;
                 $Event['description'] = ($this->input->post('description') != '') ? $this->input->post('description') : NULL;
-                $Event['featured_image']  = ($this->input->post('featured_image') != '') ? $this->input->post('featured_image') : NULL;
+                if($this->input->post('featured_image') != '') {
+                    $Event['featured_image']  = $this->input->post('featured_image');
+                } 
                 // var_dump($post);
                 
                 // Ensure the id wasn't overwritten by an id in the post
@@ -311,7 +313,7 @@ class Entries extends Admin_Controller {
     function delete()
     {
         $this->load->helper('file');
-        $this->load->model('entries_model');
+        // $this->load->model('entries_model');
 
         if ($this->input->post('selected'))
         {
@@ -321,51 +323,14 @@ class Entries extends Admin_Controller {
         {
             $selected = (array) $this->uri->segment(5);
         }
-
-        $Entries = new Entries_model();
-        $Entries->where_in('id', $selected)->get();
-
-        if ($Entries->exists())
+        
+        if ( ! empty($selected))
         {
-            $message = '';
-            $entries_deleted = FALSE;
-            $entries_required = FALSE;
-            $this->load->model('navigations/navigation_items_model');
+            $message = '';            
+            $this->db->where_in('id', $selected);
+            $entries_deleted = $this->db->delete('calendar');
 
-            foreach($Entries as $Entry)
-            {
-                if ($Entry->id == $this->settings->content_module->site_homepage)
-                {
-                    $message .= '<p class="error">Entry ' . $Entry->title . ' (#' . $Entry->id . ') is set as the site homepage and cannot be deleted.</p>';
-                }
-                else if ($Entry->id == $this->settings->content_module->custom_404)
-                {
-                    $message .= '<p class="error">Entry ' . $Entry->title . ' (#' . $Entry->id . ') is set as the custom 404 and cannot be deleted.</p>';
-                }
-                else if ($Entry->required)
-                {
-                    $message .= '<p class="error">Entry ' . $Entry->title . ' (#' . $Entry->id . ') is required by the system and cannot be deleted.</p>';
-                }
-                else
-                {
-                    // Remove the entry from navigations
-                    $Navigation_items = new Navigation_items_model();
-                    $Navigation_items->where('entry_id', $Entry->id)->get();
-                    $Navigation_items->delete_all();
-
-                    $Entries_data = $Entry->entries_data->get();
-                    $Entries_data->delete_all();
-
-                    $Entry_revisions = $Entry->get_entry_revisions();
-                    $Entry_revisions->delete_all();
-
-                    $Entry->delete();
-                    $entries_deleted = TRUE; 
-                }
-            }
-
-            if ($entries_deleted)
-            {
+            if ($entries_deleted) {
                 // Clear cache so updates will show on next entry load
                 $this->load->library('cache');
                 $this->cache->delete_all('entries');
@@ -375,12 +340,14 @@ class Entries extends Admin_Controller {
                 $this->navigations_library->clear_cache();
 
                 $message .= '<p class="success">The selected items were successfully deleted.</p>';
+            } else {
+                $message .= '<p class="error">An error coccured. The selected items were not deleted.</p>';
             }
 
             $this->session->set_flashdata('message', $message);
         }
 
-        redirect(ADMIN_PATH . '/content/entries');
+        redirect(ADMIN_PATH . '/calendar/entries');
     }
 
     // ------------------------------------------------------------------------
