@@ -425,37 +425,72 @@ ON DUPLICATE KEY UPDATE
 CREATE TABLE IF NOT EXISTS `settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `slug` varchar(50) NOT NULL,
-  `value` varchar(255) NOT NULL,
+  `value` text NOT NULL,
   `module` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
 
 --
 -- Dumping data for table `settings`
 --
 
 INSERT INTO `settings` (`id`, `slug`, `value`, `module`) VALUES
-(1, 'site_name', 'CMS Canvas', NULL),
-(2, 'ga_account_id', '', NULL),
-(3, 'suspend', '0', NULL),
-(4, 'enable_admin_toolbar', '1', NULL),
-(6, 'site_homepage', '1', 'content'),
-(7, 'enable_registration', '0', 'users'),
-(8, 'default_group', '2', 'users'),
-(9, 'email_activation', '0', 'users'),
-(10, 'custom_404', '2', 'content'),
+(1, 'site_name', 'My First Website', NULL),
+(2, 'site_description', '', NULL),
+(3, 'ga_account_id', '', NULL),
+(4, 'suspend', '0', NULL),
+(5, 'enable_admin_toolbar', '1', NULL),
+(6, 'custom_404', '14', 'content'),
+(7, 'site_homepage', '1', 'content'),
+(8, 'enable_registration', '0', 'users'),
+(9, 'default_group', '2', 'users'),
+(10, 'email_activation', '0', 'users'),
 (11, 'ga_email', '', NULL),
 (12, 'ga_password', '', NULL),
 (13, 'ga_profile_id', '', NULL),
-(14, 'theme', 'default', NULL),
-(15, 'layout', 'default', NULL),
+(14, 'theme', 'cedargrove', NULL),
+(15, 'layout', '404-page', NULL),
 (16, 'enable_profiler', '0', NULL),
-(17, 'notification_email', '', NULL),
-(18, 'editor_stylesheet', 'assets/css/content.css', NULL),
-(19, 'enable_inline_editing', '0', NULL),
-(20, 'site_description', '', NULL)
-ON DUPLICATE KEY UPDATE
-`id` = VALUES(`id`);
+(17, 'editor_stylesheet', 'assets/css/content.css', NULL),
+(18, 'enable_inline_editing', '0', NULL),
+(19, 'blog_url', '', NULL),
+(20, 'blog_title', '', NULL),
+(21, 'blog_landing_page', 'news', NULL),
+(22, 'blog_posts_per_page', '3', NULL),
+(23, 'blog_comment_per_page', '2', NULL),
+(24, 'blog_links_per_page', '5', NULL),
+(25, 'blog_post_order', 'desc', NULL),
+(26, 'blog_comment_order', 'asc', NULL),
+(27, 'blog_public', '1', NULL),
+(28, 'blog_comments_notify', '0', NULL),
+(29, 'themes_path', 'themes', NULL),
+(30, 'theme_name', 'default', NULL),
+(31, 'modules_path', '', NULL),
+(32, 'modules_status', '', NULL),
+(33, 'portal_online', '1', NULL),
+(34, 'portal_login_on', '1', NULL),
+(35, 'portal_forgot_pass', '1', NULL),
+(36, 'portal_theme', 'default', NULL),
+(37, 'default_timezone', 'America/New_York', NULL),
+(38, 'default_date_format', 'F jS, Y', NULL),
+(39, 'default_time_format', 'g:i a', NULL),
+(40, 'default_gmt_offset', '', NULL),
+(41, 'notification_email', '', NULL),
+(42, 'admin_email', '', NULL),
+(43, 'reply_email', '', NULL),
+(44, 'webmaster_email', '', NULL),
+(45, 'mail_reply_email', '', NULL),
+(46, 'mail_server', '', NULL),
+(47, 'mail_login', '', NULL),
+(48, 'mail_password', '', NULL),
+(49, 'mail_incoming_srv', '', NULL),
+(50, 'mail_outgoing_srv', '', NULL),
+(51, 'mail_ssl_on', 'true', NULL),
+(52, 'mail_authen_srvc', 'ssl', NULL),
+(53, 'mail_incoming_port', '', NULL),
+(54, 'mail_outgoing_port', '465', NULL),
+(55, 'mail_send_as_html', 'true', NULL),
+(56, 'mail_protocol', 'smtp', NULL);
 
 -- --------------------------------------------------------
 
