@@ -204,7 +204,14 @@ class Contact_plugin extends Plugin
 		$mail->Host = $config['smtp_host']; 
 		$mail->Port = $config['smtp_port'];
 		$mail->SMTPSecure = 'ssl';
-		// $mail->SMTPDebug   = 2; // 2 to enable SMTP debug information
+        
+        // 2 to enable SMTP debug information
+        if (defined('ENVIRONMENT')) {
+            if(ENVIRONMENT !== 'production') {
+                $mail->SMTPDebug   = 2; 
+            }
+        }
+        
         $mail->SMTPAuth = true;
         $mail->Username = $config['smtp_user'];
         $mail->Password = $config['smtp_pass']; 
@@ -221,15 +228,14 @@ class Contact_plugin extends Plugin
 		$mail->Subject  	= $subject;
 		$mail->Body 		= $message;
 		
-		/*
-		 * Send the email, add auto respond if sent successfully
+		/**
+		 * Log error message if delivery failed. 
 		 */
 		if ( $mail->Send() ) {
-			// return 1;
+			return 1;
 		} else {
-			// $this->MailErrorInfo = $mail->ErrorInfo;
-			// $this->_errors[] .= "Mailer Error: " . $mail->ErrorInfo;
-			// return 0;
+            log_message('error', $mail->ErrorInfo);
+			return 0;
 		}
     }
     
