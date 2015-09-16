@@ -1,15 +1,15 @@
 <div id="admin-toolbar">
     <ul class="admin-toolbar-left">
         <?php if ($entry_id): ?>
-        <li><a target="ee_admin" class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/content/entries/edit/' . $content_type_id . '/' . $entry_id); ?>">Edit Page</a></li>
+        <li><a target="ee_admin" class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/calendar/entries/edit/' . $calendar_type_id . '/' . $entry_id); ?>">Edit Page</a></li>
         <?php else: ?>
-        <li><a target="ee_admin" class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/content/types/edit/' . $content_type_id); ?>">Edit Content Type</a></li>
+        <li><a target="ee_admin" class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/calendar/types/edit/' . $calendar_type_id); ?>">Edit calendar Type</a></li>
         <?php endif; ?>
         <li>
-            <a class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>">Content &nbsp;<img src="<?php echo base_url('/application/modules/content/assets/images/down-triangle.gif'); ?>" /></a>
+            <a class="admin-toolbar-top" href="<?php echo site_url(ADMIN_PATH . '/calendar/entries'); ?>">calendar &nbsp;<img src="<?php echo base_url('/application/modules/calendar/assets/images/down-triangle.gif'); ?>" /></a>
             <ul>
-                <li><a href="<?php echo site_url(ADMIN_PATH . '/content/entries'); ?>">Entries</a></li>
-                <li><a href="<?php echo site_url(ADMIN_PATH . '/content/types'); ?>">Content Types</a></li>
+                <li><a href="<?php echo site_url(ADMIN_PATH . '/calendar/entries'); ?>">Entries</a></li>
+                <li><a href="<?php echo site_url(ADMIN_PATH . '/calendar/types'); ?>">calendar Types</a></li>
                 <li><a href="<?php echo site_url(ADMIN_PATH . '/navigations'); ?>">Navigations</a></li>
             </ul>
         </li>
