@@ -12,6 +12,7 @@
         <div class="tabs">
             <ul class="htabs">
                 <li><a href="#general-tab">General</a></li>
+                <li><a href="#email-tab">Email </a></li>
                 <li><a href="#users-tab">Users</a></li>
                 <li><a href="#analytics-tab">Analytics</a></li>
             </ul>
@@ -25,10 +26,6 @@
                     <div>
                         <?php echo form_label('<span class="required">*</span> Site Description:', 'sitedescription'); ?>
                         <?php echo form_textarea(array('name' => 'site_description', 'id' => 'sitedescription', 'value' => set_value('site_description', isset($Settings->site_description->value) ? $Settings->site_description->value : ''))); ?>
-                    </div>
-                    <div>
-                        <?php echo form_label('<span class="required">*</span> Notification Email:', 'notification_email'); ?>
-                        <?php echo form_input(array('name' => 'notification_email', 'id' => 'notification_email', 'value' => set_value('notification_email', isset($Settings->notification_email->value) ? $Settings->notification_email->value : ''))); ?>
                     </div>
                     <div>
                         <?php echo form_label('<span class="required">*</span> Site Homepage:', 'site_homepage'); ?>
@@ -78,6 +75,51 @@
                     <?php endif; ?>
                 </div>
             </div>
+            <!-- Email Tab -->
+            <div id="email-tab">
+                <div class="form">
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Notification Email:', 'notification_email'); ?>
+                        <?php echo form_input(array('name' => 'notification_email', 'id' => 'notification_email', 'value' => set_value('notification_email', isset($Settings->notification_email->value) ? $Settings->notification_email->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Reply From Email:', 'mail_reply_email'); ?>
+                        <?php echo form_input(array('name' => 'mail_reply_email', 'id' => 'mail_reply_email', 'value' => set_value('mail_reply_email', isset($Settings->mail_reply_email->value) ? $Settings->mail_reply_email->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Email Protocol:', 'mail_protocol'); ?>
+                        <?php echo form_input(array('name' => 'mail_protocol', 'id' => 'mail_protocol', 'value' => set_value('mail_protocol', isset($Settings->mail_protocol->value) ? $Settings->mail_protocol->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Email Host:', 'mail_server'); ?>
+                        <?php echo form_input(array('name' => 'mail_server', 'id' => 'mail_server', 'value' => set_value('mail_server', isset($Settings->mail_server->value) ? $Settings->mail_server->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Email Outgoing Port:', 'mail_outgoing_port'); ?>
+                        <?php echo form_input(array('name' => 'mail_outgoing_port', 'id' => 'mail_outgoing_port', 'value' => set_value('mail_outgoing_port', isset($Settings->mail_outgoing_port->value) ? $Settings->mail_outgoing_port->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Email Login:', 'mail_login'); ?>
+                        <?php echo form_input(array('name' => 'mail_login', 'id' => 'mail_login', 'value' => set_value('mail_login', isset($Settings->mail_login->value) ? $Settings->mail_login->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Email Password:', 'mail_password'); ?>
+                        <?php echo form_input(array('name' => 'mail_password', 'id' => 'mail_password', 'value' => set_value('mail_password', isset($Settings->mail_password->value) ? $Settings->mail_password->value : ''))); ?>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Send as HTML?:', 'mail_send_as_html'); ?>
+                        <span>
+                            <label><?php echo form_radio(array('name' => 'mail_send_as_html', 'value' => 'true', 'checked' => set_radio('mail_send_as_html', 'true', ($Settings->mail_send_as_html->value === 'true') ? TRUE : FALSE))); ?> Yes</label>
+                            <label><?php echo form_radio(array('name' => 'mail_send_as_html', 'value' => 'false', 'checked' => set_radio('mail_send_as_html', 'false', ($Settings->mail_send_as_html->value === 'false') ? TRUE : FALSE))); ?> No</label>
+                        </span>
+                    </div>
+                    <div>
+                        <?php echo form_label('<span class="required">*</span> Email Authentication Service:', 'mail_authen_srvc'); ?>
+                        <?php echo form_input(array('name' => 'mail_authen_srvc', 'id' => 'mail_authen_srvc', 'value' => set_value('mail_authen_srvc', isset($Settings->mail_authen_srvc->value) ? $Settings->mail_authen_srvc->value : ''))); ?>
+                    </div>
+                </div>
+            </div>
+            <!-- Analytics Tab -->
             <!-- Users Tab -->
             <div id="users-tab">
                 <div class="form">

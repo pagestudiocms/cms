@@ -118,15 +118,16 @@ class Contact_plugin extends Plugin
     private function _send_form()
     {
         $config = array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'srv53.hosting24.com',
-            'smtp_port' => 465,
-            'smtp_user' => 'cosmo@cosmointeractive.co',
-            'smtp_pass' => 'W3bAdm!n0287987',
-            'mailtype'  => 'html', 
+            'protocol'   => $this->settings->mail_protocol,
+            'smtp_host'  => $this->settings->mail_server,
+            'smtp_port'  => $this->settings->mail_outgoing_port,
+            'smtp_user'  => $this->settings->mail_login,
+            'smtp_pass'  => $this->settings->mail_password,
+            'mailtype'   => $this->settings->mail_send_as_html, 
+            'mail_authen_srvc' => $this->settings->mail_authen_srvc,
             // 'charset'   => 'iso-8859-1'
-            'wrapchars' => 76, 
-            'wordwrap' => true,
+            'wrapchars'  => 76, 
+            'wordwrap'   => true,
             'smtp_reply' => ''
         );
         // $config['crlf'] = "\r\n";
@@ -203,7 +204,7 @@ class Contact_plugin extends Plugin
 		 */
 		$mail->Host = $config['smtp_host']; 
 		$mail->Port = $config['smtp_port'];
-		$mail->SMTPSecure = 'ssl';
+		$mail->SMTPSecure = $config['mail_authen_srvc'];
         
         // 2 to enable SMTP debug information
         if (defined('ENVIRONMENT')) {
