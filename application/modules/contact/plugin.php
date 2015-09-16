@@ -104,21 +104,44 @@ class Contact_plugin extends Plugin
 
     // ------------------------------------------------------------------------
 
-    /*
+    /**
      * Send Form
      *
      * Builds and sends email to the specified address
      *
-     * @access private
-     * @return void
+     * Updated: Use PHPMailer to sent email as html using SMTP service.
+     *
+     * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
+     * @access     private
+     * @return     void
      */
     private function _send_form()
     {
-        $this->load->library('email');
-        $this->email->from($this->attribute('from', 'noreply@' . domain_name()), $this->attribute('from_name', $this->settings->site_name));
-        $this->email->to($this->attribute('to', $this->settings->notification_email)); 
-        $this->email->subject($this->attribute('subject', 'Contact Form Submission'));
+        $config = array(
+            'protocol' => 'smtp',
+            'smtp_host' => 'srv53.hosting24.com',
+            'smtp_port' => 465,
+            'smtp_user' => 'cosmo@cosmointeractive.co',
+            'smtp_pass' => 'W3bAdm!n0287987',
+            'mailtype'  => 'html', 
+            // 'charset'   => 'iso-8859-1'
+            'wrapchars' => 76, 
+            'wordwrap' => true,
+            'smtp_reply' => ''
+        );
+        // $config['crlf'] = "\r\n";
+        // $config['newline'] = "\r\n";
+        // $this->load->library('email', $config);
+        // $this->email->initialize($config);
+        // $this->email->from($this->attribute('from', 'noreply@' . domain_name()), $this->attribute('from_name', $this->settings->site_name));
+        // $this->email->to($this->attribute('to', $this->settings->notification_email)); 
+        // $this->email->subject($this->attribute('subject', 'Contact Form Submission'));
 
+        $from       = $this->attribute('from', $this->settings->mail_reply_email);
+        $fromName   = $this->attribute('from_name', $this->settings->site_name);
+        $to         = $this->attribute('to', $this->settings->notification_email); 
+        $subject    = $this->attribute('subject', 'Contact Form Submission');
+        
         // Remove Spam Check
         unset($_POST['spam_check']);
         unset($_POST['form_id']);
@@ -126,27 +149,90 @@ class Contact_plugin extends Plugin
 
         // Build message from $_POST array
         $message = '';
-        foreach($_POST as $field => $value)
-        {
-            if (is_array($value))
-            {
-                $message .= ucwords(str_replace('_', ' ', $field)) . ' : ' . "\r\n";
+        foreach($_POST as $field => $value) {
+            if (is_array($value)) {
+                $message .= ucwords(str_replace('_', ' ', $field)) . ' : ' . "<br>\r\n";
 
                 foreach ($value as $arr_val)
                 {
-                    $message .= "\t" . $arr_val . "\r\n";
+                    $message .= "\t" . $arr_val . "<br>\r\n";
                 }
-            }
-            else
-            {
-                $message .= ucwords(str_replace('_', ' ', $field)) . ' : ' . $value . "\r\n";
+            } else {
+                $message .= ucwords(str_replace('_', ' ', $field)) . ' : ' . $value . "<br>\r\n";
             }
         }
+        
+        $this->load->helper('contact_helper');
+        $message = html_template($subject, $message);
 
-        $this->email->message($message);  
-        $this->email->send();
+        $this->mailForm(
+            $from, 
+            $fromName,
+            $to, 
+            $subject,
+            $message,
+            $config
+        );
+
+        // $this->email->message($message);  
+        // $this->email->send();
     }
 
+    // ------------------------------------------------------------------------
+    
+    private function mailForm(
+        $from, 
+        $fromName,
+        $to, 
+        $subject,
+        $message,
+        $config
+    ) {
+        $this->load->library('SMTP');
+        $this->load->library('PHPMailer');
+        
+        $mail = new PHPMailer();
+
+		/*
+		 * send via SMTP
+		 */
+		$mail->IsSMTP(); 
+		
+		/*
+		 * SMTP server setup
+		 */
+		$mail->Host = $config['smtp_host']; 
+		$mail->Port = $config['smtp_port'];
+		$mail->SMTPSecure = 'ssl';
+		// $mail->SMTPDebug   = 2; // 2 to enable SMTP debug information
+        $mail->SMTPAuth = true;
+        $mail->Username = $config['smtp_user'];
+        $mail->Password = $config['smtp_pass']; 
+		
+		/*
+		 * phpMailer email configuration
+		 */
+		$mail->From 		= $from;
+		$mail->FromName 	= $fromName;
+		$mail->AddAddress($to);
+		$mail->AddReplyTo($config['smtp_reply']);		
+		$mail->WordWrap 	= $config['wrapchars']; // set word wrap
+		$mail->IsHTML(true);		
+		$mail->Subject  	= $subject;
+		$mail->Body 		= $message;
+		
+		/*
+		 * Send the email, add auto respond if sent successfully
+		 */
+		if ( $mail->Send() ) {
+			// return 1;
+		} else {
+			// $this->MailErrorInfo = $mail->ErrorInfo;
+			// $this->_errors[] .= "Mailer Error: " . $mail->ErrorInfo;
+			// return 0;
+		}
+    }
+    
     // ------------------------------------------------------------------------
 
     /*
