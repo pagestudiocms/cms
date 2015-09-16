@@ -119,22 +119,22 @@ if ( ! function_exists('set_crumbs'))
     {
         if (current_url() == site_url(ADMIN_PATH) || current_url() == site_url(ADMIN_PATH . '/dashboard'))
         {
-            $crumb_str = '<span class="first_crumb current">Dashboard</span>';
+            $crumb_str = '<li class="first_crumb current">Dashboard</li>';
         }
         else
         {
-            $crumb_str = '<a class="first_crumb" href="' . site_url(ADMIN_PATH) . '">Dashboard</a>';
+            $crumb_str = '<li><a href="' . site_url(ADMIN_PATH) . '">Dashboard</a></li>';
         }
 
         foreach($crumbs as $uri => $crumb)
         {
             if ($uri == current_url())
             {
-                $crumb_str .= '<span class="current">' . $crumb . '</span>';
+                $crumb_str .= '<li class="current">' . $crumb . '</li>';
             }
             else
             {
-                $crumb_str .= '<a href="' . site_url(ADMIN_PATH . '/' . trim($uri, '/')) . '">' . $crumb . '</a>';
+                $crumb_str .= '<li><a href="' . site_url(ADMIN_PATH . '/' . trim($uri, '/')) . '">' . $crumb . '</a></li>';
             }
         }
 
