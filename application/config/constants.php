@@ -260,7 +260,9 @@ define('STATES', serialize($states));
 */
 $admin_access_options = array(
     ADMIN_PATH . '/content/entries'      => 'Content / Entries',
-    ADMIN_PATH . '/navigations'           => 'Content / Navigations',
+    ADMIN_PATH . '/calendar'             => 'Calendar',
+    ADMIN_PATH . '/calendar/entries'     => 'Calendar / Entries',
+    ADMIN_PATH . '/navigations'          => 'Content / Navigations',
     ADMIN_PATH . '/galleries'            => 'Content / Galleries',
     ADMIN_PATH . '/users'                => 'Users',
     ADMIN_PATH . '/users/groups'         => 'User Groups',
