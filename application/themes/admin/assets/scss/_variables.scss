@@ -7,6 +7,7 @@
 // --------------------------------------------------------------
 $grey:         #6E6E6E;
 $light-grey:   #9b9b9b;
+$gray-light:   $light-grey;
 $darkest-grey: #222;
 $charcoal:     #343434;
 $black:        #464646;
@@ -82,3 +83,14 @@ $tablet-large:      768px;
 $screen-small:      860px;
 $screen-medium:     992px;
 $screen-large:      1280px; 
+
+$breadcrumb-padding-vertical:   8px !default;
+$breadcrumb-padding-horizontal: 15px !default;
+//** Breadcrumb background color
+$breadcrumb-bg:                 #547C96 !default;
+//** Breadcrumb text color
+$breadcrumb-color:              #ccc !default;
+//** Text color of current page in the breadcrumb
+$breadcrumb-active-color:       $gray-light !default;
+//** Textual separator for between breadcrumb elements
+$breadcrumb-separator:          "/" !default;
