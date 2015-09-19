@@ -1,0 +1,356 @@
+
+/***** Reset & Basics *****/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote {
+  &:before, &:after {
+    content: '';
+    content: none;
+  }
+}
+
+q {
+  &:before, &:after {
+    content: '';
+    content: none;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/***** Basic Styles *****/
+
+html {
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-vertical;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FFF;
+  font: 15px/20px Sans-Serif;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: none;
+}
+
+/***** Typography *****/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+  font-family: Sans-Serif;
+  font-weight: normal;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  font-weight: inherit;
+  color: inherit;
+}
+
+h1 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-size: 38px;
+  line-height: 40px;
+  color: #333;
+}
+
+h2 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-size: 32px;
+  line-height: 34px;
+  color: #333;
+}
+
+h3 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-size: 24px;
+  line-height: 26px;
+  color: #333;
+}
+
+h4 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-size: 17px;
+  line-height: 19px;
+  color: #333;
+}
+
+h5 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 16px;
+  color: #333;
+}
+
+h6 {
+  margin: 0 0 10px 0;
+  padding: 0;
+  font-size: 11px;
+  line-height: 13px;
+  color: #333;
+}
+
+p {
+  margin: 0 0 20px 0;
+  padding: 0;
+  line-height: 26px;
+}
+
+b, strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+small {
+  font-size: 11px;
+}
+
+sup, sub {
+  height: 0;
+  line-height: 0;
+  vertical-align: baseline;
+  _vertical-align: bottom;
+  position: relative;
+  font-size: 80%;
+}
+
+sup {
+  top: -5px;
+}
+
+sub {
+  bottom: -5px;
+}
+
+pre code {
+  margin: 16px 0 26px 0;
+  padding: 16px;
+  font: 12px/19px 'Consolas', Courier, monospace;
+  color: #F1F1F1;
+  display: block;
+  background-color: #111;
+  border: 1px solid #111;
+}
+
+abbr {
+  &[title], &[data-original-title] {
+    border-bottom: 1px dotted #999999;
+    cursor: help;
+  }
+}
+
+address {
+  margin: 26px 0;
+  padding: 0;
+  display: block;
+  font-style: normal;
+  line-height: 20px;
+}
+
+hr {
+  margin: 20px 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid #D6D6D6;
+  height: 1px;
+  width: 100%;
+  text-align: left;
+  display: block;
+}
+
+div {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+/***** Lists *****/
+
+ul, ol {
+  margin: 26px 0 36px 0;
+  display: block;
+}
+
+ul {
+  list-style: none outside;
+  li {
+    margin: 0 0 15px 0;
+    padding: 0 0 0 18px;
+    line-height: 18px;
+    background: transparent url('../img/bullet.png') no-repeat 0 3px;
+  }
+  ul, ol {
+    margin: 11px 0 5px 0;
+  }
+}
+
+ol {
+  ol, ul {
+    margin: 8px 0 5px 20px;
+  }
+}
+
+ul {
+  ul li {
+    margin: 0 0 5px 0;
+  }
+  ol li {
+    margin: 0 0 3px 0;
+  }
+}
+
+ol {
+  ol li, ul li {
+    margin: 0 0 3px 0;
+  }
+}
+
+ul {
+  &.square {
+    list-style: square outside;
+    ul {
+      list-style: square outside;
+    }
+  }
+  &.circle {
+    ul {
+      &.square {
+        list-style: square outside;
+      }
+      list-style: circle outside;
+    }
+    list-style: circle outside;
+  }
+  &.square ul.circle {
+    list-style: circle outside;
+  }
+  &.disc {
+    list-style: disc outside;
+    ul {
+      list-style: disc outside;
+    }
+  }
+  &.square li, &.circle li, &.disc li {
+    margin: 0 0 5px 18px;
+    padding: 0;
+    line-height: 18px;
+    background: none;
+  }
+}
+
+ol {
+  list-style: decimal;
+  li {
+    margin: 0 0 10px 22px;
+    padding: 0;
+    line-height: 18px;
+  }
+}
+
+dl {
+  margin: 16px 0 26px 0;
+  padding: 0;
+}
+
+dt {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  line-height: 20px;
+  font-weight: bold;
+}
+
+dd {
+  margin: 0 0 10px 10px;
+}
+
+/***** Blockquotes *****/
+
+figure {
+  margin: 16px 0 26px 0;
+  padding: 0;
+}
+
+blockquote {
+  margin: 0;
+  padding: 0 0 0 10px;
+  border-left: 1px solid #747474;
+  p {
+    margin: 0;
+    padding: 0;
+    color: #777;
+    font-style: italic;
+    &:before {
+      content: "\201C";
+    }
+    &:after {
+      content: "\201D";
+    }
+  }
+}
+
+figcaption {
+  &:before {
+    content: "\2014 \202F";
+  }
+  margin: 6px 0 0 0;
+  padding: 0;
+  font-size: 11px;
+}
+
+/***** Links *****/
+
+a {
+  color: #000;
+  text-decoration: underline;
+  outline: 0;
+  transition: all .1s linear 0s;
+  -moz-transition: all .1s linear 0s;
+  -webkit-transition: all .1s linear 0s;
+  -o-transition: all .1s linear 0s;
+  &:focus {
+    outline: none;
+    -moz-outline-style: none;
+  }
+}
+
+/***** disable Chrome blue border *****/
+
+input:focus, select:focus,
+textarea:focus, button:focus                    { outline: none; }

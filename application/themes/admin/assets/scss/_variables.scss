@@ -87,10 +87,22 @@ $screen-large:      1280px;
 $breadcrumb-padding-vertical:   8px !default;
 $breadcrumb-padding-horizontal: 15px !default;
 //** Breadcrumb background color
-$breadcrumb-bg:                 #547C96 !default;
+$breadcrumb-bg:                 #fff !default;
 //** Breadcrumb text color
 $breadcrumb-color:              #ccc !default;
 //** Text color of current page in the breadcrumb
 $breadcrumb-active-color:       $gray-light !default;
 //** Textual separator for between breadcrumb elements
 $breadcrumb-separator:          "/" !default;
+
+// Notifications and alerts
+// ---------------------------------------
+$alert-warning-h3-color:    #43433f;
+$alert-warning-text-color:  #6f6e69;
+$alert-warning-bg:          #fefce5;
+$alert-warning-border:      #f4f2db;
+
+$alert-info-h3-color:    #1c2836;
+$alert-info-text-color:  #5b707e;
+$alert-info-bg:          #fafcfb;
+$alert-info-border:      #e1ebf4;

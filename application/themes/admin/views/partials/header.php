@@ -5,7 +5,6 @@
     <?php echo $this->template->metadata() ?>
 
     <!-- CSS FILES -->
-    <!-- <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/reset.css');  ?>" /> -->
     <link rel="stylesheet" type="text/css" href="<?php echo theme_url('assets/css/style.css');  ?>" />
 
     <!-- Controller Defined Stylesheets -->
@@ -20,6 +19,9 @@
     <!-- Controller Defined JS Files -->
     <?php echo $this->template->javascripts() ?>
 
+    <script type="text/javascript" src="<?php echo theme_url('assets/js/tablesorter-pager.js'); ?>"></script>
+    <script type="text/javascript" src="<?php echo theme_url('assets/js/tablesorter.js'); ?>"></script>
+    <script type="text/javascript" src="<?php echo theme_url('assets/js/app.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/helpers.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/superfish.js'); ?>"></script>
 
@@ -27,45 +29,26 @@
     <?php echo $this->template->analytics() ?>
 </head>
 <body>
+    <?php if ($this->secure->is_auth()): ?>
+    <div id="header">
+		<div id="top-menu">
+			<a href="<?php echo site_url(ADMIN_PATH .'/settings/general-settings'); ?>" title="Settings">Settings</a> |
+			<a href="mailto:support@cosmointeractive.co?subject=Support Request From <?php echo $this->settings->site_name ?>" title="Contact us">Support</a>
+			
+			<span>Logged in as <a href="#" title="Logged in as admin"><?php echo $this->secure->get_user_session()->first_name . ' ' . $this->secure->get_user_session()->last_name ; ?></a></span>
+			| <a href="<?php echo site_url('users/logout'); ?>" title="Logout">Logout</a>
+		</div>
+		<div id="sitename">
+			<a href="<?php echo site_url('sitemin'); ?>" class="logo fleft" title="Admintasia">
+                <span id="site_name"><?php echo $this->settings->site_name ?> <small>| ADMINISTRATION</small></span>
+            </a>
+			<div class="fright" style="margin-top: 5px;">
+				<a class="btn blue small" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>">Visit Site</a>
+			</div>
+		</div>
+        
+        <?php echo theme_partial('main-navigation'); ?>
+	</div>	
+    <?php endif; ?>
+    
     <div id="container">
-
-        <!-- Header -->
-        <div id="header">
-            <div class="div1">
-                <div class="div2"><span id="site_name"><?php echo $this->settings->site_name ?></span> | ADMINISTRATION</div>
-                <?php if ($this->secure->is_auth()): ?>
-                    <div class="div3"><img src="<?php echo theme_url('assets/images/lock.png'); ?>" alt="" style="position: relative; top: 3px;" />&nbsp;You are logged in as <?php echo $this->secure->get_user_session()->first_name . ' ' . $this->secure->get_user_session()->last_name ; ?></div>
-                <?php endif; ?>
-            </div>
-            <?php if ($this->secure->is_auth()): ?>
-                <div id="menu">
-
-                    <?php echo theme_partial('navigation'); ?>
-
-                    <ul class="right">
-                        <li id="store"><a class="top" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>">Visit Site</a></li>
-                        <li id="store"><a class="top" href="<?php echo site_url('users/logout'); ?>">Logout</a></li>
-                    </ul>
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-                            $('#menu > ul').superfish({
-                                hoverClass	 : 'sfHover',
-                                pathClass	 : 'overideThisToUse',
-                                delay		 : 0,
-                                animation	 : {height: 'show'},
-                                speed		 : 'normal',
-                                autoArrows   : false,
-                                dropShadows  : false, 
-                                disableHI	 : false, /* set to true to disable hoverIntent detection */
-                                onInit		 : function(){},
-                                onBeforeShow : function(){},
-                                onShow		 : function(){},
-                                onHide		 : function(){}
-                            });
-                            
-                            $('#menu > ul').css('display', 'block');
-                        });
-                    </script>
-                </div>
-            <?php endif; ?>
-        </div>

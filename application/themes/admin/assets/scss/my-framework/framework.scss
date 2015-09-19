@@ -1,0 +1,96 @@
+/**
+ * Main website styles
+ *
+ * This file contains all the elements needed to change the 
+ * appearance of the site. 
+ *
+ * @project    <http://mysite.com> 
+ * @version    0.1.1
+ * @package    xhtml-css
+ * @author     Cosmo Mathieu <http://cosmointeractive.co> 
+ * @copyright  2015 <http://cosmointeractive.co>
+ * @file       style.css
+ * @css-for IE 8+, Safari 4+, Firefox 3+
+ * 
+ * --------------------------------------------------------------
+ * Table of Contents
+ * --------------------------------------------------------------
+ * 1.0 - Reset
+ * 
+ * --------------------------------------------------------------
+ * Color Glossary - needs updating
+ * --------------------------------------------------------------
+ * Dark gray (text):            #333333
+ *
+ */ 
+// --------------------------------------------------------------
+// Sass file Imports
+// --------------------------------------------------------------
+@import "variables"; 
+@import "normalize";
+@import "type";
+@import "buttons";
+@import "forms";
+@import "tables";
+@import "grid";
+@import "breadcrumbs";
+@import "utilities";
+// @import "";
+
+/***********************************************
+Example use only - Delete when done..!
+***********************************************/
+body                                            { margin:20px 0; }
+.grid-highlight                                 { margin-bottom:5px; }
+.grid-highlight [class^="grid_"]                { line-height:30px; text-align:center; background-color:#F1F1F1; }
+
+
+
+/***********************************************
+Screen 1200px+
+***********************************************/
+.example                                        {  }
+
+
+
+/***********************************************
+Screen Smaller than 1199px
+***********************************************/
+@media only screen and (min-width:960px) and (max-width: 1199px) {
+
+.example                                        {  }
+
+
+
+}
+
+/***********************************************
+Tablet (Smaller than 959px)
+***********************************************/
+@media only screen and (min-width:768px) and (max-width: 959px) {
+
+.example                                        {  }
+
+
+
+}
+
+/***********************************************
+Mobile (portrait 300px)
+***********************************************/
+@media only screen and (max-width:767px) {
+
+.example                                        {  }
+
+
+
+}
+
+/***** Mobile (landscape 420px) *****/
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+.example                                        {  }
+
+
+
+}

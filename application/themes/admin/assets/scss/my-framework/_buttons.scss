@@ -1,0 +1,92 @@
+/***** Buttons  *****/
+
+a.btn, .btn, button {
+  margin: 0 5px 5px 0;
+  padding: 1px 20px 0;
+  display: inline-block;
+  color: #FFF;
+  border: 1px solid #000;
+  background-color: #000;
+  // font-size: 14px;
+  // line-height: 24px;
+  text-decoration: none;
+  cursor: pointer;
+  @include transition(all .1s linear 0s);
+  
+  &:hover {
+    font-weight: normal;
+  }
+}
+
+:hover.btn {
+  border: 1px solid #CCC;
+  background-color: #FFF;
+  color: #333;
+}
+
+.btn, 
+a.btn {
+  &.small {
+    padding: 2px 10px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  &.white {
+    border-color: #CCC;
+    background-color: #FFF;
+    color: #333;
+  }
+}
+
+:hover.btn.white {
+  border-color: #000;
+  background-color: #000;
+  color: #FFF;
+}
+
+.btn.red {
+  border-color: #E74C3C;
+  background-color: #E74C3C;
+}
+
+:hover.btn.red {
+  border-color: #E74C3C;
+  background-color: #B93D30;
+  color: #FFF;
+}
+
+// ------------------------------------------------
+// Primary button
+// ------------------------------------------------
+a.btn,
+.btn,
+.btn.blue {
+	color:#ffffff;
+	text-shadow:0px 1px 0px #286296;
+	box-shadow:inset 0px 1px 0px 0px #b6d5e8;
+	background-color:#4fabd0;
+	@include background-gradient(#4fabd0, #3f7cb5);
+	border:1px solid #277baf;
+    
+    &:hover {
+        color:#ffffff;
+        background-color:#3f7cb5;
+        @include background-gradient(#3f7cb5, #4fabd0);        
+        border:1px solid #277baf;
+    }
+    &:active {
+        position:relative;
+        top:1px;
+    }
+}
+
+.btn.green {
+  border-color: #2ECC71;
+  background-color: #2ECC71;
+}
+
+:hover.btn.green {
+  border-color: #2ECC71;
+  background-color: #25A35A;
+  color: #FFF;
+}

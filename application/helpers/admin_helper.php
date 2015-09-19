@@ -145,7 +145,7 @@ if ( ! function_exists('set_crumbs'))
 // ------------------------------------------------------------------------
 
 /*
- * Admin Nav
+ * Admin Dashboard Nav
  *
  * Generates the html to build the admin navigation 
  * showing only links that the admin is permitted
@@ -172,6 +172,53 @@ if ( ! function_exists('admin_nav'))
                 if ( ! empty($item['sub']))
                 {
                     $list_item .= admin_nav($item['sub'], $depth + 1);
+                }
+
+                $list_item .= '</li>';
+            }
+        }
+
+        $list_item .= '</ul>';
+
+        return $list_item;
+    }   
+} 
+
+// ------------------------------------------------------------------------
+
+/*
+ * Admin Primary Nav
+ *
+ * Generates the html to build the admin navigation 
+ * showing only links that the admin is permitted
+ *
+ * @param       array $nav 
+ * @param       array $atts
+ * @param int
+ * @return string
+ */
+if ( ! function_exists('admin_primary_nav'))
+{
+    function admin_primary_nav($nav, $atts = array(), $depth = 1)
+    {
+        $menu_id    = (is_array($atts) && isset($atts['menu_id'])) ? ' id="' . $atts['menu_id'] . '" ' : '';
+        $menu_class = (is_array($atts) && isset($atts['menu_class'])) ? ' class="' . $atts['menu_class'] . '" ' : '';
+        $list_item  = '<ul '. $menu_id . $menu_class .'>';
+
+        foreach($nav as $item)
+        {
+            $item['url'] = trim($item['url'], '/');
+
+            if (show_admin_nav_li($item) && empty($item['hidden']))
+            {
+                $list_item .= '<li' . (($depth == 1 && is_admin_nav_li_selected($item)) ? ' class="selected"' : '') . ((isset($item['id'])) ? ' id="' . $item['id'] . '"' : '') . '>';
+                $list_item .= '<a href="' . (admin_is_permitted(ADMIN_PATH . '/' . $item['url']) 
+                            ? site_url(ADMIN_PATH . '/' . $item['url']) 
+                            : 'javascript:void(0)') . '"' . (($depth == 1) ? ' class="top"' : '') . '>' . $item['title'] . '</a>';
+
+                if ( ! empty($item['sub']))
+                {
+                    $list_item .= admin_primary_nav($item['sub'], 0, $depth + 1);
                 }
 
                 $list_item .= '</li>';

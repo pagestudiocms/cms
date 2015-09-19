@@ -1,7 +1,9 @@
 @charset "UTF-8";
-/** Main website styles  This file contains all the elements needed to change the  appearance of the site.   @project    <http://mysite.com>  @version    0.1.1 @package    xhtml-css @author     Cosmo Mathieu <http://cosmointeractive.co>  @copyright  2015 <http://cosmointeractive.co> @file       style.css @css-for IE 8+, Safari 4+, Firefox 3+  -------------------------------------------------------------- Table of Contents -------------------------------------------------------------- 1.0 - Reset 2.0 - Typography 3.0 - Elements 4.0 - Forms 4.1 - Button sizes 4.2 - Utility classes 5.0 - Navigation 5.1 - Desktop menu 5.2 - Mobile menu 6.0 - Header section 7.0 - Scroll to top button  8.0 - Content sections  8.1 - Portfolio section  8.1.1 - Portfolio modal 8.2 - Contact section  8.3 - Section - Services 8.4 - Section - Footer 9.0 - Misc 9.1 - Lightbox 9.2 - Social buttons (inline) 9.3 - Form completion steps  -------------------------------------------------------------- Color Glossary - needs updating -------------------------------------------------------------- Dark gray (text):            #333333  */
+/** Main website styles  This file contains all the elements needed to change the  appearance of the site.   @project    <http://mysite.com>  @version    0.1.1 @package    xhtml-css @author     Cosmo Mathieu <http://cosmointeractive.co>  @copyright  2015 <http://cosmointeractive.co> @file       style.css @css-for IE 8+, Safari 4+, Firefox 3+  -------------------------------------------------------------- Table of Contents -------------------------------------------------------------- 1.0 - Reset 2.0 - Typography  -------------------------------------------------------------- Color Glossary - needs updating -------------------------------------------------------------- Dark gray (text):            #333333  */
 /* Clearfix Usage .container-with-floated-children { @extend %clearfix; }
 */
+@import url("admintasia/general.css");
+@import url("admintasia/tables.css");
 /* ------------------------------------------------------------- Sass CSS3 Mixins! The Cross-Browser CSS3 Sass Library By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
  List of CSS3 Sass Mixins File to be @imported and @included as you need
  The purpose of this library is to facilitate the use of CSS3 on different browsers avoiding HARD TO READ and NEVER ENDING css files
@@ -36,6 +38,50 @@
 /* TRIPLE BORDERS */
 /* KEYFRAMES */
 /* ANIMATION */
+/***** Buttons  *****/
+a.btn, .btn, button { margin: 0 5px 5px 0; padding: 1px 20px 0; display: inline-block; color: #FFF; border: 1px solid #000; background-color: #000; text-decoration: none; cursor: pointer; -webkit-transition: all 0.1s linear 0s; -khtml-transition: all 0.1s linear 0s; -moz-transition: all 0.1s linear 0s; -ms-transition: all 0.1s linear 0s; -o-transition: all 0.1s linear 0s; transition: all 0.1s linear 0s; }
+a.btn:hover, .btn:hover, button:hover { font-weight: normal; }
+
+:hover.btn { border: 1px solid #CCC; background-color: #FFF; color: #333; }
+
+.btn.small, a.btn.small { padding: 2px 10px; font-size: 12px; line-height: 20px; }
+.btn.white, a.btn.white { border-color: #CCC; background-color: #FFF; color: #333; }
+
+:hover.btn.white { border-color: #000; background-color: #000; color: #FFF; }
+
+.btn.red { border-color: #E74C3C; background-color: #E74C3C; }
+
+:hover.btn.red { border-color: #E74C3C; background-color: #B93D30; color: #FFF; }
+
+a.btn, .btn, .btn.blue { color: #ffffff; text-shadow: 0px 1px 0px #286296; box-shadow: inset 0px 1px 0px 0px #b6d5e8; background-color: #4fabd0; background-color: #4fabd0; background-image: -webkit-gradient(linear, left top, left bottom, from(#4fabd0), to(#3f7cb5)); background-image: -webkit-linear-gradient(top, #4fabd0, #3f7cb5); background-image: -moz-linear-gradient(top, #4fabd0, #3f7cb5); background-image: -ms-linear-gradient(top, #4fabd0, #3f7cb5); background-image: -o-linear-gradient(top, #4fabd0, #3f7cb5); background-image: linear-gradient(top, #4fabd0, #3f7cb5); filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#4fabd0', endColorStr='#3f7cb5'); border: 1px solid #277baf; }
+a.btn:hover, .btn:hover, .btn.blue:hover { color: #ffffff; background-color: #3f7cb5; background-color: #3f7cb5; background-image: -webkit-gradient(linear, left top, left bottom, from(#3f7cb5), to(#4fabd0)); background-image: -webkit-linear-gradient(top, #3f7cb5, #4fabd0); background-image: -moz-linear-gradient(top, #3f7cb5, #4fabd0); background-image: -ms-linear-gradient(top, #3f7cb5, #4fabd0); background-image: -o-linear-gradient(top, #3f7cb5, #4fabd0); background-image: linear-gradient(top, #3f7cb5, #4fabd0); filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#3f7cb5', endColorStr='#4fabd0'); border: 1px solid #277baf; }
+a.btn:active, .btn:active, .btn.blue:active { position: relative; top: 1px; }
+
+.btn.green { border-color: #2ECC71; background-color: #2ECC71; }
+
+:hover.btn.green { border-color: #2ECC71; background-color: #25A35A; color: #FFF; }
+
+/* Response Messages */
+.response-msg { padding: 6px 10px 10px 45px; font-size: 0.9em; margin: 0 0 10px; }
+.response-msg span { display: block; font-weight: bold; padding: 0 0 4px; }
+
+.error { background: #f9e5e6 url("../images/icons/error.png") 10px 50% no-repeat; color: #b50007; border: #e8aaad solid 1px; }
+
+.notice { background: #f9f9e5 url("../images/icons/notice.png") 10px 50% no-repeat; color: #828400; border: #e8e3aa solid 1px; }
+
+.inf { background: #e5ecf9 url("../images/icons/info.png") 10px 50% no-repeat; color: #0055b5; border: #aac6e8 solid 1px; }
+
+.success { background: #e9f9e5 url("../images/icons/success.png") 10px 50% no-repeat; color: #1c8400; border: #b4e8aa solid 1px; }
+
+#page-wrapper .other-box { margin: 15px 0; }
+#page-wrapper .cont { border-top: #fff solid 1px; padding: 8px; line-height: 1.4em; }
+#page-wrapper .other-box h3 { font-size: 1.2em; font-weight: bold; }
+#page-wrapper .gray-box { background: #eaeaea; border: #c0c0c0 solid 1px; }
+#page-wrapper .yellow-box { color: #6f6e69; background: #fefce5; border: #f4f2db solid 1px; }
+#page-wrapper .yellow-box h3 { color: #43433f; }
+#page-wrapper .blue-box { color: #5b707e; background: #fafcfb; border: #e1ebf4 solid 1px; }
+#page-wrapper .blue-box h3 { color: #1c2836; }
+
 /*--------------------------------------------------------------- 1.0 Section Reset styles These styles reset the default style sheet that comes with the  user agent.
 ---------------------------------------------------------------*/
 /* http://meyerweb.com/eric/tools/css/reset/  v2.0 | 20110126 License: none (public domain)
@@ -70,8 +116,6 @@ strong, b { font-weight: bold; }
 
 input[type='text'], input[type='password'] { padding: 5px; border: 1px solid #abadb3; }
 
-#page-tab #slug { width: 350px; }
-
 select { padding: 5px; border: 1px solid #abadb3; }
 
 textarea { padding: 5px; width: 450px; border: 1px solid #abadb3; }
@@ -92,44 +136,89 @@ label { cursor: pointer; }
 
 .label_highlight { color: #ABADB3; }
 
+/*--------------------------------------------------------------- 2.0 UI Styles
+---------------------------------------------------------------*/
+#page-wrapper #main-wrapper #main-content .page-title h1 b, .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited, #page-wrapper #main-wrapper .title h2, #page-wrapper #main-wrapper .title h3, a { color: #0073ea; text-decoration: none; outline: none; }
+
+#main-content .page-title, .form-bg, #page-wrapper #sidebar .side-menu li a:hover { /* add to any div to change background color */ background: #F9F9F9; }
+
+.linetop { border-top: #c7c7c7 solid 1px; }
+
+/* Header Style */
+#header { background: url("../images/header-bg.png") repeat-x; }
+
+#header #top-menu { color: #646464; }
+
+#header #top-menu a { color: #e6e6e6; }
+
+#header #top-menu span { color: #d7d7d7; }
+
+#header #sitename a.logo { color: #fff; background: url("../../../images/logo.png") no-repeat; text-shadow: 1px 1px 0 #000; }
+
+#header #top-menu a:hover, #header #sitename a.logo:hover { color: #b7cbdf; }
+
+/* Header navigation menu */
+#navigation li a { color: #454545; font-weight: bold; border-right: #d0d0d0 solid 1px; border-left: #f7f7f7 solid 1px; }
+
+#navigation li.sfHover, #navigation li.sfHover2 { background: #fff; border-left: #b2b2b2 solid 1px; border-right: #b2b2b2 solid 1px; }
+
+#navigation li ul { background: #fff; border: #b2b2b2 solid 1px; }
+
+#navigation li ul li { border-bottom: #ccc dotted 1px; background: #f0f0f0; }
+
+#navigation li ul li a { color: #7c7c7c; }
+
+#navigation li ul li a:hover { color: #696969; background: #f7f7f7; }
+
+#navigation li ul li.sfHover, #navigation li ul li.sfHover2 { background: #e0e0e0; }
+
+#navigation li ul li.sfHover a { color: #333; }
+
+#navigation li ul li ul li a:hover { color: #000; }
+
+/* Pages title box */
+#page-wrapper #main-wrapper #main-content .page-title .other { color: #515151; border-top: #dadada dotted 1px; }
+
+/* Dashboard buttons */
+#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li { border: #fff solid 4px; }
+
+#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li a { background-color: #f3f3f3; border: #dcdfe3 solid 1px; border-color: #dcdfe3 #d0d4d8 #d0d4d8 #dcdfe3; color: #666; }
+
+#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li a:hover { background-color: #e4e7ea; border-color: #c3c9ce; color: #333; }
+
+#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li a:active { border-color: #9d9d9d; }
+
+/* Different title styles */
+#page-wrapper #main-wrapper .title, #page-wrapper #sidebar .side-menu li { color: #616161; border-bottom: #8f8f8f dotted 1px; }
+
+.ui-sortable-placeholder { background: #ffffcc; }
+
+#page-wrapper #sidebar { background: #f4f4f4; border-color: #d0d0d0; }
+
+/* Note */
+i.note { font-weight: bold; padding: 15px 0 15px 25px; color: #8f8f8f; display: block; }
+
+.red { color: red; }
+
+/* Footer */
+#page-tab #slug { width: 350px; }
+
 #tree_box #status { height: 15px; }
 
 #ajax_status { background: url("../images/dark-transparent.png"); position: fixed; left: 50%; top: 50%; margin-top: -32.5px; margin-left: -110px; border-radius: 5px; color: #FFFFFF; text-align: center; display: none; padding: 10px; }
 
 #ajax_status_frame td { text-align: center; color: #FFFFFF; vertical-align: middle; font-size: 16px; width: 200px; height: 45px; }
 
-#header .div1 { height: 56px; padding: 0px 30px; background: url("../images/header.png") repeat-x; min-width: 900px; }
-#header .div2 { color: #FFFFFF; padding: 14px 0px 0px 0px; float: left; font-size: 16px; }
-#header .div3 { font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #FFF; text-align: right; padding: 15px 0px 0px 0px; float: right; }
-
-#menu { background: url("../images/menu.png") repeat-x; position: relative; z-index: 1; height: 34px; clear: both; padding: 0px 30px; min-width: 900px; }
-#menu > ul { position: relative; margin: 0; padding: 0; }
-#menu > ul.left { float: left; }
-#menu > ul.right { float: right; }
-#menu > ul ul { list-style: none; margin: 0; padding: 0; background: url("../images/transparent.png"); display: none; }
-#menu > ul a { display: block; color: #FFFFFF; text-decoration: none; padding: 5px; }
-#menu > ul > li + li { background: url("../images/split.png") center left no-repeat; }
-#menu > ul .top, #menu > ul li li.sfhover { padding: 10px 15px 9px 17px; font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #FFFFFF; text-align: center; }
-#menu > ul ul li { padding: 2px; }
-#menu > ul .selected .top { background: url("../images/selected.png") repeat-x; color: #FFFFFF; }
-#menu > ul .parent { background: url("../images/arrow-right.png") 95% center no-repeat; }
-#menu > ul li { float: left; list-style: none; }
-#menu > ul li ul { position: absolute; }
-#menu > ul li li { clear: both; }
-#menu > ul li ul a { color: #FFFFFF; height: 15px; width: 145px; }
-#menu > ul li ul ul { margin: -27px 0 0 157px; }
-#menu > ul li li:hover, #menu > ul li li.sfhover { background: #333; color: #000000; }
-
 #container { height: 100%; }
 
 body > #container { height: auto; min-height: 100%; }
 
-#content { background: #FFFFFF url("../images/background.png") 0px 1px repeat-x; padding: 10px 30px 0px 30px; min-width: 900px; padding-bottom: 128px; }
+#content { padding: 10px 30px 0px 30px; min-width: 900px; padding-bottom: 128px; }
 
 #footer { background: #FFFFFF url("../images/footer.png") repeat-x; height: 90px; padding-top: 38px; text-align: center; font-size: 12px; color: #333; position: relative; margin-top: -128px; clear: both; }
 #footer a { color: #333; text-decoration: underline; }
 
-.breadcrumb { padding: 10px; margin-bottom: 15px; list-style: none; background-color: #547C96; border-radius: 2px; }
+.breadcrumb { padding: 10px; margin-bottom: 15px; list-style: none; background-color: #fff; border-radius: 2px; }
 .breadcrumb > li { display: inline-block; }
 .breadcrumb > li + li:before { content: "/ "; padding: 0 5px; color: #ccc; }
 .breadcrumb > .active { color: #9b9b9b; }
@@ -259,9 +348,9 @@ table.form > tbody > tr > td:first-child { width: 200px; }
 .latest { clear: both; }
 .latest tbody td { background: #FFF; }
 
-.dashboard-heading { background: #547C96; color: #FFF; border-bottom: 1px solid #8EAEC3; padding: 5px; font-size: 14px; font-weight: bold; }
+.dashboard-heading { background: #547C96; color: #FFF; border-bottom: 1px solid #879eac; padding: 5px; font-size: 14px; font-weight: bold; }
 
-.dashboard-content { background: #FCFCFC; border: 1px solid #8EAEC3; padding: 10px; min-height: 180px; }
+.dashboard-content { background: #FCFCFC; border: 1px solid #879eac; padding: 10px; min-height: 180px; }
 
 div.form div { padding: 10px; border-bottom: 1px dotted #CCCCCC; }
 div.form div label { display: inline-block; width: 195px; padding-right: 5px; vertical-align: middle; }
@@ -286,7 +375,13 @@ div.form div img { vertical-align: middle; }
 
 .content .buttons { margin-bottom: 8px; }
 
-#site_name { font-weight: normal; font-size: 23px; }
+#header { height: 121px; padding: 0 10px; }
+#header #top-menu { font-size: 12px; height: 28px; line-height: 28px; text-align: right; }
+#header #top-menu span { padding: 0 0 0 20px; }
+#header #top-menu span a { font-weight: bold; }
+#header #sitename { height: 43px; padding: 8px 0 0; font-weight: normal; }
+#header #sitename small { font-size: 60%; }
+#header #sitename a.logo { height: 36px; line-height: 36px; display: block; font-size: 20px; padding: 0 0 0 10px; font-weight: bold; }
 
 .filter .filter_buttons { margin-top: 20px; }
 .filter .filter_buttons .button { margin-right: 0px; }
@@ -323,7 +418,7 @@ div.form div img { vertical-align: middle; }
 .subnav { margin-bottom: 15px; background: url("../images/box.png") repeat-x scroll 0 0 transparent; z-index: 1; height: 34px; clear: both; min-width: 900px; border: 1px solid #CCCCCC; border-radius: 3px; }
 .subnav li { float: left; border-right: 1px solid #CCCCCC; }
 .subnav > ul a { display: block; text-decoration: none; padding: 0px 15px; height: 34px; line-height: 34px; color: #000000; }
-.subnav > ul a.selected { background: #E7EFEF; background: #ffffff; /* Old browsers */ background: -moz-linear-gradient(top, #ffffff 0%, #e7efef 20%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(20%, #e7efef)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #ffffff 0%, #e7efef 20%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #ffffff 0%, #e7efef 20%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #ffffff 0%, #e7efef 20%); /* IE10+ */ background: linear-gradient(top, #ffffff 0%, #e7efef 20%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e7efef',GradientType=0 ); /* IE6-9 */ }
+.subnav > ul a.selected { background: #ffffff; background-color: #ffffff; background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e7efef)); background-image: -webkit-linear-gradient(top, #ffffff, #e7efef); background-image: -moz-linear-gradient(top, #ffffff, #e7efef); background-image: -ms-linear-gradient(top, #ffffff, #e7efef); background-image: -o-linear-gradient(top, #ffffff, #e7efef); background-image: linear-gradient(top, #ffffff, #e7efef); filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', endColorStr='#e7efef'); }
 
 .datetime { width: 200px; }
 
@@ -346,12 +441,12 @@ div.multi_fields { display: inline-block; vertical-align: middle; }
 
 #dashboard_sitemap > ul { width: 100%; display: table; table-layout: fixed; }
 #dashboard_sitemap table { width: 100%; display: table; table-layout: fixed; }
-#dashboard_sitemap table .top { font-weight: bold; background-color: #547C96; display: block; color: #FFFFFF; padding: 8.5px 10px; text-decoration: none; border-bottom: 3px solid #8EAEC3; }
+#dashboard_sitemap table .top { font-weight: bold; background-color: #404d55; display: block; color: #FFFFFF; padding: 8.5px 10px; text-decoration: none; border-bottom: 3px solid #879eac; }
 #dashboard_sitemap table td { display: table-cell; padding: 10px; }
 #dashboard_sitemap table td a { display: block; padding: 10px; text-decoration: none; }
 #dashboard_sitemap table td a:hover { background-color: #E7EFEF; color: #000000; }
 #dashboard_sitemap table ul li + li a { border-top: 1px dashed #CCCCCC; }
-#dashboard_sitemap > ul .top { font-weight: bold; background-color: #547C96; display: block; color: #FFFFFF; padding: 8.5px 10px; text-decoration: none; border-bottom: 3px solid #8EAEC3; }
+#dashboard_sitemap > ul .top { font-weight: bold; background-color: #404d55; display: block; color: #FFFFFF; padding: 8.5px 10px; text-decoration: none; border-bottom: 3px solid #879eac; }
 #dashboard_sitemap > ul > li { display: table-cell; padding: 10px; }
 #dashboard_sitemap > ul ul li a { display: block; padding: 10px; text-decoration: none; }
 #dashboard_sitemap > ul li a:hover { background-color: #E7EFEF; color: #000000; }

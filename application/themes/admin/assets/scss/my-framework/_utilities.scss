@@ -1,0 +1,171 @@
+/***** Images, iFrames & Videos  *****/
+
+img {
+  border: 0;
+  vertical-align: middle;
+  -ms-interpolation-mode: bicubic;
+}
+
+.img-left {
+  float: left;
+  margin: 0 30px 30px 0;
+  border: none;
+}
+
+.img-right {
+  float: right;
+  margin: 0 0 30px 30px;
+  border: none;
+}
+
+.img-max {
+  width: 100%;
+  height: auto;
+}
+
+.media {
+  position: relative;
+  margin: 0 0 15px 0;
+  padding-bottom: 51%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  iframe, object, embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/***** Global Classes *****/
+
+.clear {
+  clear: both;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.txt-big {
+  color: #A2BD30;
+  font-weight: bold;
+  line-height: 26px;
+}
+
+.txt-left {
+  text-align: left;
+}
+
+.txt-right {
+  text-align: right;
+}
+
+.txt-center {
+  text-align: center;
+}
+
+.txt-justify {
+  text-align: justify;
+}
+
+.normal {
+  font-weight: normal;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.underline {
+  border-bottom: 1px solid;
+}
+
+.highlight {
+  padding: 4px 7px 4px;
+  color: #000;
+  line-height: 19px;
+  display: inline-block;
+  background: #00DEFF;
+  font-weight: bold;
+}
+
+.intro {
+  font-size: 130%;
+  line-height: 130%;
+}
+
+.nopadding {
+  padding: 0;
+}
+
+.noindent {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.nobullet {
+  list-style: none;
+  list-style-image: none;
+}
+
+.inline {
+  display: inline;
+}
+
+.block {
+  display: block;
+}
+
+.hidden, .hide {
+  display: none;
+}
+
+.bfix {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+/***** Back to Top *****/
+
+#toTop {
+  display: none;
+  text-decoration: none;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  overflow: hidden;
+  width: 51px;
+  height: 51px;
+  border: none;
+  text-indent: -999px;
+  background: url(../img/ui.totop.png) no-repeat left top;
+  z-index: 99;
+  &:active, &:focus {
+    outline: none;
+  }
+}
+
+#toTopHover {
+  background: url(../img/ui.totop.png) no-repeat left -51px;
+  width: 51px;
+  height: 51px;
+  display: block;
+  overflow: hidden;
+  float: left;
+  opacity: 0;
+  -moz-opacity: 0;
+  filter: alpha(opacity = 0);
+}
