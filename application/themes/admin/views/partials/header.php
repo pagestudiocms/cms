@@ -35,7 +35,7 @@
 			<a href="<?php echo site_url(ADMIN_PATH .'/settings/general-settings'); ?>" title="Settings">Settings</a> |
 			<a href="mailto:support@cosmointeractive.co?subject=Support Request From <?php echo $this->settings->site_name ?>" title="Contact us">Support</a>
 			
-			<span>Logged in as <a href="#" title="Logged in as admin"><?php echo $this->secure->get_user_session()->first_name . ' ' . $this->secure->get_user_session()->last_name ; ?></a></span>
+			<span>Logged in as <a href="<?php echo site_url(ADMIN_PATH . '/users/edit') .'/'. $this->secure->get_user_session()->id;?>" title="Logged in as admin"><?php echo $this->secure->get_user_session()->first_name . ' ' . $this->secure->get_user_session()->last_name ; ?></a></span>
 			| <a href="<?php echo site_url('users/logout'); ?>" title="Logout">Logout</a>
 		</div>
 		<div id="sitename">
