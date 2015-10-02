@@ -1,163 +1,179 @@
-
-#page-wrapper #main-wrapper #main-content .page-title h1 b, .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited, #page-wrapper #main-wrapper .title h2, #page-wrapper #main-wrapper .title h3, a {
-	color:#0073ea;
-	text-decoration:none;outline:none;
+#page-wrapper #main-wrapper #main-content .page-title h1 b {
+  color: $link-color;
+  text-decoration: none;
+  outline: none;
 }
 
-#main-content .page-title, .form-bg, #page-wrapper #sidebar .side-menu li a:hover { /* add to any div to change background color */
-	background:#F9F9F9;
+.ui-state-default a {
+  color: $link-color;
+  text-decoration: none;
+  outline: none;
+  &:link, &:visited {
+    color: $link-color;
+    text-decoration: none;
+    outline: none;
+  }
+}
+
+#page-wrapper #main-wrapper .title {
+  h2, h3 {
+    color: $link-color;
+    text-decoration: none;
+    outline: none;
+  }
+}
+
+a, a:visited {
+  color: $link-color;
+  text-decoration: none;
+  outline: none;
+}
+
+#main-content .page-title, .form-bg, #page-wrapper #sidebar .side-menu li a:hover {
+  /* add to any div to change background color */
+  background: #F9F9F9;
 }
 
 .linetop {
-	border-top:#c7c7c7 solid 1px;
+  border-top: #c7c7c7 solid 1px;
 }
 
-	/* Header Style */
+/* Header Style */
 
 #header {
-		background:url('../images/header-bg.png') repeat-x;
+  background: url('../images/header-bg.png') repeat-x;
+  #top-menu {
+    color: #646464;
+    a {
+      color: #e6e6e6;
+    }
+    span {
+      color: #d7d7d7;
+    }
+  }
+  #sitename a.logo {
+    color: #fff;
+    background: url('../../../images/logo.png') no-repeat;
+    text-shadow: 1px 1px 0 #000;
+  }
+  #top-menu a:hover, #sitename a.logo:hover {
+    color: #b7cbdf;
+  }
 }
 
-#header #top-menu {
-	color:#646464;
+/* Header navigation menu */
+
+#navigation li {
+  a {
+    color: #454545;
+    font-weight: bold;
+    border-right: #d0d0d0 solid 1px;
+    border-left: #f7f7f7 solid 1px;
+  }
+  &.sfHover, &.sfHover2 {
+    background: #fff;
+    border-left: #b2b2b2 solid 1px;
+    border-right: #b2b2b2 solid 1px;
+  }
+  ul {
+    background: #fff;
+    border: #b2b2b2 solid 1px;
+    li {
+      border-bottom: #ccc dotted 1px;
+      background: #f0f0f0;
+      a {
+        color: #7c7c7c;
+        &:hover {
+          color: #696969;
+          background: #f7f7f7;
+        }
+      }
+      &.sfHover, &.sfHover2 {
+        background: #e0e0e0;
+      }
+      &.sfHover a {
+        color: #333;
+      }
+      ul li a:hover {
+        color: #000;
+      }
+    }
+  }
 }
 
-#header #top-menu a {
-	color:#e6e6e6;
+/* Pages title box */
+
+#page-wrapper {
+  #main-wrapper {
+    #main-content .page-title .other {
+      color: #515151;
+      border-top: #dadada dotted 1px;
+      ul#dashboard-buttons li {
+        border: #fff solid 4px;
+        a {
+          background-color: #f3f3f3;
+          border: #dcdfe3 solid 1px;
+          border-color: #dcdfe3 #d0d4d8 #d0d4d8 #dcdfe3;
+          color: #666;
+          &:hover {
+            background-color: #e4e7ea;
+            border-color: #c3c9ce;
+            color: #333;
+          }
+          &:active {
+            border-color: #9d9d9d;
+          }
+        }
+      }
+    }
+    .title {
+      color: #616161;
+      border-bottom: #8f8f8f dotted 1px;
+    }
+  }
+  #sidebar .side-menu li {
+    color: #616161;
+    border-bottom: #8f8f8f dotted 1px;
+  }
 }
 
-#header #top-menu span {
-	color:#d7d7d7;
-}
+/* Dashboard buttons */
 
-#header #sitename a.logo {
-	color:#fff;
-	background:url('../../../images/logo.png') no-repeat;
-	text-shadow:1px 1px 0 #000;
-}
-
-#header #top-menu a:hover, #header #sitename a.logo:hover {
-	color:#b7cbdf;
-}
-
-	/* Header navigation menu */
-
-#navigation li a {
-	color:#454545;
-	font-weight:bold;
-	border-right:#d0d0d0 solid 1px;
-	border-left:#f7f7f7 solid 1px;
-}
-
-#navigation li.sfHover, #navigation li.sfHover2 {
-	background:#fff;
-	border-left:#b2b2b2 solid 1px;
-	border-right:#b2b2b2 solid 1px;
-
-}
-
-#navigation li ul {
-	background:#fff;
-	border:#b2b2b2 solid 1px;
-}
-
-#navigation li ul li {
-	border-bottom:#ccc dotted 1px;
-	background:#f0f0f0;
-}
-
-#navigation li ul li a {
-	color:#7c7c7c;
-}
-
-#navigation li ul li a:hover {
-	color:#696969;
-	background:#f7f7f7;
-}
-
-#navigation li ul li.sfHover, #navigation li ul li.sfHover2 { 
-	background:#e0e0e0;
-}
-
-#navigation li ul li.sfHover a {
-	color:#333;	
-}
-
-#navigation li ul li ul li a:hover {
-	color:#000;
-}
-
-	/* Pages title box */
-
-#page-wrapper #main-wrapper #main-content .page-title .other {
-	color:#515151;
-	border-top:#dadada dotted 1px;
-}
-
-	/* Dashboard buttons */
-	
-#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li {
-	border:#fff solid 4px;
-}
-	
-#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li a {
-	background-color:#f3f3f3;
-	border:#dcdfe3 solid 1px;
-	border-color:#dcdfe3 #d0d4d8 #d0d4d8 #dcdfe3;
-	color:#666;
-}
-
-#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li a:hover {
-	background-color:#e4e7ea;
-	border-color:#c3c9ce;
-	color:#333;
-}
-
-#page-wrapper #main-wrapper #main-content .page-title .other ul#dashboard-buttons li a:active {
-	border-color:#9d9d9d;
-}
-
-	/* Different title styles */
-
-#page-wrapper #main-wrapper .title, #page-wrapper #sidebar .side-menu li {
-	color:#616161;
-	border-bottom:#8f8f8f dotted 1px;
-	
-}
+/* Different title styles */
 
 .ui-sortable-placeholder {
-	background:#ffffcc;
+  background: #ffffcc;
 }
 
 #page-wrapper #sidebar {
-	background:#f4f4f4;
-	border-color:#d0d0d0;
+  background: #f4f4f4;
+  border-color: #d0d0d0;
 }
 
-	/* Note */
+/* Note */
 
 i.note {
-	font-weight:bold;
-	padding:15px 0 15px 25px;
-	color:#8f8f8f;
-	display:block;
+  font-weight: bold;
+  padding: 15px 0 15px 25px;
+  color: #8f8f8f;
+  display: block;
 }
 
 .red {
-	color:red;
+  color: red;
 }
 
 /* Footer */
 
 // #footer {
-	// border-top:#e3e3e3 solid 6px;
-	// background:#4c4c4c;
-	// color:#c1c1c1;
+// border-top:#e3e3e3 solid 6px;
+// background:#4c4c4c;
+// color:#c1c1c1;
 // }
 // #footer #menu a {
-	// color:#fff;
+// color:#fff;
 // }
 
 // #footer #menu a:hover {
-	// text-decoration:underline;
+// text-decoration:underline;
 // }

@@ -28,7 +28,12 @@
     <!-- Google Analytics -->
     <?php echo $this->template->analytics() ?>
 </head>
-<body>
+<body <?php 
+    if ($this->template->segment(3) === 'login') {
+        echo 'class="login"';
+    }
+?>>
+
     <?php if ($this->secure->is_auth()): ?>
     <div id="header">
 		<div id="top-menu">

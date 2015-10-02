@@ -14,7 +14,7 @@ $black:        #464646;
 $white:        #fff;
 $muted:        #777;
 
-$brand-primary:     #238baa;
+$brand-primary:     #2A373F;
 $brand-secondary:   #384551;
 $brand-tertiary:    #38ABE1;
 $brand-danger:      #e74c3c;
@@ -27,13 +27,14 @@ $placeholder-text:  #bbbbbb;
 
 // Background color for `<body>`.
 $body-bg:               #fff !default;
+$body-login-bg:         #1b2830 !default;
 
 // Global text color on `<body>`.
 $text-color:            $black;
 $text-highlight-color:  #469ccf;
 
 // Global textual link color.
-$link-color:            $brand-primary !default;
+$link-color:            #2A373F !default;
 $link-hover-color:      darken($link-color, 15%) !default;
 $link-hover-decoration: underline !default;
 
@@ -106,3 +107,9 @@ $alert-info-h3-color:    #1c2836;
 $alert-info-text-color:  #5b707e;
 $alert-info-bg:          #fafcfb;
 $alert-info-border:      #e1ebf4;
+
+// --------------------------------------------------------------
+// Login page
+// --------------------------------------------------------------
+$login-page-text-color:    #d5d5d5;
+$login-page-link-color:    #4182b9;

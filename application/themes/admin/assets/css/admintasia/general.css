@@ -91,7 +91,11 @@ a.btn span.ui-icon {
 	padding:0 8px;
 }
 #navigation li.selected {
-    background: #fff;
+    background: #f9f9f9;
+    border-left: 1px solid #d0d0d0;
+}
+#navigation li.selected a {
+    color: #1A9ADA;
 }
 #navigation li.sfHover a, #navigation li.sfHover2 a {
 	padding:0 7px;
