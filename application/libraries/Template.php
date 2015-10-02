@@ -753,4 +753,19 @@ class Template
 
         return $layouts_array;
     }
+    
+    // --------------------------------------------------------------------
+    
+    /**
+     * Returns the URI segment to the caller
+     *
+     * @since      1.2.0
+     * @access     public 
+     * @param      int $part 
+     * @return     int
+     */
+    public function segment($part)
+    {
+        return $this->CI->uri->segment($part);
+    }
 }
