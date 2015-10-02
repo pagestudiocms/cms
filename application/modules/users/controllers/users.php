@@ -174,7 +174,8 @@ class Users extends Public_Controller
         // Delete all session data
         $this->session->sess_destroy();
         $this->users_model->destroy_remember_me();
-        redirect('/');
+        // redirect('/');
+        redirect(ADMIN_PATH);
     }
 
     function forgot_password()
