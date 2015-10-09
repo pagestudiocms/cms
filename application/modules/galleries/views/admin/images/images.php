@@ -3,6 +3,7 @@
         <h1><img alt="" src="<?php echo theme_url('assets/images/banner.png'); ?>"> <?php echo $Gallery->title; ?> (#<?php echo $Gallery->id; ?>) &ndash; Images</h1>
 
         <div class="buttons">
+            <a class="button" href="<?php echo site_url(ADMIN_PATH . "/galleries/"); ?>"><span>Cancel</span></a>
             <a class="button" id="add_image" href="javascript:void(0);"><span>Add Images</span></a>
             <a class="button delete" href="#"><span>Delete</span></a>
         </div>
