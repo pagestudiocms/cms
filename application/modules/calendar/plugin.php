@@ -124,13 +124,23 @@ class Calendar_plugin extends Plugin
         $result = $query->result();
         
         foreach($result as $key => $val) {
-            $events .= "{ 
-                title: '". $val->title ."', 
-                url: '". site_url() . "calendar/" . $val->id . "-" . date("Y-m-d", strtotime($val->created)) ."', 
-                start: '". $val->start ."', 
-                end: '". $val->end ."', 
-                description: '". shorten_phrase( $val->description, 50 ) ."' 
-            },";
+            // $events .= "{ 
+                // title: '". $val->title ."', 
+                // url: '". site_url() . "calendar/" . $val->id . "-" . date("Y-m-d", strtotime($val->created)) ."', 
+                // start: '". $val->start ."', 
+                // end: '". $val->end ."', 
+                // description: '". shorten_phrase( $val->description, 50 ) ."' 
+            // },";
+            $events .= json_encode(
+                array(
+                    'title' => $val->title,
+                    'url' => site_url() . "calendar/" . $val->id . "-" . date("Y-m-d", strtotime($val->created)), 
+                    'start' => $val->start,
+                    'end' => $val->end,
+                    'description' => shorten_phrase( $val->description, 50 )
+                )
+            );
+            $events .= ',';
         }
         
         $output  = '';
