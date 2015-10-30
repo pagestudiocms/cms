@@ -19,10 +19,12 @@
             <li><span id="admin-save-status" class="admin-toolbar-top"></span></li>
             <li><a id="admin-save-changes" class="admin-toolbar-top" href="javascript:void(0);">Save Changes</a></li>
         <?php endif; ?>
-        <li><a id="admin-settings-icon" class="admin-toolbar-top" href="javascript:void(0);"></a>
+        <!-- <a id="admin-settings-icon" class="admin-toolbar-top" href="javascript:void(0);"></a> -->
+        <li>
+            <a class="admin-toolbar-top" href="javascript:void(0);">Settings &nbsp;<img src="<?php echo base_url('/application/modules/content/assets/images/down-triangle.gif'); ?>" /></a>
             <ul>
                 <li><a id="admin-toggle-inline-editing" href="javascript:void(0);"><?php echo ($this->settings->enable_inline_editing) ? 'Disable' : 'Enable'; ?> Inline Editing</a></li>
-                <li><a href="<?php echo site_url('/users/logout') ?>">Sign Out</a></li>
+                <li><a href="<?php echo site_url('/users/logout') ?>">Sign Out</a></li>                
             </ul>
         </li>
     </ul>

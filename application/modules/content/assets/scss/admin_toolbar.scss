@@ -1,0 +1,136 @@
+body {
+  padding-top: 35px !important;
+}
+
+#admin-toolbar {
+    // background: url("/application/modules/content/assets/images/toolbar/menu.png") repeat-x scroll 0 0 transparent;
+    background-image: -moz-linear-gradient(bottom, #414141 38%, #232323 100%);
+    background-image:   -o-linear-gradient(bottom, #414141 38%, #232323 100%);
+    background-image:     -webkit-gradient(linear, left top, left bottom, color-stop(0.38, #414141), color-stop(1, #232323));
+    background-image: -webkit-linear-gradient(bottom, #414141 38%, #232323 100%);
+    background-image:     -ms-linear-gradient(bottom, #414141 38%, #232323 100%);
+    background-image:         linear-gradient(to bottom, #414141 38%, #232323 100%);
+
+    clear: both;
+    height: 37px;
+    min-width: 300px;
+    position: fixed;
+    padding: 0 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    line-height: normal;
+    
+    > ul {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        a {
+            display: block;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 5px;
+        }
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            background: url('/application/modules/content/assets/images/toolbar/transparent.png');
+            li {
+                padding: 2px;
+            }
+        }
+        > li + li {
+            background: url('/application/modules/content/assets/images/toolbar/split.png') center left no-repeat;
+        }
+        li {
+            float: left;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            ul {
+                position: absolute;
+                a {
+                    color: #FFFFFF;
+                    width: 145px;
+                    font-size: 12px;
+                }
+                ul {
+                    margin: -27px 0 0 157px;
+                }
+            }
+            li {
+                clear: both;
+                &:hover, &.sfhover {
+                    background: #333;
+                    color: #000000;
+                }
+            }
+        }
+        
+        .admin-toolbar-top,
+        li.sfhover {
+            padding: 10px 15px 9px 17px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            color: #FFFFFF;
+            text-align: center;
+        }
+        .admin-toolbar-top img {
+            vertical-align: middle;
+        }
+        .selected {
+            .admin-toolbar-top {
+                background: url('/application/modules/content/assets/images/toolbar/selected.png') repeat-x;
+                color: #FFFFFF;
+            }
+        }
+        .parent {
+            background: url('/application/modules/content/assets/images/toolbar/arrow-right.png') 95% center no-repeat;
+        }
+        
+        &.admin-toolbar-left {
+            float: left;
+        }
+        &.admin-toolbar-right {
+            float: right;
+            li ul {
+                right: 0;
+                text-align: right;
+            }
+        }
+    }
+
+    #admin-toolbar-shadow {
+        clear: both;
+    }
+    #admin-save-status {
+        font-style: italic;
+        color: #CCCCCC !important;
+        display: block;
+    }
+}
+
+.cc_admin_editable {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: auto;
+    height: auto;
+    display: block;
+    &.cke_focus, 
+    &:focus {
+        outline: 1px solid #D8B166;
+    }
+}
+.cc_image_editable {
+    cursor: pointer;
+    &:focus {
+        outline: 1px solid #D8B166;
+    }
+}
+.cc_admin_editable:hover, 
+.cc_image_editable:hover {
+    outline: 1px dashed #D8B166;
+}
