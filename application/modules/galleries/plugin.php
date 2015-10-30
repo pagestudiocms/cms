@@ -12,6 +12,41 @@ class Galleries_plugin extends Plugin
 {
     public $images = array();
 
+    /**
+     * Gallery
+     *
+     * Returns the status of the gallery to the user. 
+     * 
+     * @author     Cosmo Mathieu <http://cosmointeractive.co>
+     * @since      Version 1.2.0
+     * @return     array
+     */
+    public function gallery_exists()
+    {       
+        $gallery_id = $this->attribute('gallery_id');
+
+        // Check if we received a string or a tag with {{ open-and-close-braces }}
+        // Match the tag key in the $data array and parse the corresponding info.
+        if (
+            (strpos($gallery_id,'{{') && strpos($gallery_id,'}}')) !== false || 
+            (strpos($gallery_id,'{') && strpos($gallery_id,'}')) !== false 
+        ) {
+            $array = array (
+                '{{' => '',
+                '}}' => '',
+                '{' => '',
+                '}' => ''
+            );
+            $tag = trim(strtr( $gallery_id, $array ));
+            $gallery_id = $data[$tag];
+        } 
+        
+        $this->Gallery = $this->load->model('galleries_model');
+        $this->Gallery->get_by_id($gallery_id); 
+
+        return ($this->Gallery->exists()) ? true : false;
+    }
+    
     /*
      * Gallery
      *
@@ -44,7 +79,7 @@ class Galleries_plugin extends Plugin
 
         if ( ! $this->Gallery->exists())
         {
-            return;
+            return false;
         }
 
         $Images = $this->Gallery->images->where('hide', 0)->order_by('sort', 'ASC')->get();

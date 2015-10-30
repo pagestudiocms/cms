@@ -61,7 +61,7 @@ class MY_Parser extends CI_Parser {
         return $this->_parse($string, $data, $return, $inject_noparse);
     }
 
-    // --------------------------------------------------------------------
+    // -------------------------------------------------------------------- 
 
      /**
       *  Parse
@@ -100,12 +100,12 @@ class MY_Parser extends CI_Parser {
          Lex_Autoloader::register();
 
          $parser = new Lex_Parser();
-         $parser->scopeGlue(':');
-         $parsed = $parser->parse($string, $data, array($this, 'parser_callback'), TRUE);
+         $parser->scope_glue(':');
+         $parsed = $parser->parse($string, $data, array($this, 'parser_callback'), true);
 
          if ($inject_noparse)
          {
-             $parsed = Lex_Parser::injectNoparse($parsed);
+             $parsed = Lex_Parser::inject_noparse($parsed);
          }
 
          // Return results or not ?
@@ -121,12 +121,12 @@ class MY_Parser extends CI_Parser {
     // --------------------------------------------------------------------
 
     /**
-     * Callback from template parser
+        * Callback from template parser
      *
      * @param array
      * @return mixed
      */
-    public function parser_callback($plugin, $attributes, $content, $data)
+    public function parser_callback($plugin, $attributes, $content, $data = '')
     {
         $this->_ci->load->library('plugins');
         $return_data = '';
@@ -174,7 +174,7 @@ class MY_Parser extends CI_Parser {
             $parsed_return = '';
 
             $parser = new Lex_Parser();
-            $parser->scopeGlue(':');
+            $parser->scope_glue(':');
 
             foreach ($return_data as $result)
             {

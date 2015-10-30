@@ -550,12 +550,13 @@ CREATE TABLE IF NOT EXISTS `calendar` (
   `modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `url` varchar(255) COLLATE utf8_bin NOT NULL,
   `location` varchar(250) COLLATE utf8_bin NOT NULL,
-  `featured` varchar(255) COLLATE utf8_bin NOT NULL,
+  `featured_image` varchar(255) COLLATE utf8_bin NOT NULL,
   `event_author` int(11) NOT NULL,
   `allDay` varchar(255) COLLATE utf8_bin NOT NULL,
-  `repeat` tinyint(1) NOT NULL DEFAULT '0',
+  `recurrence` varchar(35) COLLATE utf8_bin DEFAULT NULL,
   `series_id` int(64) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `series_id` (`series_id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
+
