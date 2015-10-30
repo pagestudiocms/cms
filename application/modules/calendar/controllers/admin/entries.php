@@ -262,10 +262,11 @@ class Entries extends Admin_Controller {
                 $Event = array();
                 // Populate from post and prep for insert / update
                 $post = $this->input->post();
-                $Event['modified']  = date('Y-m-d H:i:s');
-                $Event['start']     = date('Y-m-d H:i:s', strtotime($this->input->post('start')));
-                $Event['end']       = date('Y-m-d H:i:s', strtotime($this->input->post('end')));
-                $Event['title']     = ($this->input->post('title') != '') ? $this->input->post('title') : NULL;
+                $Event['modified']   = date('Y-m-d H:i:s');
+                $Event['start']      = date('Y-m-d H:i:s', strtotime($this->input->post('start')));
+                $Event['end']        = date('Y-m-d H:i:s', strtotime($this->input->post('end')));
+                $Event['recurrence'] = ($this->input->post('recurrence')) ? json_encode(['dow' => $this->input->post('recurrence')]) : null;
+                $Event['title']      = ($this->input->post('title') != '') ? $this->input->post('title') : NULL;
                 $Event['description'] = ($this->input->post('description') != '') ? $this->input->post('description') : NULL;
                 $Event['featured_image']  = ($this->input->post('featured_image') != '') ? $this->input->post('featured_image') : NULL;
                 // var_dump($post);
@@ -277,7 +278,7 @@ class Entries extends Admin_Controller {
                 
                 // Set a success message
                 if ($this->model->update($event_id, $Event)) {             
-                    $this->session->set_flashdata('message', '<p class="success">Changes Saved.</p>');
+                    $this->session->set_flashdata('message', '<p class="success">Changes Saved.</p>'.$Event['recurrence']);
                 } else{
                     $this->session->set_flashdata('message', '<p class="error">Changes were not saved.</p>');
                 }

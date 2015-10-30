@@ -65,6 +65,34 @@
                         </div>
                     </div>
                     <div>
+                        <?php echo form_label('<div class="arrow arrow_expand"></div> Select Recurrence', 'recurrence'); ?>
+                        <div>
+                            <?php
+                                $recurrence = ($Event->recurrence) ? json_decode($Event->recurrence, true) : ['dow' => []];                                
+                                
+                                $options = [
+                                    'Sundays' => '0',
+                                    'Mondays' => '1',
+                                    'Tuesdays' => '2',
+                                    'Wednesdays' => '3',
+                                    'Thursdays' => '4',
+                                    'Fridays' => '5',
+                                    'Saturdays' => '6',
+                                ];
+                                foreach($options as $key => $value) {
+                                    $status = (in_array($value, $recurrence['dow'])) ? true : false;
+                                    echo $key;
+                                    echo form_checkbox([
+                                        'name'    => 'recurrence[]',
+                                        'value'   => $value,
+                                        'checked' => $status,
+                                        'style'   => 'margin-left: 5px; margin-right: 10px',
+                                    ]);
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <div>
                         <?php echo form_label('<div class="arrow arrow_expand"></div><span class="required">*</span> Description', 'description'); ?>
                         <div>
                             <?php echo 

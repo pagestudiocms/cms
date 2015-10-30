@@ -118,9 +118,11 @@ class Calendar_plugin extends Plugin
     {   
         $events = '';
         $now    = date("Y-m-d G:i:s");
+        $then   = date('Y-m-d G:i:s', strtotime('-1 month', strtotime($now)));
         $CI     =& get_instance();
         
-        $query  = $CI->db->order_by("start", 'asc')->get_where('calendar', array('end >=' => $now)); 
+        
+        $query  = $CI->db->order_by("start", 'asc')->get_where('calendar', array('end >=' => $then)); 
         $result = $query->result();
         
         foreach($result as $key => $val) {
@@ -131,16 +133,29 @@ class Calendar_plugin extends Plugin
                 // end: '". $val->end ."', 
                 // description: '". shorten_phrase( $val->description, 50 ) ."' 
             // },";
-            $events .= json_encode(
-                array(
-                    'title' => $val->title,
-                    'url' => site_url() . "calendar/" . $val->id . "-" . date("Y-m-d", strtotime($val->created)), 
-                    'start' => $val->start,
-                    'end' => $val->end,
-                    'description' => shorten_phrase( $val->description, 50 )
-                )
-            );
-            $events .= ',';
+            // if($val->end >= $now) {
+                
+                $dow = '';
+                if( ! empty($val->recurrence)) {
+                    $recurrence = json_decode($val->recurrence, true);
+                    foreach($recurrence['dow'] as $dow_key => $dow_value) {
+                        $dow .= $dow_value . ',';
+                    }
+                    $dow .= '[' . $dow . ']';
+                }
+                
+                $events .= json_encode(
+                    array(
+                        'title' => $val->title,
+                        'url' => site_url() . "calendar/" . $val->id . "-" . date("Y-m-d", strtotime($val->created)), 
+                        'start' => $val->start,
+                        'end' => $val->end,
+                        'description' => shorten_phrase( $val->description, 50 ), 
+                        'dow' => $dow
+                    )
+                );
+                $events .= ',';
+            // }
         }
         
         $output  = '';
@@ -148,12 +163,13 @@ class Calendar_plugin extends Plugin
         $scripts[] = site_url() . 'application/modules/calendar/assets/js/moment.min.js';
         $scripts[] = site_url() . 'application/modules/calendar/assets/js/fullcalendar.min.js';
         $scripts[] = site_url() . 'application/modules/calendar/assets/js/gcal.js';
+
+        // To set default view state go here: 
+        // http://stackoverflow.com/questions/12573134/fullcalendar-remember-user-option-eg-month-week-day-in-cookie
+        // http://w3facility.org/question/how-can-the-browser-remember-the-selected-view-of-week-month-day/
         $output .= "
             <script type=\"text/javascript\">
                 $(document).ready(function() {
-                    // To set default view state go here: 
-                    // http://stackoverflow.com/questions/12573134/fullcalendar-remember-user-option-eg-month-week-day-in-cookie
-                    // http://w3facility.org/question/how-can-the-browser-remember-the-selected-view-of-week-month-day/
                     
                     $('#fullcalendar').fullCalendar({
                         header: {
@@ -161,6 +177,7 @@ class Calendar_plugin extends Plugin
                             center: 'title',
                             right: 'month,basicWeek,'
                         },
+                        defaultDate: moment(),
                         //defaultDate: '2014-09-12',
                         editable: false,
                         eventLimit: true, // allow \"more\" link when too many events
@@ -181,7 +198,7 @@ class Calendar_plugin extends Plugin
                         }
                     });
                 });
-            </script>";
+            </script>\n";
         
         foreach($scripts as $script) {
             $output .= '<script type="text/javascript" src="' . $script . '"></script>' . "\n";
