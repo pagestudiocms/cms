@@ -99,6 +99,7 @@ define('USER_DATA',   '/assets/userdata/');
 $packages = array(
     'jquery' => array(
         'javascript' => array(
+            'https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js',
             '/application/themes/admin/assets/js/jquery.min.js',
         ),
     ),
