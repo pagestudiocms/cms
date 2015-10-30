@@ -86,7 +86,7 @@
                                         'name'    => 'recurrence[]',
                                         'value'   => $value,
                                         'checked' => $status,
-                                        'style'   => 'margin-left: 5px; margin-right: 10px',
+                                        'style'   => 'margin-left: 5px; margin-right: 15px',
                                     ]);
                                 }
                             ?>
