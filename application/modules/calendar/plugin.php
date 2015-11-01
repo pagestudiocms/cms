@@ -20,10 +20,10 @@
  *
  * Provides the ability to execute code via template tags. 
  *
- * @package		CodeIgniter
- * @subpackage	codeigniter
+ * @package		pagestudio
+ * @subpackage	modules
  * @category	Common Functions
- * @author		ExpressionEngine Dev Team
+ * @author		Cosmo Mathieu
  * @link		http://codeigniter.com/user_guide/
  */
 class Calendar_plugin extends Plugin
@@ -104,7 +104,8 @@ class Calendar_plugin extends Plugin
                         foreach($options as $o_key => $o_value) {
                             $key_to_check = (in_array($o_value, $recurrence['dow'])) ? $o_key : false;
                             if(isset($next_seven_days[$key_to_check])){
-                                $key->start = $next_seven_days[$key_to_check];
+                                // Add new date and append the time from original date.
+                                $key->start = $next_seven_days[$key_to_check] . ' ' . substr($key->start, -8);
                             }
                         }
                         $events[] = (array) $key;
@@ -133,7 +134,8 @@ class Calendar_plugin extends Plugin
                     foreach($options as $o_key => $o_value) {
                         $key_to_check = (in_array($o_value, $recurrence['dow'])) ? $o_key : false;
                         if(isset($next_seven_days[$key_to_check])){
-                            $key->start = $next_seven_days[$key_to_check];
+                            // Add new date and append the time from original date.
+                            $key->start = $next_seven_days[$key_to_check] . ' ' . substr($key->start, -8);
                         }
                     }
                     $events[] = (array) $key;
