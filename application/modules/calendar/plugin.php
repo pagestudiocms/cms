@@ -50,7 +50,7 @@ class Calendar_plugin extends Plugin
     // --------------------------------------------------------------------
     
     /**
-     * {{ calendar:events segment="1|calendar" status="published" sort="desc" limit="5" }}
+     * {{ calendar:events segment="1|calendar" status="published|recurring" sort="desc" limit="5" }}
      * 
      * @access     public 
      * @return     string
@@ -63,6 +63,26 @@ class Calendar_plugin extends Plugin
         $attr   = $this->attributes();
         $sort   = ( ! empty($attr['sort'])) ? $attr['sort'] : 'asc';
         $limit  = ( ! empty($attr['limit'])) ? $attr['limit'] : 5;
+        $next_seven_days = array();
+        $datetime = new DateTime($now);
+        
+        // Build and array containing the dates for the next 7 days 
+        // including the days of the week
+        for($i = 0; $i <= 6; $i++) {
+            $day_of_week_date = date("Y-m-d", strtotime($datetime->modify('+1 day')->format('Y-m-d')));
+            $day_of_week = date("l", strtotime($day_of_week_date));
+            $next_seven_days[$day_of_week . 's'] = $day_of_week_date;
+        }
+        
+        $options = [
+            'Sundays' => '0',
+            'Mondays' => '1',
+            'Tuesdays' => '2',
+            'Wednesdays' => '3',
+            'Thursdays' => '4',
+            'Fridays' => '5',
+            'Saturdays' => '6',
+        ];
         
         if(isset($attr['segment'])) {
             $parts   = explode('|', $attr['segment']);
@@ -74,10 +94,26 @@ class Calendar_plugin extends Plugin
                 $query  = $CI->db->order_by("start", $sort)->get_where('calendar', array('end >=' => $now), $limit); 
                 $result = $query->result();
                 foreach($result as $key) {  
-                    if( $key->start <= $now ) {
-                        $key->start = 'Now';
+                    /**
+                     * Check if the event is a reocurrence and include it in the 
+                     * list of events to return. Find the day of the week it should 
+                     * reocure on and assign it a date.
+                     */
+                    if( ! empty($key->recurrence)) {
+                        $recurrence = json_decode($key->recurrence, true);
+                        foreach($options as $o_key => $o_value) {
+                            $key_to_check = (in_array($o_value, $recurrence['dow'])) ? $o_key : false;
+                            if(isset($next_seven_days[$key_to_check])){
+                                $key->start = $next_seven_days[$key_to_check];
+                            }
+                        }
+                        $events[] = (array) $key;
+                    } else {
+                        if( $key->start <= $now ) {
+                            $key->start = 'Now';
+                        }
+                        $events[] = (array) $key;
                     }
-                    $events[] = (array) $key;
                 }
                 
                 return $events;
@@ -85,13 +121,36 @@ class Calendar_plugin extends Plugin
         } else {
             $query  = $CI->db->order_by("start", $sort)->get_where('calendar', array('end >=' => $now), $limit); 
             $result = $query->result();
-            
-            foreach($result as $key) {  
-                if( $key->start <= $now ) {
-                    $key->start = 'Now';
+
+            foreach($result as $key) {
+                /**
+                 * Check if the event is a reocurrence and include it in the 
+                 * list of events to return. Find the day of the week it should 
+                 * reocure on and assign it a date.
+                 */
+                if( ! empty($key->recurrence)) {
+                    $recurrence = json_decode($key->recurrence, true);
+                    foreach($options as $o_key => $o_value) {
+                        $key_to_check = (in_array($o_value, $recurrence['dow'])) ? $o_key : false;
+                        if(isset($next_seven_days[$key_to_check])){
+                            $key->start = $next_seven_days[$key_to_check];
+                        }
+                    }
+                    $events[] = (array) $key;
+                } else {
+                    if( $key->start <= $now ) {
+                        $key->start = 'Now';
+                    }
+                    $events[] = (array) $key;
                 }
-                $events[] = (array) $key;
             }
+            
+            // Sort the events by date 
+            usort($events, function($a, $b){
+                $da = strtotime($a['start']);
+                $db = strtotime($b['start']);
+                return $da > $db; // use "<" to reverse sort
+            });
             
             return $events;
         }
