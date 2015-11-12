@@ -243,10 +243,9 @@ class Analytics {
 	 */
 	public function getData($aProperties = array())
 	{
-		$sUrl = 'https://www.google.com/analytics/feeds/data?ids=' . $this->_sProfileId .
+		$sUrl = 'https://www.googleapis.com/analytics/v2.4/data?ids=' . $this->_sProfileId .
 				'&start-date=' . $this->_sStartDate .
 				'&end-date=' . $this->_sEndDate . '&' .
-				'&max-results=100&' .
 				http_build_query($aProperties);
 
 		$aCache = $this->getCache($sUrl);
@@ -279,22 +278,7 @@ class Analytics {
 			}
 			$sTitle = str_replace($aProperties['dimensions'] . '=', '', $sTitle);
 
-            $metric_array = array();
-
-            if ($oMetric->length > 1)
-            {
-                foreach ($oMetric as $myMetric)
-                {
-                     $metric_array[ltrim($myMetric->getAttribute('name'), 'ga:')] = $myMetric->getAttribute('value');
-                }
-
-                $aResult[$sTitle] = $metric_array;
-            }
-            else
-            {
-                $aResult[$sTitle] = $oMetric->item(0)->getAttribute('value');
-            }
-
+			$aResult[$sTitle] = $oMetric->item(0)->getAttribute('value');
 		}
 		// cache the results (if caching is true)
 		$this->setCache($sUrl, $aResult);
@@ -436,11 +420,10 @@ class Analytics {
 			));
 			$rContext = stream_context_create($aContext);
 
-			$sOutput = @file_get_contents($sUrl, 0, $rContext);
-			if (strpos($http_response_header[0], '200') === false)
+			if (($sOutput = @file_get_contents($sUrl, 0, $rContext)) === false)
 			{
 				// not a valid response from GA
-				throw new Exception('Not a valid response (' . $http_response_header[0] . ') url: ' . $sUrl);
+				throw new Exception('Not a valid response url: ' . $sUrl);
 			}
 		}
 		return $sOutput;
@@ -602,4 +585,5 @@ class Analytics {
 		arsort($aData);
 		return $aData;
 	}
+
 }
