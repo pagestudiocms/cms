@@ -13,8 +13,19 @@ class Google_analytics_model extends CI_Model
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('analytics', array('username' => $this->settings->ga_email, 'password' => $this->settings->ga_password));
-        $this->analytics->setProfileById('ga:' . $this->settings->ga_profile_id);
+        
+        $this->clientId = '601667939223-sid4ss85hs21947ntrj6vm68468k5oqi.apps.googleusercontent.com';
+        $this->clientEmail = 'account-1@pagestudio-1127.iam.gserviceaccount.com';
+        $this->keyFileLocation = BASEPATH . '../application/third_party/Google/PageStudio-20c49edcceae.p12';
+        
+        $this->load->library('ga_api', [
+            'username' => $this->settings->ga_email, 
+            'password' => $this->settings->ga_password,
+            'clientId' => $this->clientId,
+            'clientEmail' => $this->clientEmail,
+            'key' => $this->keyFileLocation
+        ]);
+        $this->ga_api->setProfileById('ga:' . $this->settings->ga_profile_id);
         $this->set_month(time());
     }
 
@@ -61,11 +72,11 @@ class Google_analytics_model extends CI_Model
             $start_date = date('Y-m-d', strtotime(date('m') . '/01/' . date('Y')));
             $end_date = date('Y-m-d');
 
-            $this->analytics->setDateRange($start_date, $end_date);
+            $this->ga_api->setDateRange($start_date, $end_date);
         }
         else
         {
-            $this->analytics->setMonth(date('m', $unix_month), date('Y', $unix_month));
+            $this->ga_api->setMonth(date('m', $unix_month), date('Y', $unix_month));
         }
     }
 
@@ -73,16 +84,33 @@ class Google_analytics_model extends CI_Model
     {
         $data = array();
 
-        $data['ga_data'] = $this->analytics->getData(array(
-			'dimensions' => 'ga:date',
-			'metrics' => 'ga:visits,ga:pageviews,ga:timeOnSite',
-			'sort' => '-ga:date'
-		));
+        $ga_data = $this->ga_api->getData([
+			'metrics' => 'ga:visits,ga:pageviews,ga:sessionDuration',
+            'optParams' => [
+                'dimensions' => 'ga:date',
+                'sort' => '-ga:date'
+            ]
+        ]);
 
-        $ga_visitor_type = $this->analytics->getData(array(
-			'dimensions' => 'ga:visitorType',
+        // Merge array values in associative array 
+        if( ! empty($ga_data)) {
+            $ga_data_to_assoc = [];
+            foreach ($ga_data->getRows() as $row) {
+                $ga_data_to_assoc[$row[0]] = array(
+                    'visits' => $row[1],
+                    'pageviews' => $row[2],
+                    'sessionDuration' => $row[3]
+                ); 
+            }
+        }
+        $data['ga_data'] = $ga_data_to_assoc;
+
+        $ga_visitor_type = $this->ga_api->getData([
 			'metrics' => 'ga:visits',
-		));
+            'optParams' => [
+                'dimensions' => 'ga:visitorType',
+            ]
+        ]);
 
         $data['ga_visitor_type'] = $this->_new_vs_return_percent($ga_visitor_type);
 
@@ -94,7 +122,7 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('source' => 'Referrer', 'visits' => 'Visits');
 
-        $data['ga_data'] = $this->analytics->getReferrers();
+        $data['ga_data'] = $this->ga_api->getReferrers();
 
         return $this->load->view('admin/analytics/generic_table', $data, TRUE);
     }
@@ -104,7 +132,7 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('keyword' => 'Keyword', 'visits' => 'Visits');
 
-        $data['ga_data'] = $this->analytics->getSearchWords();
+        $data['ga_data'] = $this->ga_api->getSearchWords();
 
         return $this->load->view('admin/analytics/generic_table', $data, TRUE);
     }
@@ -114,7 +142,7 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('pagePath' => 'Page', 'pageviews' => 'Page Views', 'uniquePageviews' => 'Unique Page Views', 'timeOnPage' => 'Time On Page', 'bounces' => 'Bounces', 'entrances' => 'Entrances', 'exits' => 'Exits');
 
-        $data['ga_data'] = $this->analytics->getData(array(
+        $data['ga_data'] = $this->ga_api->getData(array(
 			'dimensions' => 'ga:pagePath',
 			'metrics' => 'ga:pageviews,ga:uniquePageviews,ga:visitors,ga:timeOnPage,ga:bounces,ga:entrances,ga:exits',
 			'sort' => '-ga:pageviews',
@@ -128,7 +156,7 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('country' => 'Country', 'visits' => 'Visits');
 
-        $data['ga_data'] = $this->analytics->getData(array(
+        $data['ga_data'] = $this->ga_api->getData(array(
 			'dimensions' => 'ga:country',
 			'metrics' => 'ga:visits',
 			'sort' => '-ga:visits',
@@ -142,7 +170,7 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('browser' => 'Browser', 'visits' => 'Visits');
 
-        $data['ga_data'] = $this->analytics->getBrowsers();
+        $data['ga_data'] = $this->ga_api->getBrowsers();
 
         return $this->load->view('admin/analytics/generic_table', $data, TRUE);
     }
@@ -152,13 +180,27 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('screen_resolution' => 'Screen Resolution', 'visits' => 'Visits');
 
-        $data['ga_data'] = $this->analytics->getScreenResolution();
+        $data['ga_data'] = $this->ga_api->getScreenResolution();
 
         return $this->load->view('admin/analytics/generic_table', $data, TRUE);
     }
-
-    private function _new_vs_return_percent($ga_visitor_type)
+    
+    /**
+     * @return      array $data
+     * @access      private
+     */
+    private function _new_vs_return_percent($visitors = [])
     {
+        // Merge array values in associative array 
+        if( ! empty($visitors)) {            
+            $ga_visitor_type = [];        
+            foreach($visitors->rows as $key) {
+                foreach ($key as $value) {
+                    $ga_visitor_type[$key[0]] = $value;
+                }
+            }
+        }
+        
         $data['new_visitor'] = 0;
         $data['returning_visitor'] = 0;
 
