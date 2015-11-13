@@ -470,12 +470,23 @@ class ga_api
 	 *
 	 */
 	public function getBrowsers()
-	{
-		$aData = $this->getData(array(
-		   'dimensions' => 'ga:browser,ga:browserVersion',
+	{        
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:visits'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:browser,ga:browserVersion',
+                'sort' => 'ga:visits'
+            ]
+        ]);
+
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0] . ' ' . $row[1];
+            $aData[$key] = $row[2];
+        }
+
+		// sort descending by number of visits
 		arsort($aData);
 		return $aData;
 	}
@@ -502,11 +513,20 @@ class ga_api
 	 */
 	public function getScreenResolution()
 	{
-		$aData = $this->getData(array(
-			'dimensions' => 'ga:screenResolution',
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:visits'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:screenResolution',
+                'sort' => 'ga:visits'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
 
 		// sort descending by number of visits
 		arsort($aData);
@@ -515,15 +535,24 @@ class ga_api
 
 	/**
 	 * Get referrers for given period
-	 *
+	 * @return  array
 	 */
 	public function getReferrers()
-	{
-		$aData = $this->getData(array(
-			'dimensions' => 'ga:source',
+	{        
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:source'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:source',
+                'sort' => 'ga:source'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
 
 		// sort descending by number of visits
 		arsort($aData);
@@ -536,11 +565,21 @@ class ga_api
 	 */
 	public function getSearchWords()
 	{
-		$aData = $this->getData(array(
-			'dimensions' => 'ga:keyword',
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:keyword'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:keyword',
+                'sort' => 'ga:keyword'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
+
 		// sort descending by number of visits
 		arsort($aData);
 		return $aData;

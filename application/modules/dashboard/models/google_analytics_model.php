@@ -128,7 +128,7 @@ class Google_analytics_model extends CI_Model
     private function _referrers()
     {
         $data = array();
-        $data['table_cells'] = array('source' => 'Referrer', 'visits' => 'Visits');
+        $data['table_cells'] = ['Refferer', 'Visits'];
 
         $data['ga_data'] = $this->ga_api->getReferrers();
 
@@ -138,7 +138,7 @@ class Google_analytics_model extends CI_Model
     private function _keywords()
     {
         $data = array();
-        $data['table_cells'] = array('keyword' => 'Keyword', 'visits' => 'Visits');
+        $data['table_cells'] = ['Keyword', 'Visits'];
 
         $data['ga_data'] = $this->ga_api->getSearchWords();
 
@@ -150,11 +150,30 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('pagePath' => 'Page', 'pageviews' => 'Page Views', 'uniquePageviews' => 'Unique Page Views', 'timeOnPage' => 'Time On Page', 'bounces' => 'Bounces', 'entrances' => 'Entrances', 'exits' => 'Exits');
 
-        $data['ga_data'] = $this->ga_api->getData(array(
-			'dimensions' => 'ga:pagePath',
+        $ga_data = $this->ga_api->getData([
 			'metrics' => 'ga:pageviews,ga:uniquePageviews,ga:visitors,ga:timeOnPage,ga:bounces,ga:entrances,ga:exits',
-			'sort' => '-ga:pageviews',
-		));
+            'optParams' => [
+                'dimensions' => 'ga:pagePath',
+                'sort' => '-ga:pageviews',
+            ]
+        ]);        
+
+        $ga_data_to_assoc = [];
+        foreach ($ga_data->getRows() as $row) {
+            $ga_data_to_assoc[$row[0]] = array(
+                'pageviews' => $row[0],
+                'uniquePageviews' => $row[1],
+                'visitors' => $row[2],
+                'pageviews' => $row[3],
+                'timeOnPage' => $row[4],
+                'bounces' => $row[5],
+                'entrances' =>  $row[6],
+                'exits' => $row[7],
+            ); 
+        }
+        // var_dump($ga_data_to_assoc);
+
+        $data['ga_data'] = $ga_data_to_assoc;
 
         return $this->load->view('admin/analytics/top_content', $data, TRUE);
     }
@@ -164,11 +183,24 @@ class Google_analytics_model extends CI_Model
         $data = array();
         $data['table_cells'] = array('country' => 'Country', 'visits' => 'Visits');
 
-        $data['ga_data'] = $this->ga_api->getData(array(
-			'dimensions' => 'ga:country',
+        $ga_data = $this->ga_api->getData([
 			'metrics' => 'ga:visits',
-			'sort' => '-ga:visits',
-		));
+            'optParams' => [
+                'dimensions' => 'ga:country',
+                'sort' => 'ga:visits'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($ga_data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
+
+		// sort descending by number of visits
+		arsort($aData);
+		$data['ga_data'] = $aData;
 
         return $this->load->view('admin/analytics/generic_table', $data, TRUE);
     }
@@ -236,24 +268,27 @@ class Google_analytics_model extends CI_Model
 
     public function calc_percent($numerator, $denominator)
     {
-        if ($denominator <= 0)
-        {
+        if ($denominator <= 0) {
             return 0;
         }
 
         return round(($numerator / $denominator) * 100, 2);
     }
-
+    
+    // -----------------------------------------------------------------
+    
+    /**
+     * Calculates average time on page 
+     *
+     * Formula: 
+     * Total of time on page (in seconds) / (the total number of pageviews - the total number of exits)
+     *
+     * @return  string 
+     */
     public function avg_time_on_site($time, $visits, $padHours = TRUE)
     {
-        if ($visits != 0)
-        {
-            $sec = $time / $visits;
-        }
-        else
-        {
-            $sec = 0;
-        }
+        $sec = ($visits != 0) ? $time / $visits : 0;
+        $sec = ($sec <= 0) ? 0 : $sec;
 
         // start with a blank string
         $hms = "";
