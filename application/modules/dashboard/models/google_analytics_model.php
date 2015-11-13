@@ -1,13 +1,21 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 /**
- * CMS Canvas
+ * PageStudio
  *
- * @author      Mark Price
- * @copyright   Copyright (c) 2012
+ * @author      Cosmo Mathieu
+ * @copyright   Copyright (c) 2015
  * @license     MIT License
- * @link        http://cmscanvas.com
+ * @link        http://pagestudioapp.com
  */
 
+// -------------------------------------------------------------------
+
+/**
+ * Google Analytics Accessor
+ *
+ * @author      Mark Price <http://cmscanvas.com>
+ * @author      Cosmo Mathieu
+ */
 class Google_analytics_model extends CI_Model
 {	
     public function __construct()

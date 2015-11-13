@@ -1,33 +1,29 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 /**
- * Google Analytics PHP API
+ * PageStudio
+ *
+ * @author      Cosmo Mathieu
+ * @copyright   Copyright (c) 2015
+ * @license     MIT License
+ * @link        http://pagestudioapp.com
+ */
+ 
+// -------------------------------------------------------------------
+
+/**
+ * Google Analytics PHP API Accessor
  *
  * This class can be used to retrieve data from the Google Analytics API with PHP
  * It fetches data as array for use in applications or scripts
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * Changes
+ * ----------------
+ * This API now depends on Google PHP API
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * Credits:  Vincent Kleijnendorst <http://www.swis.nl> original developer.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Credits: http://www.alexc.me/
- * parsing the profile XML to a PHP array
- *
- *
- * @link http://www.swis.nl
- * @copyright 2009 SWIS BV
- * @author Vincent Kleijnendorst - SWIS BV (vkleijnendorst [AT] swis [DOT] nl)
- *
- * @version 0.1
+ * @author  Cosmo Mathieu <http://cosmointeractive.co>
+ * @version 0.2
  */
 class ga_api 
 {
