@@ -1,37 +1,32 @@
-<?php
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+/**
+ * PageStudio
+ *
+ * @author      Cosmo Mathieu
+ * @copyright   Copyright (c) 2015
+ * @license     MIT License
+ * @link        http://pagestudioapp.com
+ */
+ 
+// -------------------------------------------------------------------
 
 /**
- * Google Analytics PHP API
+ * Google Analytics PHP API Accessor
  *
  * This class can be used to retrieve data from the Google Analytics API with PHP
  * It fetches data as array for use in applications or scripts
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
+ * Changes
+ * ----------------
+ * This API now depends on Google PHP API
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * Credits:  Vincent Kleijnendorst <http://www.swis.nl> original developer.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Credits: http://www.alexc.me/
- * parsing the profile XML to a PHP array
- *
- *
- * @link http://www.swis.nl
- * @copyright 2009 SWIS BV
- * @author Vincent Kleijnendorst - SWIS BV (vkleijnendorst [AT] swis [DOT] nl)
- *
- * @version 0.1
+ * @author  Cosmo Mathieu <http://cosmointeractive.co>
+ * @version 0.2
  */
-class Analytics {
-
+class ga_api 
+{
 	private $_sUser;
 	private $_sPass;
 	private $_sAuth;
@@ -40,6 +35,8 @@ class Analytics {
 	private $_sEndDate;
 	private $_bUseCache;
 	private $_iCacheAge;
+    private $_client;
+    private $_errors = [];  // Stores exception errors
 
 	/**
 	 * public constructor
@@ -52,49 +49,62 @@ class Analytics {
 	{
 		$this->_sUser = $params['username'];
 		$this->_sPass = $params['password'];
+        $this->clientId = $params['clientId'];
+        $this->clientEmail = $params['clientEmail'];
+        $this->pKey = $params['key'];
 
 		$this->_bUseCache = false;
+        
+        // Load Google API libraries
+        require_once BASEPATH . '../application/third_party/Google/autoload.php';
+        require_once BASEPATH . '../application/third_party/Google/Client.php';
+        require_once BASEPATH . '../application/third_party/Google/Service/Analytics.php';
 
 		$this->auth();
 	}
 
 	/**
-	 * Google Authentification, returns session when set
+	 * Google Authentification
 	 */
 	private function auth()
 	{
-		if (isset($_SESSION['auth']))
-		{
-			$this->_sAuth = $_SESSION['auth'];
-			return;
-		}
+        try 
+        {
+            $this->_client = new Google_Client();
+            echo $this->_client->setApplicationName("ApplicationName");
 
-		$aPost = array('accountType' => 'GOOGLE',
-			'Email' => $this->_sUser,
-			'Passwd' => $this->_sPass,
-			'service' => 'analytics',
-			'source' => 'SWIS-Webbeheer-4.0');
+            if (isset($_SESSION['service_token'])) {
+                $this->_client->setAccessToken($_SESSION['service_token']);
+            }
 
-		$sResponse = $this->getUrl('https://www.google.com/accounts/ClientLogin', $aPost);
-
-		$_SESSION['auth'] = '';
-		if (strpos($sResponse, "\n") !== false)
-		{
-			$aResponse = explode("\n", $sResponse);
-			foreach ($aResponse as $sResponse)
-			{
-				if (substr($sResponse, 0, 4) == 'Auth')
-				{
-					$_SESSION['auth'] = trim(substr($sResponse, 5));
-				}
-			}
-		}
-		if ($_SESSION['auth'] == '')
-		{
-			unset($_SESSION['auth']);
-			throw new Exception('Retrieving Auth hash failed!');
-		}
-		$this->_sAuth = $_SESSION['auth'];
+            $key = file_get_contents($this->pKey);
+            if (empty($key)) {
+                throw new Exception('Private key not found!');
+            }
+            
+            $cred = new Google_Auth_AssertionCredentials(
+                $this->clientEmail, [
+                    'https://www.googleapis.com/auth/analytics',
+                ],
+                $key, // Private key
+                'notasecret' // Private key password
+            );
+            
+            $this->_client->setAssertionCredentials($cred);
+            
+            if ($this->_client->getAuth()->isAccessTokenExpired()) {
+                $this->_client->getAuth()->refreshTokenWithAssertion($cred);
+            }
+            $_SESSION['service_token'] = $this->_client->getAccessToken();	
+            
+            if ( ! is_object($this->_client) && (count(get_object_vars($this->_client)) < 0)) {
+                throw new Exception('The Google Client object returned empty.');
+            }
+        } 
+        catch(Exception $e) 
+        {
+            $this->_errors = $e->getMessage();
+        }
 	}
 
 	/**
@@ -115,72 +125,12 @@ class Analytics {
 	}
 
 	/**
-	 * Get GA XML with auth key
-	 *
-	 * @param string $sUrl
-	 * @return string XML
-	 */
-	private function getXml($sUrl)
-	{
-		return $this->getUrl($sUrl, array(), array('Authorization: GoogleLogin auth=' . $this->_sAuth));
-	}
-
-	/**
-	 * Sets GA Profile ID  (Example: ga:12345)
-	 */
-	public function setProfileById($sProfileId)
-	{
-		$this->_sProfileId = $sProfileId;
-	}
-
-	/**
-	 * Sets Profile ID by a given accountname
-	 *
-	 */
-	public function setProfileByName($sAccountName)
-	{
-		if (isset($_SESSION['profile']))
-		{
-			$this->_sProfileId = $_SESSION['profile'];
-			return;
-		}
-
-		$this->_sProfileId = '';
-		$sXml = $this->getXml('https://www.google.com/analytics/feeds/accounts/default');
-		$aAccounts = $this->parseAccountList($sXml);
-
-		foreach ($aAccounts as $aAccount)
-		{
-			if (isset($aAccount['accountName']) && $aAccount['accountName'] == $sAccountName)
-			{
-				if (isset($aAccount['tableId']))
-				{
-					$this->_sProfileId = $aAccount['tableId'];
-				}
-			}
-		}
-		if ($this->_sProfileId == '')
-		{
-			throw new Exception('No profile ID found!');
-		}
-
-		$_SESSION['profile'] = $this->_sProfileId;
-	}
-
-	/**
 	 * Returns an array with profileID => accountName
 	 *
 	 */
 	public function getProfileList()
 	{
-		$sXml = $this->getXml('https://www.google.com/analytics/feeds/accounts/default');
-		$aAccounts = $this->parseAccountList($sXml);
-		$aReturn = array();
-		foreach ($aAccounts as $aAccount)
-		{
-			$aReturn[$aAccount['tableId']] = $aAccount['title'];
-		}
-		return $aReturn;
+		
 	}
 
 	/**
@@ -248,40 +198,34 @@ class Analytics {
 				'&end-date=' . $this->_sEndDate . '&' .
 				http_build_query($aProperties);
 
-		$aCache = $this->getCache($sUrl);
-		if ($aCache !== false)
-		{
-			return $aCache;
-		}
-
-		$sXml = $this->getXml($sUrl);
-
-		$aResult = array();
-
-		$oDoc = new DOMDocument();
-		$oDoc->loadXML($sXml);
-		$oEntries = $oDoc->getElementsByTagName('entry');
-		foreach ($oEntries as $oEntry)
-		{
-			$oTitle = $oEntry->getElementsByTagName('title');
-			$sTitle = $oTitle->item(0)->nodeValue;
-
-			$oMetric = $oEntry->getElementsByTagName('metric');
-
-			// Fix the array key when multiple dimensions are given
-			if (strpos($sTitle, ' | ') !== false && strpos($aProperties['dimensions'], ',') !== false)
-			{
-				$aDimensions = explode(',', $aProperties['dimensions']);
-				$aDimensions[] = '|';
-				$aDimensions[] = '=';
-				$sTitle = preg_replace('/\s\s+/', ' ', trim(str_replace($aDimensions, '', $sTitle)));
-			}
-			$sTitle = str_replace($aProperties['dimensions'] . '=', '', $sTitle);
-
-			$aResult[$sTitle] = $oMetric->item(0)->getAttribute('value');
-		}
+		// $aCache = $this->getCache($sUrl);
+		// if ($aCache !== false)
+		// {
+			// return $aCache;
+		// }
+        
+		$aResult   = [];        
+        $analytics = new Google_Service_Analytics($this->_client);
+        $metrics   = (isset($aProperties['metrics'])) ? $aProperties['metrics'] : '';
+        $optParams = (isset($aProperties['optParams'])) ? $aProperties['optParams'] : '';
+        
+        try {
+            $aResult = $analytics->data_ga->get(
+                $this->_sProfileId, 
+                $this->_sStartDate, 
+                $this->_sEndDate, 
+                $metrics,
+                $optParams
+            );
+            
+        } catch(Exception $e) {
+            $this->_errors = 'There was an error : - ' . $e->getMessage();
+        }
+		
 		// cache the results (if caching is true)
 		$this->setCache($sUrl, $aResult);
+        
+        // $this->tabular($aResult);
 
 		return $aResult;
 	}
@@ -429,6 +373,18 @@ class Analytics {
 		return $sOutput;
 	}
 
+    // -----------------------------------------------------------------
+    // SETTERS
+    // -----------------------------------------------------------------
+    
+	/**
+	 * Sets GA Profile ID  (Example: ga:12345)
+	 */
+	public function setProfileById($sProfileId)
+	{
+		$this->_sProfileId = $sProfileId;
+	}
+    
 	/**
 	 * Sets the date range for GA data
 	 *
@@ -452,6 +408,10 @@ class Analytics {
 		$this->_sStartDate = date('Y-m-d', strtotime($iYear . '-' . $iMonth . '-01'));
 		$this->_sEndDate = date('Y-m-d', strtotime($iYear . '-' . $iMonth . '-' . date('t', strtotime($iYear . '-' . $iMonth . '-01'))));
 	}
+    
+    // -----------------------------------------------------------------
+    // GETTERS
+    // -----------------------------------------------------------------
 
 	/**
 	 * Get visitors for given period
@@ -510,12 +470,23 @@ class Analytics {
 	 *
 	 */
 	public function getBrowsers()
-	{
-		$aData = $this->getData(array(
-		   'dimensions' => 'ga:browser,ga:browserVersion',
+	{        
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:visits'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:browser,ga:browserVersion',
+                'sort' => 'ga:visits'
+            ]
+        ]);
+
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0] . ' ' . $row[1];
+            $aData[$key] = $row[2];
+        }
+
+		// sort descending by number of visits
 		arsort($aData);
 		return $aData;
 	}
@@ -542,11 +513,20 @@ class Analytics {
 	 */
 	public function getScreenResolution()
 	{
-		$aData = $this->getData(array(
-			'dimensions' => 'ga:screenResolution',
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:visits'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:screenResolution',
+                'sort' => 'ga:visits'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
 
 		// sort descending by number of visits
 		arsort($aData);
@@ -555,15 +535,24 @@ class Analytics {
 
 	/**
 	 * Get referrers for given period
-	 *
+	 * @return  array
 	 */
 	public function getReferrers()
-	{
-		$aData = $this->getData(array(
-			'dimensions' => 'ga:source',
+	{        
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:source'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:source',
+                'sort' => 'ga:source'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
 
 		// sort descending by number of visits
 		arsort($aData);
@@ -576,14 +565,57 @@ class Analytics {
 	 */
 	public function getSearchWords()
 	{
-		$aData = $this->getData(array(
-			'dimensions' => 'ga:keyword',
+        $data = $this->getData([
 			'metrics' => 'ga:visits',
-			'sort' => 'ga:keyword'
-		));
+            'optParams' => [
+                'dimensions' => 'ga:keyword',
+                'sort' => 'ga:keyword'
+            ]
+        ]);
+        
+        // Merge array values into an associative array 
+        $aData = [];
+        foreach ($data->rows as $row) {
+            $key = $row[0];
+            $aData[$key] = $row[1];
+        }
+
 		// sort descending by number of visits
 		arsort($aData);
 		return $aData;
 	}
+    
+    // ----------------------------------------------------------------
+    
+    /**
+     * Table to display data sets for debugging.
+     * @access      private
+     */
+    private function tabular($data)
+    {
+        if( ! empty($data)) {            
+            echo '
+            <table class="list"><tr>';
+            foreach($data->getColumnHeaders() as $header){  
+                print "<td>".$header['name']."</td>";   
+            }
+            echo '</tr>';
+            
+            //printing each row.
+            foreach ($data->getRows() as $row) {  
+                print '<tr>';
+                foreach ($row as $td) {
+                    echo '<td>'.$td.'</td>';
+                }
+                print '</tr>';
+            }
+
+            //printing the total number of rows
+            echo '
+            <tr><td colspan="2">Rows Returned ' . print $data->getTotalResults() . ' </td></tr>
+            </table>
+            </html>';
+        }
+    }
 
 }
