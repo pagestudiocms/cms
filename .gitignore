@@ -44,8 +44,8 @@ Temporary Items
 
 # Custom directories
 # =========================
+_dump*
 _inspiration
-_install
 themes/cedargrove
 date.xml
 _dump/projects_cmscanvas_b_09.12.2015.sql

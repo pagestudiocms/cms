@@ -23,12 +23,12 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach($ga_data as $day => $metric): ?>    
+        <?php foreach($ga_data as $day => $metric): ?>
         <tr>
             <td><?php echo date('F d, Y', strtotime($day)); ?></td>
             <td class="right"><?php echo $metric['visits']; ?></td>
             <td class="right"><?php echo $metric['pageviews']; ?></td>
-            <td class="right"><?php echo $this->google_analytics_model->avg_time_on_site($metric['timeOnSite'], $metric['visits']); ?></td>
+            <td class="right"><?php echo $this->google_analytics_model->avg_time_on_site($metric['sessionDuration'], $metric['visits']); ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>
