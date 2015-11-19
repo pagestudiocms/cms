@@ -469,7 +469,7 @@ class Entries_library
             $config['prefix'] = 'p';
             $config['uri_segment'] = $pagenum_segment;
             // Styling the pagination
-            $config['full_tag_open'] = '<div><ul class="pagination">';
+            $config['full_tag_open'] = '<div class="pagination-wrapper"><ul class="pagination">';
             $config['full_tag_close'] = '</ul></div><!--pagination-->';
 
             $config['first_link'] = '&laquo; First';
