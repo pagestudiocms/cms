@@ -4,19 +4,19 @@
  *
  * A web application for managing website content. For use with PHP 5.4+
  * 
- * This application is based on the on the CMS Canvas, the CodeIgniter 
- * application, http://cmscanvas.com/. It has been greatly altered to 
- * work for the purposes of our development team. Additional resources 
- * and concepts have been borrowed from PyroCMS http://pyrocms.com, 
- * for further improvement and reliability. 
+ * This application is based on CMS Canvas, a CodeIgniter based application, 
+ * http://cmscanvas.com/. It has been greatly altered to work for the 
+ * purposes of our development team. Additional resources and concepts have 
+ * been borrowed from PyroCMS http://pyrocms.com, for further improvement
+ * and reliability. 
  *
  * @package     PageStudio
- * @author      Cosmo Mathieu <cosmo@cimwebdesigns.com>
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
  * @copyright   Copyright (c) 2015, CosmoInteractive, LLC
  * @license     MIT License
- * @link        http://pagestudio.com
+ * @link        http://pagestudioapp.com
  */
- 
+
 // ------------------------------------------------------------------------
 
 /**
@@ -30,6 +30,7 @@
  * @category	Common Functions
  * @author		Cosmo Mathieu <cosmo@cosmointeractive.co>
  * @link		http://pagestudio.com/user_guide/
+ * @since       Version 1.2.0
  */
 class Search extends Public_Controller 
 {
@@ -42,15 +43,13 @@ class Search extends Public_Controller
     public function index()
     {
         $session = $this->session->userdata('search_terms');
-        // var_dump($session);
-        // echo $session['terms'];
-        
         $results = $this->search($session['terms']);
+        // $this->session->unset_userdata('search_terms');
+        
+        // var_dump($session);
         // var_dump($results);
         
         $this->build($results);
-        
-        // $this->session->unset_userdata('search_terms');
     }
     
     /**
@@ -66,7 +65,7 @@ class Search extends Public_Controller
 	 * @return array The search results.
 	 * @author Joe Freeman
 	 */
-	private function search($terms, $start = 0, $results_per_page = 0)
+	private function search_old($terms, $start = 0, $results_per_page = 0)
 	{
 		// Determine whether we need to limit the results
 		if ($results_per_page > 0) {
@@ -83,6 +82,99 @@ class Search extends Public_Controller
 		$query = $this->db->query($sql, array($terms, $terms));
 		return $query->result();
 	}
+    
+    // --------------------------------------------------------------------
+    
+    /**
+     * Loops through the content_type table and gets the ID's where searchable 
+     * is set to true, and returns an array containing the ID's
+     * 
+     * Select all content data where field_id_xx matches items in the ID's array 
+     * and return results array 
+     * 
+     * Loop through the results array and perform a kwyword search and return result
+     *
+     * @return  array
+     */ 
+    private function search($terms, $start = 0, $results_per_page = 0)
+    {
+        // Declare our vars
+        $field_ids = '';        // Stores field_id_xx etc
+        $fields = [];
+        $terms = trim($terms);
+        $tracker = [];
+        
+        // Determine whether we need to limit the results
+		if ($results_per_page > 0) {
+			$limit = "LIMIT $start, $results_per_page";
+		} else {
+			$limit = '';
+		}
+        
+        // Loops through the content_type table and gets the ID's where 
+        // searchable is set to true, and returns an array containing the ID's
+        $searchFields = $this->db->select('id')->where('is_searchable','y')->get('content_fields');
+
+        // Build query partial
+        foreach($searchFields->result() as $key => $field) {
+            $field_ids .= 'field_id_' . $field->id . ',';
+            $fields[] = 'field_id_' . $field->id;
+        }
+        $field_ids = rtrim($field_ids, ','); // Remove final comma from string
+        
+        // Select all content data where field_id_xx matches items in the ID's 
+        // array and return results array
+        $this->db->select('
+            entries_data.id,
+            entry_id,
+            entries.title,
+            entries.slug,
+            entries.status,
+            ' . $field_ids
+        );
+        $this->search_helper($fields, $terms, true); // Query builder helper 
+        $this->search_helper($fields, $terms, false); // Query builder helper 
+        // $this->db->where('entries.status', 'drafts'); 
+        $this->db->join('entries', 'entries.id = entries_data.entry_id');
+        $search = $this->db->get('entries_data');
+
+        // var_dump($search->result());
+        
+        return $search->result();
+        // return []; 
+    }
+
+    // --------------------------------------------------------------------
+    
+    /**
+     * Helper function to search method
+     *
+     * @return  array
+     */
+    private function search_helper($fields, $terms, $search_rank = false)
+    {
+        $count = 0;
+        for($i = 0;$i < count($fields); $i++) {
+            // Keyword search | ranks lower
+            if($search_rank === true) {
+                $this->db->like($fields[0], $terms); // Produces ['field_id_xx', 'key phrase']
+                if($i > 0) {
+                    $this->db->or_like($fields[$i], $terms);
+                }
+            } else { // Phrase search | ranks higher
+                $keywords = explode(' ', $terms);
+                foreach($keywords as $keyword) {
+                    if($count < 1) {                            
+                        $this->db->like($fields[0], $keyword); // Produces ['field_id_xx', 'key word']
+                    }
+                    if($count > 0) {
+                        $this->db->or_like($fields[$i], $keyword);
+                    }
+                    $count++;
+                }
+            }
+        }
+    }
     
     // --------------------------------------------------------------------
     
@@ -182,7 +274,7 @@ class Search extends Public_Controller
 
             $data['_content'] = $Page->build_content();
             foreach($search_results as $item) {
-                $data['_content'] = '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
+                $data['_content'] .= '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
             }
 
             // Set Metadata
