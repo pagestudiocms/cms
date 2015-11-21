@@ -1,13 +1,25 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 /**
- * CMS Canvas
+ * PageStudio
  *
- * @author      Mark Price
- * @copyright   Copyright (c) 2012
+ * @author      Cosmo Mathieu
+ * @copyright   Copyright (c) 2015
  * @license     MIT License
- * @link        http://cmscanvas.com
+ * @link        http://pagestudioapp.com
  */
+ 
+// -------------------------------------------------------------------
 
+/**
+ * Default dashboard controller 
+ *
+ * Changes
+ * ----------------
+ *
+ * Credits:  Mark Price <http://cmscanvas.com>
+ *
+ * @author  Cosmo Mathieu <http://cosmointeractive.co>
+ */
 class Dashboard extends Admin_Controller 
 {
     function __construct()
