@@ -44,7 +44,7 @@ class Search extends Public_Controller
     {
         $session = $this->session->userdata('search_terms');
         $results = $this->search($session['terms']);
-        // $this->session->unset_userdata('search_terms');
+        $this->session->unset_userdata('search_terms');
         
         // var_dump($session);
         // var_dump($results);
@@ -103,6 +103,11 @@ class Search extends Public_Controller
         $fields = [];
         $terms = trim($terms);
         $tracker = [];
+        
+        // Returns an empty array if the search form was submitted empty
+        if(empty($terms)) {
+            return [];
+        }
         
         // Determine whether we need to limit the results
 		if ($results_per_page > 0) {
