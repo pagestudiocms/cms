@@ -79,6 +79,7 @@ class Fields extends Admin_Controller {
         $this->form_validation->set_rules('content_field_type_id', 'Type', 'trim|required');
         $this->form_validation->set_rules('label', 'Label', 'trim|required');
         $this->form_validation->set_rules('required', 'Required', 'trim|required');
+        $this->form_validation->set_rules('is_searchable', 'trim');
 
         if ($data['edit_mode'])
         {

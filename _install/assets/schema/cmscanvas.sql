@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `content_fields` (
   `label` varchar(50) NOT NULL,
   `short_tag` varchar(50) NOT NULL,
   `required` tinyint(1) NOT NULL DEFAULT '0',
+  `is_searchable` varchar(4) DEFAULT NULL,
   `options` text DEFAULT NULL,
   `settings` text DEFAULT NULL,
   `sort` int(11) NOT NULL DEFAULT '0',

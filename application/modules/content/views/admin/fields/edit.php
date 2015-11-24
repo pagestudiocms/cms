@@ -37,6 +37,13 @@
                         <label><?php echo form_radio(array('name'=>'required', 'value'=>'0', 'checked'=>set_radio('required', '0', (empty($Field->required)) ? TRUE : FALSE))); ?> No</label>
                     </span>
                 </div>
+                <div>
+                    <label for="is_searchable">Searchable?:</label>
+                    <span>
+                        <label><?php echo form_radio(array('name'=>'is_searchable', 'value'=>'y', 'checked'=>set_radio('is_searchable', '1', ( ! empty($Field->is_searchable) && $Field->is_searchable === 'y') ? TRUE : FALSE))); ?> Yes</label>
+                        <label><?php echo form_radio(array('name'=>'is_searchable', 'value'=>'n', 'checked'=>set_radio('is_searchable', '0', (( ! empty($Field->is_searchable) && $Field->is_searchable === 'n') || empty($Field->is_searchable)) ? TRUE : FALSE))); ?> No</label>
+                    </span>
+                </div>
 
                 <span id="config"><?php echo $setting_fields; ?></span>
             </div>
