@@ -133,6 +133,7 @@ class Search extends Public_Controller
             entries_data.id,
             entry_id,
             entries.title,
+            entries.meta_description,
             entries.slug,
             entries.status,
             ' . $field_ids
@@ -142,11 +143,12 @@ class Search extends Public_Controller
         // $this->db->where('entries.status', 'drafts'); 
         $this->db->join('entries', 'entries.id = entries_data.entry_id');
         $search = $this->db->get('entries_data');
-
-        // var_dump($search->result());
         
-        return $search->result();
-        // return []; 
+        // return $search->result();
+        return [
+            'terms' => $terms, 
+            'results' => $search->result(), 
+        ];
     }
 
     // --------------------------------------------------------------------
@@ -184,7 +186,7 @@ class Search extends Public_Controller
     // --------------------------------------------------------------------
     
     // List results to the view 
-    private function build($search_results = array())
+    private function build($search = array())
 	{
         $this->load->model('content/pages_model');
         $this->load->helper('functions');
@@ -278,8 +280,23 @@ class Search extends Public_Controller
             $this->template->set('content_type', $Page->content_types->short_name);
 
             $data['_content'] = $Page->build_content();
-            foreach($search_results as $item) {
-                $data['_content'] .= '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
+            
+            // List search results 
+            if( ! empty($search)) {
+                $data['search_term'] = $search['terms'];
+                $data['_content'] .= '<h2>Search Results</h2>';
+                if( isset($search['results']) && ! empty($search['results']) ) {            
+                    foreach($search['results'] as $item) {
+                        $data['_content'] .= '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
+                        $data['_content'] .= ( ! empty($item->meta_description)) ? shorten_phrase( $item->meta_description, 100 ) . '<hr>' : '...<hr>';
+                    }
+                } else {
+                    $data['_content'] = '<h2>Search Results </h2>
+                        <p>Your search for <strong><em>'. $search['terms'] .'</em></strong> did not return any results.</p>';
+                }
+            } else {
+                $data['_content'] = '<h2>Search Results </h2> 
+                    <p>Please enter something in the search field to begin your search.</p><br />';
             }
 
             // Set Metadata
