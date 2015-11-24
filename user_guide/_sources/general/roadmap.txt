@@ -2,13 +2,6 @@
 Development Road Map
 ====================
 
-Entry Search
-############
-
-**Estimated Completion Date: Unknown**
-
-Adds the ability to build forms that search entry field data.
-
 Template ShortCodes
 ###################
 

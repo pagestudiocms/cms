@@ -233,41 +233,74 @@ Home, Page Not Found, About Us</p>
 <div class="section" id="content-type">
 <h4>content_type=<a class="headerlink" href="#content-type" title="Permalink to this headline">¶</a></h4>
 <p>Used to return entries of a specified content type. To reference a content type supply the content type&#8217;s short name.</p>
-<p>content_type=&#8221;pages&#8221;</p>
+<p><code class="docutils literal"><span class="pre">content_type=&quot;pages&quot;</span></code></p>
 <p>To return entries of multiple content types, provide the list of short names separated by a pipe.</p>
-<p>content_type=&#8221;pages|events&#8221;</p>
+<p><code class="docutils literal"><span class="pre">content_type=&quot;pages|events&quot;</span></code></p>
 <p>You can also return all entries but exclude entries of specific content types by using the keyword &#8220;not&#8221;.</p>
-<p>content_type=&#8221;not pages|events&#8221;</p>
+<p><code class="docutils literal"><span class="pre">content_type=&quot;not</span> <span class="pre">pages|events&quot;</span></code></p>
 </div>
 <div class="section" id="entry-id">
 <h4>entry_id=<a class="headerlink" href="#entry-id" title="Permalink to this headline">¶</a></h4>
 <p>Queries and returns a single entry by its ID. Great for embedding entries inside themes, content types, and other entries to prevent duplicating content.</p>
-<p>entry_id=&#8221;18&#8221;</p>
+<p><code class="docutils literal"><span class="pre">entry_id=&quot;18&quot;</span></code></p>
 </div>
 <div class="section" id="limit">
 <h4>limit=<a class="headerlink" href="#limit" title="Permalink to this headline">¶</a></h4>
 <p>Limit the number of entries returned.</p>
-<p>limit=&#8221;10&#8221;</p>
+<p><code class="docutils literal"><span class="pre">limit=&quot;10&quot;</span></code></p>
 </div>
 <div class="section" id="order-by">
 <h4>order_by=<a class="headerlink" href="#order-by" title="Permalink to this headline">¶</a></h4>
 <p>Order the returned entries by a content type&#8217;s content field. To set the order by, provide the fields short tag name without brackets.</p>
-<p>order_by=&#8221;title&#8221;</p>
+<p><code class="docutils literal"><span class="pre">order_by=&quot;title&quot;</span></code></p>
 <p>You can also order by multiple fields by providing a pipe delimited list of field short tags.</p>
-<p>order_by=&#8221;created_date|modified_date&#8221;</p>
+<p><code class="docutils literal"><span class="pre">order_by=&quot;created_date|modified_date&quot;</span></code></p>
 <p>If you would like entries to be completely random you can set use the keyword &#8220;random&#8221;</p>
-<p>order_by=&#8221;random&#8221;</p>
+<p><code class="docutils literal"><span class="pre">order_by=&quot;random&quot;</span></code></p>
 <p>See the sort paramater on how to set the sorting for the order bys.</p>
 </div>
 <div class="section" id="paginate">
 <h4>paginate=<a class="headerlink" href="#paginate" title="Permalink to this headline">¶</a></h4>
-<p>paginate=&#8221;top&#8221;, paginate=&#8221;bottom&#8221;, paginate=&#8221;both&#8221;</p>
-<p>Documentation coming soon.</p>
+<p><code class="docutils literal"><span class="pre">paginate=&quot;top|bottom|both&quot;</span></code></p>
+<p>The opening and closing tags for pagination. This can to be used in conjunction with the paginate= parameter to determine where the contents of this tag will appear. See below for the available variables for use inside this tag. This tag is wrapped around either the single variables (see below) or the next/previous variable pairs.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="x">{{paginate}} {{/paginate}}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pagination-links">
+<h4>pagination_links=<a class="headerlink" href="#pagination-links" title="Permalink to this headline">¶</a></h4>
+<p>This variable shows the current page you are on as well as “surrounding” pages in addition to links for next/previous pages and first/last pages.</p>
+<p>You can use <code class="docutils literal"><span class="pre">{{pagination_links}}</span></code> in two ways. It can be used as a single variable:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="x">{{paginate}} {{ pagination_links }} {{/paginate}}</span>
+</pre></div>
+</div>
+<p>And the output looks like this:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="x">« First  &lt;  11 12 13 14 15 &gt;  Last »</span>
+</pre></div>
+</div>
+<p>When used as a pair, you have a lot more flexibility with the markup:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="x">{{paginate}}</span>
+<span class="x">    {{ if previous_page }}</span>
+<span class="x">        &lt;li&gt;&lt;a href=&quot;{{pagination_url}}&quot; class=&quot;page-next&quot;&gt;Previous Page&lt;/a&gt;&lt;/li&gt;</span>
+<span class="x">    {{ endif }}</span>
+
+<span class="x">    ...</span>
+
+<span class="x">    {{ if next_page }}</span>
+<span class="x">        &lt;li&gt;&lt;a href=&quot;{{pagination_url}}&quot; class=&quot;page-next&quot;&gt;Next Page&lt;/a&gt;&lt;/li&gt;</span>
+<span class="x">    {{ endif }}</span>
+<span class="x">{{/paginate}}</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">In order for the pagination to work the <code class="docutils literal"><span class="pre">limit=</span></code> paramater must also be set in the content opening tag block.</p>
+</div>
 </div>
 <div class="section" id="segment">
 <h4>segment=<a class="headerlink" href="#segment" title="Permalink to this headline">¶</a></h4>
 <p>This allows you to query and return a single entry by its entry id or URL title defined in a segment in the current page&#8217;s URL.</p>
-<p>segment=&#8221;3&#8221;</p>
+<p><code class="docutils literal"><span class="pre">segment=&quot;3&quot;</span></code></p>
 <p>For example, if the current page&#8217;s URL is:</p>
 <p><a class="reference external" href="http://somedomain.com/blog/entry/26">http://somedomain.com/blog/entry/26</a></p>
 <p>The third segment of this URL defines the entry id. So you could have {{ content:entries }} return the content for entry #26 by setting the segment to 3.</p>
@@ -276,9 +309,9 @@ Home, Page Not Found, About Us</p>
 <div class="section" id="sort">
 <h4>sort=<a class="headerlink" href="#sort" title="Permalink to this headline">¶</a></h4>
 <p>By default entries are sorted ascending. You can modify this by setting sort to &#8220;desc&#8221;</p>
-<p>sort=&#8221;desc&#8221;</p>
+<p><code class="docutils literal"><span class="pre">sort=&quot;desc&quot;</span></code></p>
 <p>If you have multiple order bys you can specify the sort for each order by with a pipe delimited list in the same order as the order bys.</p>
-<p>sort=&#8221;asc|desc&#8221;</p>
+<p><code class="docutils literal"><span class="pre">sort=&quot;asc|desc&quot;</span></code></p>
 </div>
 </div>
 </div>
