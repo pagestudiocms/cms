@@ -49,11 +49,12 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
-$db['default']['password'] = '';
-$db['default']['database'] = '';
+$db['default']['username'] = 'jonah';
+$db['default']['password'] = 'jonah213';
+$db['default']['database'] = 'projects_cmscanvas';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
+$db['default']['port'] = 3306;
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['cache_on'] = FALSE;
