@@ -16,7 +16,7 @@ Features
 -  Content caching
 -  Content revisons
 
-Aknowledgments
+Acknowledgments
 ##############
 
 This project is a fork of CMS Canvas originally created by [author]. 
