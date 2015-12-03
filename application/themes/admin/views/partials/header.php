@@ -24,6 +24,7 @@
     <script type="text/javascript" src="<?php echo theme_url('assets/js/app.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/helpers.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/superfish.js'); ?>"></script>
+    <script type="text/javascript" src="<?php echo theme_url('assets/js/grid/grid.js'); ?>"></script>
 
     <!-- Google Analytics -->
     <?php echo $this->template->analytics() ?>
