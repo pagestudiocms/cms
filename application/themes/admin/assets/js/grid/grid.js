@@ -5,7 +5,7 @@
  * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
  */
 $(document).ready(function(){
-    var counter = 2;
+    var counter = 1;
     
     $('#field_id_30 table.matrix tbody').sortable({
         axis: 'y',
@@ -26,6 +26,7 @@ $(document).ready(function(){
         // counter    = $('#field_id_30 table.matrix tr').length - 2;
         var newRow = $("<tr class=\"matrix\" id=\"tbl_row_"+ counter +"\">");
         var cols   = "";
+        $('.matrix-norows').hide();
         
         cols += 
         '<th class="matrix matrix-first matrix-tr-header">' +

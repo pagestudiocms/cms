@@ -1,18 +1,20 @@
 <?php
-/**
- * Call global helper function to build html fields based on settings set in 
- * grid_fields database table settings.
- *
- * Save to table field in a json format.
- */
 // echo form_input(array(
     // 'name'  =>'field_id_' . $Field->id, 
     // 'value' =>set_value('field_id_' . $Field->id, $content)
 // )); 
 
-// To do: Build form via php and database fields 
 // To do: submit changes to database
 ?>
+<div id="sub_hold_field_30">
+	<fieldset class="holder">
+        <div id="field_id_30" class="matrix matrix-ee2">
+            <?php echo $table; ?>
+        </div>
+    </fieldset>
+</div>
+
+<!--
 <div id="sub_hold_field_30">
 	<fieldset class="holder">
         <div id="field_id_30" class="matrix matrix-ee2">
@@ -26,11 +28,9 @@
                     </tr>
                 </thead>
                 <tbody class="matrix">
-                    <!--
                     <tr style="display: none;" class="matrix matrix-first matrix-last matrix-norows even">
                         <td colspan="4" class="matrix matrix-first matrix-firstcell matrix-last">No rows exist yet. <a>Create the first one.</a></td>
                     </tr>
-                    -->
                     <tr class="matrix matrix-first" id="tbl_row_1">
                         <th class="matrix matrix-first matrix-tr-header">
                             <div>
@@ -56,3 +56,4 @@
         </div>
     </fieldset>
 </div>
+-->
