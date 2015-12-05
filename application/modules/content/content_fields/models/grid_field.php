@@ -56,8 +56,7 @@ class Grid_field extends Field_type
             $option_array[$option[0]] = (count($option) == 2) ? $option[1] : $option[0];
         }
 
-        $data['Field']->options = $option_array;
-        
+        $data['Field']->options = $option_array;        
         $data['table'] = $this->table();
         
         return $this->load->view('grid', $data, TRUE);
@@ -91,6 +90,7 @@ class Grid_field extends Field_type
     public function output($grid_headers, $grid_rows, $entry_id)
     {
         $total_cols = count($grid_headers);     // Get number of columns
+        $row_count = 1;
         $count = 0;
         $out  = '';
 		$out .= '
@@ -113,12 +113,13 @@ class Grid_field extends Field_type
                         if($count === $total_cols) {
                             $count = 0;
                             $out .= '<tr class="matrix matrix-first" id="tbl_row_1">';
+                            $row_count++;
                         }
                         if($count === 0) {
                             $out .= '
                             <th class="matrix matrix-first matrix-tr-header">
                                 <div>
-                                    <span>1</span><a style="opacity: 1; display: none;" title="Options"></a>
+                                    <span>'.$row_count.'</span><a class="delRow" style="opacity: 1; display: inline;" title="Options"></a>
                                 </div>
                             </th>';                            
                         }
@@ -142,6 +143,82 @@ class Grid_field extends Field_type
             </tbody>
         </table>
         <a class="matrix-btn matrix-add" id="addrow" title="Add row"></a>';
+        
+        $dynamic_rows = '';
+        $count = 0;
+        foreach($grid_headers as $key => $col ) {
+            // if($count === 0) {
+                // $dynamic_rows .= '
+                // <th class="matrix matrix-first matrix-tr-header">
+                    // <div>
+                        // <span>'.$row_count.'</span><a style="opacity: 1; display: none;" title="Options"></a>
+                    // </div>
+                // </th>';                            
+            // }
+            $dynamic_rows .= $this->field_type(
+                $col->content_field_type_id,
+                $col->options,
+                ''
+            );
+            $count++;
+        }
+        $dynamic_rows = json_encode($dynamic_rows);
+        
+        // Add module level javascript to head
+        $script = "$(document).ready( function() {
+            var counter = ". (($row_count >= 0) ? $row_count + 1 : 1) .";
+            
+            $('#field_id_30 table.matrix tbody').sortable({
+                axis: 'y',
+                placeholder: \"ui-state-highlight\",
+                update: function (event, ui) {
+                    var data = $(this).sortable('serialize');
+                    // POST to server using $.post or $.ajax
+                    // $.ajax({
+                        // data: data,
+                        // type: 'POST',
+                        // url: '/your/url/here'
+                    // });
+                }
+            });
+
+            $(\"#addrow\").on(\"click\", function(){
+
+                // counter    = $('#field_id_30 table.matrix tr').length - 2;
+                var newRow = $('<tr class=\"matrix\" id=\"tbl_row_\"+ counter +\"\">');
+                var cols   = \"\";
+                $('.matrix-norows').hide();
+                
+                cols += 
+                '<th class=\"matrix matrix-first matrix-tr-header\">' +
+                '    <div>' +
+                '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
+                '    </div>' +
+                '    <input name=\"field_id_30[row_order][]\" value=\"row_new_1\" type=\"hidden\">' +
+                '</th>';
+                cols += 'jQuery.parseJSON({$dynamic_rows})';
+                newRow.append(cols);
+                
+                if (counter === 4) {
+                    $('#addrow').click(function(e){
+                        e.preventDefault();
+                    });
+                    $('#addrow').removeAttr('href');
+                    $('#addrow').hide();
+                }
+                $(\"table.order-list\").append(newRow);
+                
+                counter++;
+            });
+
+            $('table.order-list').on('click', '.delRow', function(event){
+                if (confirm('Are you sure you want to delete this?')) {
+                    $(this).closest(\"tr\").remove();
+                    counter -= 1
+                }
+            });
+        });";
+        $this->template->add_script($script);
         
         return $out;
     }
