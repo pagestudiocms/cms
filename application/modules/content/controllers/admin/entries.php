@@ -182,6 +182,8 @@ class Entries extends Admin_Controller {
         $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
         $Content_fields = $this->load->library('content_fields');
         $Content_fields->initialize($config);
+        // var_dump($this->session->userdata('content_fields'));
+        $this->session->unset_userdata('content_fields');
 
         // Check if versioning is enabled and whether a revision is loaded
         if ($Content_type->enable_versioning && is_numeric($revision_id))
@@ -284,6 +286,14 @@ class Entries extends Admin_Controller {
 
         // Get content fields html
         $field_validation = $Content_fields->validate();
+        
+        // Get Grid content fields 
+        // Process Grid fields separately from normal content types
+        $Grid_fields = $this->load->library(
+            'Grid_fields',
+            $params = ['data'=> $this->input->post()]
+        );
+        $Grid_fields->run();
 
         // Validation and process form
         if ($this->form_validation->run() == TRUE && $field_validation)
@@ -388,7 +398,7 @@ class Entries extends Admin_Controller {
             }
             else
             {
-                redirect(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id);
+                // redirect(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id);
             }
         }
 

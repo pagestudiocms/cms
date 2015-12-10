@@ -4,11 +4,11 @@
  *
  * A web application for managing website content. For use with PHP 5.4+
  * 
- * This application is based on the on the CMS Canvas, the CodeIgniter 
- * application, http://cmscanvas.com/. It has been greatly altered to 
- * work for the purposes of our development team. Additional resources 
- * and concepts have been borrowed from PyroCMS http://pyrocms.com, 
- * for further improvement and reliability. 
+ * This application is based on the CodeIgniter CMS application; 
+ * CMS Canvas <http://cmscanvas.com/>. It has been greatly altered to work 
+ * for the purposes of our development team. Additional resources and 
+ * concepts have been borrowed from PyroCMS http://pyrocms.com, for further 
+ * improvement and reliability. 
  *
  * @package     PageStudio
  * @author      Cosmo Mathieu <cosmo@cimwebdesigns.com>
@@ -37,6 +37,8 @@
  */
 class Grid_field extends Field_type
 {
+    public $tracker = [];
+    
     public function settings()
     {
         $data = get_object_vars($this);
@@ -45,7 +47,7 @@ class Grid_field extends Field_type
     }
 
     public function display_field()
-    {        
+    {
         $data = get_object_vars($this);
 
         // Build options array
@@ -66,35 +68,61 @@ class Grid_field extends Field_type
     
     private function table()
     {
-        $entry_id = $this->uri->segment(5);
-        // Get the table cols and headers 
-        $this->db->select('*');
-        $this->db->where('content_type_id', $entry_id);
-        $grid_headers = $this->db->get('grid_cols');
+        $entry_id = $this->uri->segment(6);
+        $content_type_id = $this->uri->segment(5);
+        $content_fields_array = ($this->session->userdata('content_fields')) ? $this->session->userdata('content_fields') : [];
         
-        // Get the table rows
-        $this->db->select('*');
-        $this->db->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id');
-        $this->db->order_by("grid_col_data.row_order", 'asc'); 
-        $grid_rows = $this->db->get('grid_col_data');
-        
-        return $this->output(
-            $grid_headers->result(),
-            $grid_rows->result(),
-            $entry_id
-        );
+        // Get all elligible fields 
+        $content_fields = $this->db->select('*')->where('content_type_id', $content_type_id)->get('content_fields');
+
+        for($i=0;$i<count($content_field_array = $content_fields->result());$i++) {
+            if( ! array_key_exists($i, $content_fields_array)) {
+                $content_fields_array[] = $content_field_array[$i]->id;
+                $this->session->set_userdata(['content_fields' => $content_fields_array]);
+                
+                // Get the table cols and headers 
+                $this->db->select('*');
+                $this->db->where('content_field_id', $content_field_array[$i]->id);
+                $grid_headers = $this->db->get('grid_cols');
+                
+                // Get the table rows
+                $this->db->select('*, grid_col_data.id');
+                $this->db->where('grid_cols.content_field_id', $content_field_array[$i]->id);
+                $this->db->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left');
+                $this->db->order_by("grid_col_data.row_order", 'asc'); 
+                $grid_rows = $this->db->get('grid_col_data');
+                
+                // Get the field settings
+                $field_settings = $this->db->select('settings, sort')
+                    ->where('content_type_id', $content_type_id)
+                    ->get('content_fields')
+                    ->result();
+                return $this->table_output([
+                    'grid_headers' => $grid_headers->result(),
+                    'grid_rows' => $grid_rows->result(),
+                    'content_field_id' => $content_field_array[$i]->id,
+                    'content_type_id' => $content_type_id,
+                    'entry_id' => $entry_id,
+                    'field_settings' => $field_settings[0]->settings,
+                    'field_sort' => $field_settings[0]->sort
+                ]);
+            }
+        }
     }
     
     // ------------------------------------------------------------------
     
-    public function output($grid_headers, $grid_rows, $entry_id)
+    private function table_output($params)
     {
+        extract($params);
+        extract(unserialize($field_settings));
+        $max_rows = ( ! empty($max_rows)) ? $max_rows : 50;
         $total_cols = count($grid_headers);     // Get number of columns
         $row_count = 1;
         $count = 0;
         $out  = '';
 		$out .= '
-        <table id="myTable" class="matrix order-list" border="0" cellpadding="0" cellspacing="0">
+        <table id="content_type_'.$content_field_id.'" class="matrix order-list" border="0" cellpadding="0" cellspacing="0">
             <thead class="matrix">
                 <tr class="matrix matrix-first matrix-last odd">
                     <th class="matrix matrix-first matrix-tr-header"></th>';
@@ -108,7 +136,7 @@ class Grid_field extends Field_type
             <tbody class="matrix">';
                 if( ! empty($grid_rows)) {
                     $count = 0;
-                    
+
                     foreach($grid_rows as $key => $col ) {
                         if($count === $total_cols) {
                             $count = 0;
@@ -126,8 +154,9 @@ class Grid_field extends Field_type
                         $out .= $this->field_type(
                             $col->content_field_type_id,
                             $col->options,
-                            $col->row_data
-                        );
+                            $col->row_data,
+                            $col->id
+                        );                        
                         
                         $out .= ($count === $total_cols) ? '</tr>' : '';
                         $count++;
@@ -142,7 +171,7 @@ class Grid_field extends Field_type
         $out .= '
             </tbody>
         </table>
-        <a class="matrix-btn matrix-add" id="addrow" title="Add row"></a>';
+        <a class="matrix-btn matrix-add" id="field_'.$content_field_id.'_addrow_btn" title="Add row"></a>';
         
         $dynamic_rows = '';
         $count = 0;
@@ -168,7 +197,7 @@ class Grid_field extends Field_type
         $script = "$(document).ready( function() {
             var counter = ". (($row_count >= 0) ? $row_count + 1 : 1) .";
             
-            $('#field_id_30 table.matrix tbody').sortable({
+            $('table#content_type_".$content_field_id.".matrix tbody').sortable({
                 axis: 'y',
                 placeholder: \"ui-state-highlight\",
                 update: function (event, ui) {
@@ -182,9 +211,9 @@ class Grid_field extends Field_type
                 }
             });
 
-            $(\"#addrow\").on(\"click\", function(){
+            $('#field_{$content_field_id}_addrow_btn').on('click', function(){
 
-                // counter    = $('#field_id_30 table.matrix tr').length - 2;
+                // counter    = $('#content_type_".$content_field_id." table.matrix tr').length - 2;
                 var newRow = $('<tr class=\"matrix\" id=\"tbl_row_\"+ counter +\"\">');
                 var cols   = \"\";
                 $('.matrix-norows').hide();
@@ -194,27 +223,26 @@ class Grid_field extends Field_type
                 '    <div>' +
                 '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
                 '    </div>' +
-                '    <input name=\"field_id_30[row_order][]\" value=\"row_new_1\" type=\"hidden\">' +
+                '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"row_new_1\" type=\"hidden\">' +
                 '</th>';
                 cols += 'jQuery.parseJSON({$dynamic_rows})';
                 newRow.append(cols);
                 
-                if (counter === 4) {
-                    $('#addrow').click(function(e){
-                        e.preventDefault();
-                    });
-                    $('#addrow').removeAttr('href');
-                    $('#addrow').hide();
+                if (counter === ".$max_rows.") {
+                    $('#field_{$content_field_id}_addrow_btn').hide();
                 }
-                $(\"table.order-list\").append(newRow);
+                $('table#content_type_{$content_field_id}').append(newRow);
                 
                 counter++;
             });
 
-            $('table.order-list').on('click', '.delRow', function(event){
+            $('table#content_type_{$content_field_id}').on('click', '.delRow', function(event){
                 if (confirm('Are you sure you want to delete this?')) {
                     $(this).closest(\"tr\").remove();
-                    counter -= 1
+                    counter -= 1;
+                    if(counter <= ".$max_rows.") {
+                        $('#field_{$content_field_id}_addrow_btn').show();
+                    }
                 }
             });
         });";
@@ -225,14 +253,14 @@ class Grid_field extends Field_type
     
     // ------------------------------------------------------------------
    
-    public function field_type($type, $options, $row_data)
+    private function field_type($type, $options, $row_data, $grid_col_data_id = '')
     {
         $field = '';
         
         switch($type) {
             case 3 : $field = '
                 <td style="width: auto;" class="matrix matrix-text">
-                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="field_id_30[row_new_1][col_id_34]" dir="ltr">'. $row_data .'</textarea>
+                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="grid_col_data['.$grid_col_data_id.']" dir="ltr">'. $row_data .'</textarea>
                     <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>
                 </td>';
             break;
@@ -244,7 +272,7 @@ class Grid_field extends Field_type
                 }
                 $field = '
                 <td style="width: auto;" class="matrix matrix-firstcell">
-                    <select name="field_id_30[row_new_1][col_id_33]">
+                    <select name="grid_col_data['.$grid_col_data_id.']">
                     '. $select_field .'  
                     </select>
                 </td>';
