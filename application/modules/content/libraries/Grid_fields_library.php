@@ -1,0 +1,105 @@
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * PageStudio
+ *
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on the CodeIgniter CMS application; 
+ * CMS Canvas <http://cmscanvas.com/>. It has been greatly altered to work 
+ * for the purposes of our development team. Additional resources and 
+ * concepts have been borrowed from PyroCMS http://pyrocms.com, for further 
+ * improvement and reliability. 
+ *
+ * @package     PageStudio
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, CosmoInteractive, LLC
+ * @license     MIT License
+ * @link        http://pagestudio.com
+ */
+
+// ------------------------------------------------------------------------
+
+/**
+ * Grid Fields Library
+ *
+ * 
+ * @package		PageStudio
+ * @subpackage	Modules
+ * @category	Library
+ * @author		Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @link		http://pagestudio.com/user_guide/
+ */
+class Grid_Fields_library
+{
+    private $CI,
+            $pagenum_segment = NULL,
+            $db = NULL;
+
+    public  $entries = array(),
+            $content_fields = array(),
+            $entry_id = NULL,
+            $content_type_id = NULL,
+            $content_type = NULL;
+            
+    public function __construct()
+    {
+        $this->CI =& get_instance();    
+        $this->CI->load->add_package_path(APPPATH . 'modules/content/content_fields');
+
+        // Create a new instance of the activerecord class
+        // And clear benchmarks for profiling
+        $this->db =& $this->CI->db;
+    }
+    
+    /**
+     *
+     */
+    public function get_data($content_fields)
+    {
+        $data = []; // Final data to be returned to the caller 
+        
+        foreach($content_fields as $key => $content_field) {
+          // Get field names associated with the content field 
+          $this->db->select('id, short_tag');
+          $this->db->where('content_field_id', $content_field->id);
+          $grid_cols = count($this->db->get('grid_cols')->result());
+          
+          if ($grid_cols) {
+            // Get the table rows
+            $this->db->select('
+                short_tag,
+                grid_col_data.row_data
+            ');
+            $grid_rows = $this->db->where('grid_cols.content_field_id', $content_field->id)
+                ->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left')
+                ->order_by("grid_col_data.row_order", 'asc')
+                ->get('grid_col_data')->result();
+                
+            $grid_data = [];
+            $break = $grid_cols * 2;
+            $count = 1;
+            $array = [];
+            $fields = [];
+            
+            foreach($grid_rows as $key => $value) {
+              foreach($value as $key => $item) {
+                  if($count % 2 !== 0) {
+                      $tag = $item; 
+                  } else {
+                      $array[$tag] = $item;
+                      if($count === $break) {
+                          $fields[] = $array;
+                          $count = 0;
+                      }
+                  }
+                  $count++;
+              }
+            }
+            
+            $data[$content_field->short_tag] = $fields;
+          }
+        }
+        
+        return $data;
+    }
+}

@@ -11,10 +11,10 @@
  * improvement and reliability. 
  *
  * @package     PageStudio
- * @author      Cosmo Mathieu <cosmo@cimwebdesigns.com>
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
  * @copyright   Copyright (c) 2015, CosmoInteractive, LLC
  * @license     MIT License
- * @link        http://pagestudio.com
+ * @link        http://pagestudioapp.com
  */
 
 // ------------------------------------------------------------------------
@@ -22,67 +22,47 @@
 /**
  * Grid Fields Content Type Library
  *
- * Provides the ability to add/update/delete grid content type fields.
+ * Provides the ability to add/update/delete grid content type field data.
  *
- * @todo        Save field data to database
- * @todo        Add ability to use tags in templates 
  * @todo        Add ability to save row sortable order
  * @todo        Add field validators such as: required, min/max chars, etc.
  * @todo        Add additional dynamic field types(i.e. dropdowns, ckedit) 
  *
- * @package		PageStudio
- * @subpackage	Content
- * @category	Module
- * @author		Cosmo Mathieu <cosmo@cosmointeractive.co>
- * @link		http://pagestudio.com/user_guide/
+ * @package		  PageStudio
+ * @subpackage	Libraries
+ * @category	  Module
+ * @author		  Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @link		    http://pagestudioapp.com/user_guide/
  */ 
 class Grid_fields 
 {
-    public  $fielName,
+    public  $fieldName,
             $post = '',
             $gridData = [],
-            $CI;
+            $CI, 
+            $grid_col_data = 'grid_col_data';
     
-    public function __construct($data)
+    public function __construct($data = [])
     {
         $this->post = $data;
         $this->CI = get_instance();
     }
     
-    // Check if a grid field exist in the form submission
+    /**
+     * Default bootstrap method 
+     *
+     * Check if a grid field exist in the form submission and run default 
+     * methods and actions 
+     *
+     * @access    public 
+     * @return    void
+     */
     public function run()
     {
-        if($this->post['data']){
-            $this->gridData = $this->post['data']['grid_col_data'];
-            $this->validate($this->gridData);
-            // var_dump($this->post['data']);
-        }
-    }
-
-    // --------------------------------------------------------------------
-    
-    // Validate the grid field (required, min/max, etc.)
-    public function validate($data)
-    {
-        if( ! empty($data)) {
-            foreach($data as $id => $row_data) {
-                $data = [
-                   'row_data' => $row_data,
-                ];
-                $this->CI->db->where('id', $id);
-                $this->CI->db->update('grid_col_data', $data); 
-                
-                echo $this->exists($id);
-            }
-        }
-    }
-    
-    // --------------------------------------------------------------------
-    
-    public function exists($id, $grid_col_id = '')
-    {
-        $results = $this->CI->db->where('id', $id)->get('grid_col_data');
-        return ($results->result()) ? true : false;
+      if($this->post['data']){
+        $this->gridData = $this->post['data']['grid_col_data'];
+        $this->save($this->gridData); // Call the save method | true/false
+      }
     }
     
     // --------------------------------------------------------------------
@@ -96,30 +76,86 @@ class Grid_fields
      * Delete when the id exists in the table but isn't part of the form data 
      * passed. 
      * 
-     * @access      public 
-     * @return      
+     * @access      private 
+     * @param       array $gridData Array of post data
+     * @return      bool true/false
      */
-    public function edit()
+    private function save($gridData)
     {
+      if( ! empty($gridData)) {
+        foreach($gridData as $id => $row_data) {
+          // This empty foreach loop is responsible for assigning values 
+          // for $grid_col_data, $col_data
+          foreach($row_data as $grid_col_id => $col_data) {
+          }
+          $data = [
+            'grid_col_id' => $grid_col_id,
+            'row_data' => $col_data,
+          ];
+          
+          // Update existing fields 
+          $this->update($id, $data);
+          
+          // Insert new fields in database if not exists
+          if( ! $this->exists($id)) {
+            $this->insert($data);
+          }
+        }
+        return true;
         
+      } else {
+        return false;
+      }
+    }
+
+    // --------------------------------------------------------------------
+    
+    // Validate the grid field (required, min/max, etc.)
+    public function validate()
+    {
+      
     }
     
     // --------------------------------------------------------------------
     
-    // Insert
-    public function insert()
+    /**
+     * Determines whether or not grid field is found in the table 
+     *
+     * @return      bool true/false
+     */
+    private function exists($id, $grid_col_id = '')
     {
-        
+      $results = $this->CI->db->where('id', $id)->get('grid_col_data');
+      return ($results->result()) ? true : false;
     }
     
-    // Update
-    public function update()
+    // --------------------------------------------------------------------
+    
+    /**
+     * Method to insert grid_cols data
+     *
+     * @param       array $data
+     * @return      bool true/false
+     */
+    private function insert($data)
     {
-        
+      return $this->CI->db->insert($this->grid_col_data, $data);
+    }
+    
+    /**
+     * Method to udpdate grid_cols data
+     *
+     * @param       int $id
+     * @param       array $data
+     * @return      bool true/false
+     */
+    private function update($id, $data)
+    {
+      return $this->CI->db->where('id', $id)->update('grid_col_data', $data); 
     }
     
     // Delete
-    public function delete()
+    private function delete()
     {
         
     }

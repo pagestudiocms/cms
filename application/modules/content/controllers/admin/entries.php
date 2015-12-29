@@ -182,7 +182,9 @@ class Entries extends Admin_Controller {
         $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
         $Content_fields = $this->load->library('content_fields');
         $Content_fields->initialize($config);
-        // var_dump($this->session->userdata('content_fields'));
+        
+        // This session var is used in the Grid_field content type model
+        // /application/modules/content/content_types/models/grid_field.php
         $this->session->unset_userdata('content_fields');
 
         // Check if versioning is enabled and whether a revision is loaded
@@ -398,7 +400,7 @@ class Entries extends Admin_Controller {
             }
             else
             {
-                // redirect(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id);
+                redirect(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id);
             }
         }
 

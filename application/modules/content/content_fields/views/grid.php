@@ -1,17 +1,9 @@
-<?php
-// echo form_input(array(
-    // 'name'  =>'field_id_' . $Field->id, 
-    // 'value' =>set_value('field_id_' . $Field->id, $content)
-// )); 
-
-// To do: submit changes to database
-?>
-<div id="sub_hold_field_30">
+<div>
 	<fieldset class="holder">
-        <div id="field_id_30" class="matrix matrix-ee2">
-            <?php echo $table; ?>
-        </div>
-    </fieldset>
+    <div class="matrix matrix-ee2">
+      <?php echo $grid_fields_table; ?>
+    </div>
+  </fieldset>
 </div>
 
 <!--
