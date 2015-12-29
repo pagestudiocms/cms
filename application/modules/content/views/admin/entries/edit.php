@@ -168,6 +168,11 @@
 <?php js_start(); ?>
 <script type="text/javascript">
     $(document).ready(function() {
+        // Auto fill short name based on title
+        $('#title').keyup( function(e) {
+            $('#slug').val($(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, ''))
+        });
+
         $( ".tabs" ).tabs();
 
         $( ".datetime" ).datetimepicker({
