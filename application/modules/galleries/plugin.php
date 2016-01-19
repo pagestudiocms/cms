@@ -90,6 +90,8 @@ class Galleries_plugin extends Plugin
                 'title'       => $Image->title,
                 'alt'         => $Image->alt,
                 'description' => $Image->description,
+                'credits'     => $Image->credits,
+                'link'        => $Image->link,
                 'image'       => $Image->filename,
             );
         }

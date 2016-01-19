@@ -266,6 +266,8 @@ CREATE TABLE IF NOT EXISTS `gallery_images` (
   `title` varchar(100) NOT NULL,
   `alt` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
+  `credits` varchar(250) DEFAULT NULL,
+  `link` varchar(250) DEFAULT NULL,
   `hide` tinyint(1) NOT NULL DEFAULT '0',
   `sort` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
