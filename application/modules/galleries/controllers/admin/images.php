@@ -95,6 +95,7 @@ class Images extends Admin_Controller
         $this->form_validation->set_rules('description', 'Description', 'trim');
         $this->form_validation->set_rules('credits', 'Credits', 'trim');
         $this->form_validation->set_rules('link', 'Link', 'trim');
+        $this->form_validation->set_rules('link_text', 'Link Text', 'trim');
         $this->form_validation->set_rules('filename', 'filename', 'trim|required');
         $this->form_validation->set_rules('hide', 'Hide', 'trim|integer');
 
@@ -104,6 +105,7 @@ class Images extends Admin_Controller
             $Image->description = ($this->input->post('description') != '') ? $this->input->post('description') : NULL;
             $Image->credits = ($this->input->post('credits') != '') ? $this->input->post('credits') : NULL;
             $Image->link = ($this->input->post('link') != '') ? $this->input->post('link') : NULL;
+            $Image->link_text = ($this->input->post('link_text') != '') ? $this->input->post('link_text') : NULL;
             $Image->alt = ($this->input->post('alt') != '') ? $this->input->post('alt') : NULL;
             $Image->hide = ($this->input->post('hide')) ? 1 : 0;
             $Image->save();

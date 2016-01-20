@@ -41,7 +41,12 @@
             
             <div>
                 <?php echo form_label('Link:', 'link'); ?>
-                <?php echo form_input(array( 'name' => 'link', 'value' => set_value('link', isset($Image->link) ? $Image->link : ''))); ?> <span style="display: inline;" class="help"><span>
+                <?php echo form_input(array( 'name' => 'link', 'value' => set_value('link', isset($Image->link) ? $Image->link : ''))); ?> <span style="display: inline;" class="help">(The full URL)<span>
+            </div>
+            
+            <div>
+                <?php echo form_label('Link Text:', 'link_text'); ?>
+                <?php echo form_input(array( 'name' => 'link_text', 'value' => set_value('link_text', isset($Image->link_text) ? $Image->link_text : ''))); ?> <span style="display: inline;" class="help"><span>
             </div>
 
             <div>
