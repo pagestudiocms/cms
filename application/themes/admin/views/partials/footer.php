@@ -1,11 +1,11 @@
-    <!-- ends the container -->
-    </div>
     
     <?php if ($this->secure->is_auth()): ?>
 
     <!-- Footer -->
     <div id="footer">
-        Copyright &copy; <?php echo date('Y'); ?>&nbsp; v<?php echo CC_VERSION ?>
+        Copyright &copy; <?php echo date('Y'); ?>&nbsp; PageStudioCMS v<?php echo CC_VERSION ?>
+    </div>
+    <!-- ends the container -->
     </div>
 
     <?php endif; ?>

@@ -26,7 +26,7 @@
     <script type="text/javascript" src="<?php echo theme_url('assets/js/superfish.js'); ?>"></script>
 
     <!-- Google Analytics -->
-    <?php echo $this->template->analytics() ?>
+    <?php /* echo $this->template->analytics(); */ ?>
 </head>
 <body <?php 
     if ($this->template->segment(3) === 'login') {
