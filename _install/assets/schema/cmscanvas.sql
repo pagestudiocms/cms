@@ -192,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `entries` (
   `meta_description` text DEFAULT NULL,
   `meta_keywords` text DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
+  `published_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   `author_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -206,11 +207,11 @@ CREATE TABLE IF NOT EXISTS `entries` (
 -- Dumping data for table `entries`
 --
 
-INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `created_date`, `modified_date`, `author_id`) VALUES
-(1, 'home', 'Home', NULL, 0, 1, 'published', NULL, NULL, NULL, '2012-03-06 21:07:07', '2012-03-11 16:13:42', NULL),
-(2, NULL, 'Page Not Found', NULL, 0, 1, 'published', NULL, NULL, NULL, '2012-03-06 22:55:06', '2012-03-06 22:55:20', NULL),
-(3, 'contact', 'Contact', NULL, 0, 2, 'published', NULL, NULL, NULL, '2012-03-07 21:45:48', '2012-03-07 21:46:56', NULL),
-(4, 'about', 'About', NULL, 0, 1, 'published', NULL, NULL, NULL, '2012-03-11 16:06:40', '2012-03-11 16:12:13', NULL)
+INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `created_date`, `published_date`, `modified_date`, `author_id`) VALUES
+(1, 'home', 'Home', NULL, 0, 1, 'published', NULL, NULL, NULL, '2012-03-06 21:07:07', '2012-03-06 21:07:07', '2012-03-11 16:13:42', NULL),
+(2, NULL, 'Page Not Found', NULL, 0, 1, 'published', NULL, NULL, NULL, '2012-03-06 22:55:06', '2012-03-06 22:55:06', '2012-03-06 22:55:20', NULL),
+(3, 'contact', 'Contact', NULL, 0, 2, 'published', NULL, NULL, NULL, '2012-03-07 21:45:48', '2012-03-07 21:45:48', '2012-03-07 21:46:56', NULL),
+(4, 'about', 'About', NULL, 0, 1, 'published', NULL, NULL, NULL, '2012-03-11 16:06:40', '2012-03-11 16:06:40', '2012-03-11 16:12:13', NULL)
 ON DUPLICATE KEY UPDATE
 `id` = VALUES(`id`);
 
@@ -266,6 +267,9 @@ CREATE TABLE IF NOT EXISTS `gallery_images` (
   `title` varchar(100) NOT NULL,
   `alt` varchar(250) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
+  `credits` varchar(250) DEFAULT NULL,
+  `link` varchar(250) DEFAULT NULL,
+  `link_text` varchar(250) DEFAULT NULL,
   `hide` tinyint(1) NOT NULL DEFAULT '0',
   `sort` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),

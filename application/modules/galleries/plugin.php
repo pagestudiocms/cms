@@ -84,14 +84,21 @@ class Galleries_plugin extends Plugin
 
         $Images = $this->Gallery->images->where('hide', 0)->order_by('sort', 'ASC')->get();
         
+        $count = 1;
+        
         foreach($Images as $Image)
         {
             $this->images[] = array(
                 'title'       => $Image->title,
                 'alt'         => $Image->alt,
                 'description' => $Image->description,
+                'credits'     => $Image->credits,
+                'link'        => $Image->link,
+                'link_text'   => $Image->link_text,
                 'image'       => $Image->filename,
+                'count'       => $count
             );
+            $count++;
         }
     }
 

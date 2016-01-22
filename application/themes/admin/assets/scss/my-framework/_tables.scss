@@ -14,16 +14,10 @@ caption {
 
 tr {
   background-color: #FFF;
-  transition: all .1s linear 0s;
-  -moz-transition: all .1s linear 0s;
-  -webkit-transition: all .1s linear 0s;
-  -o-transition: all .1s linear 0s;
+  @include transition( all .1s linear 0s );
   &:hover {
     background-color: #F1F1F1;
-    transition: all .1s linear 0s;
-    -moz-transition: all .1s linear 0s;
-    -webkit-transition: all .1s linear 0s;
-    -o-transition: all .1s linear 0s;
+    @include transition( all .1s linear 0s );
   }
   &.even {
     background-color: #FFF;
