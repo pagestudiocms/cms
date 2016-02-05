@@ -1,41 +1,112 @@
-<div>
-    <label for="type">Allow Inline Editing:</label>
-    <span>
-        <label><?php echo form_radio(array('name'  => 'settings[inline_editing]', 'value' => '1', 'checked' => set_radio('settings[inline_editing]', '1', ( ! isset($Field->settings['inline_editing']) || $Field->settings['inline_editing']) ? TRUE : FALSE))); ?>Yes</label>
-        <label><?php echo form_radio(array('name'  => 'settings[inline_editing]', 'value' => '0', 'checked' => set_radio('settings[inline_editing]', '0', (isset($Field->settings['inline_editing']) && ! $Field->settings['inline_editing']) ? TRUE : FALSE))); ?>No</label>
-    </span>
+<div class="grid_settings" style="">
+    <div class="grid_col_item clonedInput">
+        <div>
+            <label for="type">Field Type</label>
+            <?php echo form_dropdown(
+                'grid_cols[field_1][content_field_type_id]', 
+                array('' => '', 'dropdown' => 'Dropdown', 'image'  => 'Image', 'rich_text' => 'Rich Text', 'text_field' => 'Text Field', 'textarea' => 'Textarea',), 
+                set_value('grid_cols[field_1][content_field_type_id]', 
+                    ( ! empty($Field->grid_cols['content_field_type_id'])) ? $Field->grid_cols['content_field_type_id'] : ''
+                ), 
+                'id="grid_col_type"'
+            ); ?>
+        </div>
+
+        <div>
+            <label for="grid_col_label"><span class="required">*</span> Field Label </label>
+            <?php echo form_input(array(
+                'name'=>'grid_cols[field_1][label]', 'id'=>'grid_col_label', 
+                'value'=>set_value('grid_cols[field_1][label]', '')
+            )); ?>
+        </div>
+
+        <div>
+            <label for="grid_col_tag"><span class="required">*</span> Short Tag</label>
+            <?php echo form_input(array(
+                'name'=>'grid_cols[field_1][grid_col_tag]', 'id'=>'grid_col_tag', 
+                'value'=>set_value('grid_cols[field_1][grid_col_tag]', '')
+            )); ?>
+        </div>
+        
+        <div>
+            <label for="type">Required? </label>
+            <span>
+                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][required]', 'value' => '1', 'checked' => set_radio('grid_cols[field_1][required]', '1', FALSE))); ?>Yes</label>
+                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][required]', 'value' => '0', 'checked' => set_radio('grid_cols[field_1][required]', '0', TRUE))); ?>No</label>
+            </span>
+        </div>
+        
+        <div>
+            <label for="type">Allow Search? </label>
+            <span>
+                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][is_searchable]', 'value' => '1', 'checked' => set_radio('grid_cols[field_1][is_searchable]', '1', FALSE))); ?>Yes</label>
+                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][is_searchable]', 'value' => '0', 'checked' => set_radio('grid_cols[field_1][is_searchable]', '0', TRUE))); ?>No</label>
+            </span>
+        </div>
+        
+        <div class="actions">
+            <a class="matrix-btn matrix-add clone" title="Add row"></a>
+            <a class="matrix-btn matrix-remove remove" title="Remove row"></a>
+        </div>
+        
+    </div>
+    
+    <div class="grid_col_item_placeholder" style="border:none;margin:0;padding:0;"></div>
+    
 </div>
 
-<div>
-    <label for="type">Output Type:</label>
-    <?php echo form_dropdown(
-        'settings[output]', 
-        array('image'  => 'Image', 'text_field' => 'Text Field',), 
-        set_value('settings[output]', 
-        ( ! empty($Field->settings['output'])) ? $Field->settings['output'] : ''), 
-        'id="output_type"'
-    ); ?>
-</div>
-
-<div class="grid_setting">
-    <label for="type">Max Rows:</label>
-    <?php echo form_input(array(
-        'name'  => 'settings[max_rows]', 
-        'style' => 'width: 50px',
-        'value' => set_value('settings[max_rows]', ( ! empty($Field->settings['max_rows'])) ? $Field->settings['max_rows'] : '')
-    )); ?>
-</div>
 
 <script type="text/javascript">
     $(document).ready( function() {
-        $('#output_type').change( function() {
+        // Auto Generate Url Title
+        $('#grid_col_label').keyup( function(e) {
+            $('#grid_col_tag').val($(this).val().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9\-_]/g, ''))
+        });
+            
+        $('#content_field_type').change( function() {
             if ($(this).val() == 'image') {
-                $('.grid_setting').show();
+                $('.grid_image_setting').show();
             } else {
-                $('.grid_setting').hide();
+                $('.grid_image_setting').hide();
             }
         });
+        $('#content_field_type').trigger('change');
+                
+        // ------------------------------------------------------
+        // Clone grid fields 
+        // ------------------------------------------------------
+        var regex = /^(.+?)(\d+)$/i;
+        var cloneIndex = $(".clonedInput").length;
+        // cloneIndex = (cloneIndex === '1') ? cloneIndex + 1 : '';
 
-        $('#output_type').trigger('change');
+        function clone(){
+            $(this).parents(".clonedInput").clone()
+                .appendTo(".grid_col_item_placeholder")
+                .attr("id", "clonedInput" +  cloneIndex)
+                .find("*")
+                .each(function() {
+                    var id = this.id || "";
+                    var match = id.match(regex) || [];
+                    if (match.length == 3) {
+                        this.id = match[1] + (cloneIndex);
+                    }
+                })
+                .find('input').each(function(){
+                    this.name = this.name.replace(/\[field_(\d+)\]/,
+                        function(str,p1){
+                            return '[field_' + (parseInt(p1,10)+1) + ']'
+                        }
+                    );
+                })
+                .end()
+                .on('click', 'a.clone', clone)
+                .on('click', 'a.remove', remove);
+            cloneIndex++;
+        }
+        function remove(){
+            $(this).parents(".clonedInput").remove();
+        }
+        $("a.clone").on("click", clone);
+        $("a.remove").on("click", remove);
     });
 </script>
