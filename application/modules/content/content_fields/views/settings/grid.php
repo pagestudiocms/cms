@@ -1,5 +1,5 @@
 <div class="grid_settings" style="">
-    <div class="grid_col_item clonedInput">
+    <div class="grid_col_item js_grid_col_item">
         <div>
             <label for="type">Field Type</label>
             <?php echo form_dropdown(
@@ -15,7 +15,7 @@
         <div>
             <label for="grid_col_label"><span class="required">*</span> Field Label </label>
             <?php echo form_input(array(
-                'name'=>'grid_cols[field_1][label]', 'id'=>'grid_col_label', 
+                'name'=>'grid_cols[field_1][label]', 'id'=>'grid_col_label', 'class'=>'js_grid_col_label',
                 'value'=>set_value('grid_cols[field_1][label]', '')
             )); ?>
         </div>
@@ -23,7 +23,7 @@
         <div>
             <label for="grid_col_tag"><span class="required">*</span> Short Tag</label>
             <?php echo form_input(array(
-                'name'=>'grid_cols[field_1][grid_col_tag]', 'id'=>'grid_col_tag', 
+                'name'=>'grid_cols[field_1][grid_col_tag]', 'id'=>'grid_col_tag', 'class'=>'js_grid_col_tag', 
                 'value'=>set_value('grid_cols[field_1][grid_col_tag]', '')
             )); ?>
         </div>
@@ -51,7 +51,7 @@
         
     </div>
     
-    <div class="grid_col_item_placeholder" style="border:none;margin:0;padding:0;"></div>
+    <div class="js_dynamic_fields_placeholder" style="border:none;margin:0;padding:0;"></div>
     
 </div>
 
@@ -59,10 +59,13 @@
 <script type="text/javascript">
     $(document).ready( function() {
         // Auto Generate Url Title
-        $('#grid_col_label').keyup( function(e) {
-            $('#grid_col_tag').val($(this).val().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9\-_]/g, ''))
+        $(this).on('keyup', '.js_grid_col_label', function(e){
+            $(this).closest('div').next('div').find('input:text').val(
+                $(this).val().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9\-_]/g, '')
+            );
         });
-            
+        
+        // Hide and show field options
         $('#content_field_type').change( function() {
             if ($(this).val() == 'image') {
                 $('.grid_image_setting').show();
@@ -71,18 +74,18 @@
             }
         });
         $('#content_field_type').trigger('change');
-                
+        
         // ------------------------------------------------------
         // Clone grid fields 
         // ------------------------------------------------------
         var regex = /^(.+?)(\d+)$/i;
-        var cloneIndex = $(".clonedInput").length;
-        // cloneIndex = (cloneIndex === '1') ? cloneIndex + 1 : '';
+        var cloneIndex = $(".js_grid_col_item").length;
+        cloneIndex = cloneIndex + 1;
 
         function clone(){
-            $(this).parents(".clonedInput").clone()
-                .appendTo(".grid_col_item_placeholder")
-                .attr("id", "clonedInput" +  cloneIndex)
+            $(this).parents(".js_grid_col_item").clone()
+                .appendTo(".js_dynamic_fields_placeholder")
+                .attr("id", "js_grid_col_item" +  cloneIndex)
                 .find("*")
                 .each(function() {
                     var id = this.id || "";
@@ -91,9 +94,17 @@
                         this.id = match[1] + (cloneIndex);
                     }
                 })
+                .find('select').each(function(){
+                    this.name = this.name.replace(/\[field_(\d+)\]/,
+                        function(str, p1){
+                            return '[field_' + (parseInt(p1,10)+1) + ']'
+                        }
+                    );
+                })
+                .end()
                 .find('input').each(function(){
                     this.name = this.name.replace(/\[field_(\d+)\]/,
-                        function(str,p1){
+                        function(str, p1){
                             return '[field_' + (parseInt(p1,10)+1) + ']'
                         }
                     );
@@ -104,7 +115,7 @@
             cloneIndex++;
         }
         function remove(){
-            $(this).parents(".clonedInput").remove();
+            $(this).parents(".js_grid_col_item").remove();
         }
         $("a.clone").on("click", clone);
         $("a.remove").on("click", remove);
