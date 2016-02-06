@@ -4,8 +4,6 @@
     <div class="breadcrumb"><?php echo isset($breadcrumb) ? $breadcrumb : ''; ?></div>
     <?php echo $this->session->flashdata('message'); ?>
     <?php echo validation_errors(); ?>
-    
-
     <?php echo  $content; ?>
 </div>
 

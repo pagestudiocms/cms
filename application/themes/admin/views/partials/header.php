@@ -29,7 +29,7 @@
     <?php /* echo $this->template->analytics(); */ ?>
 </head>
 <body <?php 
-    if ($this->template->segment(3) === 'login') {
+    if ($this->template->segment(3) === 'login' || $this->template->segment(3) === 'forgot-password') {
         echo 'class="login"';
     }
 ?>>

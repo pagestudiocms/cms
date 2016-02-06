@@ -235,6 +235,13 @@ class Users extends Public_Controller
         if ($this->uri->segment(1) == ADMIN_PATH)
         {
             $this->template->set_theme('admin', 'default', 'application/themes');
+            $this->template->set_layout('default_wo_errors');
+            
+            $this->template->add_package('jquery');
+            $this->template->add_script("
+                $(document).ready(function() { 
+                    $('#email').focus();
+                });");
             $this->template->view("admin/forgot_password", $data);
         }
         else
