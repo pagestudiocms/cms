@@ -15,7 +15,7 @@ A web host or server with:
 A modern and updated web browser
 
 #Documentation
-http://docs.pagestudioapp.com/docs/
+http://pagestudioapp.com/docs/
 
 ##License for PageStudio
 
