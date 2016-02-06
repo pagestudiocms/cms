@@ -100,8 +100,10 @@ class Fields extends Admin_Controller {
             $Content_fields->content_type_id = $type_id;
             $Content_fields->short_tag = $this->input->post('short_tag');
             
-            var_dump($this->input->post('settings'));
-            var_dump($this->input->post('grid_cols'));
+            // Save Grid fields 
+            // As of v1.2.0
+            $Grid_fields = $this->load->model('grid_fields_model');
+            $Grid_fields->save($this->input->post('grid_cols'));
 
             // Setting fields
             $Content_fields->settings = ($this->input->post('settings')) ? serialize($this->input->post('settings')) : NULL;
@@ -135,7 +137,7 @@ class Fields extends Admin_Controller {
 
             $this->session->set_flashdata('message', '<p class="success">Content field saved successfully.</p>');
 
-            // redirect(ADMIN_PATH . '/content/fields/index/' . $Type->id);
+            redirect(ADMIN_PATH . '/content/fields/index/' . $Type->id);
         }
 
 

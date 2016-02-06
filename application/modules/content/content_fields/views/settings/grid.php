@@ -4,7 +4,7 @@
             <label for="type">Field Type</label>
             <?php echo form_dropdown(
                 'grid_cols[field_1][content_field_type_id]', 
-                array('' => '', 'dropdown' => 'Dropdown', 'image'  => 'Image', 'rich_text' => 'Rich Text', 'text_field' => 'Text Field', 'textarea' => 'Textarea',), 
+                array('' => '', '4' => 'Dropdown', '8'  => 'Image', '1' => 'Rich Text', '3' => 'Text Field', '6' => 'Textarea',), 
                 set_value('grid_cols[field_1][content_field_type_id]', 
                     ( ! empty($Field->grid_cols['content_field_type_id'])) ? $Field->grid_cols['content_field_type_id'] : ''
                 ), 
@@ -21,10 +21,10 @@
         </div>
 
         <div>
-            <label for="grid_col_tag"><span class="required">*</span> Short Tag</label>
+            <label for="short_tag"><span class="required">*</span> Short Tag</label>
             <?php echo form_input(array(
-                'name'=>'grid_cols[field_1][grid_col_tag]', 'id'=>'grid_col_tag', 'class'=>'js_grid_col_tag', 
-                'value'=>set_value('grid_cols[field_1][grid_col_tag]', '')
+                'name'=>'grid_cols[field_1][short_tag]', 'id'=>'short_tag', 'class'=>'js_short_tag', 
+                'value'=>set_value('grid_cols[field_1][short_tag]', '')
             )); ?>
         </div>
         
@@ -39,8 +39,8 @@
         <div>
             <label for="type">Allow Search? </label>
             <span>
-                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][is_searchable]', 'value' => '1', 'checked' => set_radio('grid_cols[field_1][is_searchable]', '1', FALSE))); ?>Yes</label>
-                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][is_searchable]', 'value' => '0', 'checked' => set_radio('grid_cols[field_1][is_searchable]', '0', TRUE))); ?>No</label>
+                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][is_searchable]', 'value' => 'y', 'checked' => set_radio('grid_cols[field_1][is_searchable]', 'y', FALSE))); ?>Yes</label>
+                <label><?php echo form_radio(array('name'  => 'grid_cols[field_1][is_searchable]', 'value' => 'n', 'checked' => set_radio('grid_cols[field_1][is_searchable]', 'n', TRUE))); ?>No</label>
             </span>
         </div>
         
