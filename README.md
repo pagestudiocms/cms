@@ -5,7 +5,7 @@ A lightweight PHP CMS built to speed up web development and simplify content
 management.
 
 #Website
-https://www.pagestudiocms.com/
+http://www.pagestudiocms.com/
 
 #Requirements
 A web host or server with:
