@@ -5,8 +5,11 @@
 // --------------------------------------------------------------
 // Colors
 // --------------------------------------------------------------
+
+// colors
+
 $grey:         #6E6E6E;
-$light-grey:   #9b9b9b;
+$light-grey:   #D9D9D9;
 $gray-light:   $light-grey;
 $darkest-grey: #222;
 $charcoal:     #343434;
@@ -14,11 +17,17 @@ $black:        #464646;
 $white:        #fff;
 $muted:        #777;
 
-$brand-primary:     #2A373F;
+$brand-primary:     #2C3136;
 $brand-secondary:   #384551;
 $brand-tertiary:    #38ABE1;
 $brand-danger:      #e74c3c;
 $placeholder-text:  #bbbbbb; 
+
+$color-1: #3e454c; // Mako
+$color-2: #1784c7; // Denim | Alternate or lighter color #49535B (matching background #EFEFEF)
+$color-3: #ffffff; // White
+$color-4: #EA533F; // Salmon
+
 
 // --------------------------------------------------------------
 // Scaffolding
@@ -35,12 +44,18 @@ $text-highlight-color:  #469ccf;
 
 // Global textual link color.
 $link-color:            #2A373F !default;
-$link-hover-color:      darken($link-color, 15%) !default;
+$link-hover-color:      #1784C7 !default; // darken($link-color, 15%) !default;
 $link-hover-decoration: underline !default;
+
+
+$header-bg-color: #FFF;
+$header-bg-color-mobile: $color-1;
 
 // --------------------------------------------------------------
 // Typography
 // --------------------------------------------------------------
+
+// Font styles 
 
 // $font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-sans-serif:  Verdana, Geneva, sans-serif;
@@ -51,39 +66,33 @@ $font-family-monospace: Menlo, Monaco, Consolas, "Courier New", monospace !defau
 $font-family-base:      $font-family-sans-serif !default;
 $font-family-code:      $font-family-monospace;
 
+$primary-font: 'Open Sans', sans-serif;
+
+
+// Font sizes 
+
 $font-size-small:       12px;
-$font-size-normal:      16px;
+$font-size-normal:      14px;
 $font-size-large:       18px;
 $font-size-x-large:     22px;
 $font-size-xx-large:    32px;
 $font-size-xxx-large:   64px;
 
-// Font-weights
-// ------------------------------
-$font-weight-thin:      100;
-$font-weight-light:     200;
-$font-weight-normal:    300;
-$font-weight-regular:   $font-weight-normal;
-$font-weight-medium:    400;
-$font-weight-bold:      600;
-$font-weight-bolder:    700;
+// Font weights
+
+$font-weight-thin:    100;
+$font-weight-light:   200;
+$font-weight-normal:  300;
+$font-weight-regular: $font-weight-normal;
+$font-weight-medium:  400;
+$font-weight-bold:    600;
+$font-weight-bolder:  700;
 
 // --------------------------------------------------------------
 // Buttons
 // --------------------------------------------------------------
 $btn-background:        #8ac6e2;
 $btn-background-hover:  #ccc;
-
-// --------------------------------------------------------------
-// Screen Size - Break points
-// --------------------------------------------------------------
-$mobile-small:      240px;
-$mobile-large:      320px;
-$tablet-small:      480px;
-$tablet-large:      768px;
-$screen-small:      860px;
-$screen-medium:     992px;
-$screen-large:      1280px; 
 
 $breadcrumb-padding-vertical:   8px !default;
 $breadcrumb-padding-horizontal: 15px !default;
@@ -95,6 +104,7 @@ $breadcrumb-color:              #ccc !default;
 $breadcrumb-active-color:       $gray-light !default;
 //** Textual separator for between breadcrumb elements
 $breadcrumb-separator:          "/" !default;
+$breadcrumb-font-size:          13px !default;
 
 // Notifications and alerts
 // ---------------------------------------
@@ -113,3 +123,62 @@ $alert-info-border:      #e1ebf4;
 // --------------------------------------------------------------
 $login-page-text-color:    #d5d5d5;
 $login-page-link-color:    #4182b9;
+
+// -----------------------------------------------------------
+// Layout variables
+// -----------------------------------------------------------
+
+// Screen Size - Break points
+
+$mobile-small:      240px;
+$mobile-large:      320px;
+$tablet-small:      480px;
+$tablet-large:      768px;
+$screen-small:      860px;
+$screen-medium:     992px;
+$screen-large:      1280px; 
+
+$desktop:           1170px;
+$tablet:            992px;
+$mobile:            768px;
+$phone:             440px;
+
+// Top navigation colors
+
+$navbar-link-color: #999;
+$navbar-link-color-hover: $color-2;
+$navbar-link-border-color: #DCDCDC;
+
+$body-bg-color: #FFF; // #EBEEF0;
+
+$widget-border-color: #DEDEDE;
+
+$table-hover-bg-color: #F2F7FA;
+
+// #F47A60 | Light orange
+// #2393DF | Medium blue
+// #EBEEF0 | Blue-gray (canvas background)
+// #479CCF | Shopify button blue
+
+// Alternate menu colors
+// #2F3640 | Light black
+// #272B34 | Medium black
+// #272B34 | Darkest black
+
+//sidebar size
+
+$sidebar-width-M: 110px;
+$sidebar-width-L: 200px;
+$sidebar-width-mobile: $sidebar-width-M;
+$sidebar-width-large: $sidebar-width-L;
+
+// header size
+
+$header-height-S: 45px;
+$header-height-M: 55px;
+
+// Box (Panels) 
+
+$box-heading-color: #000;
+$box-border-color: $gray-light;
+$box-border-radius: 3px;

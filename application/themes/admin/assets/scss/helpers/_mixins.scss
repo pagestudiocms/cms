@@ -1,0 +1,162 @@
+
+$S:     $phone;   
+$M:     $mobile;     
+$L:     $desktop;
+
+// media queries
+
+@mixin MQ($canvas) {
+  @if $canvas == S {
+    @media only screen and (min-width: $S) { @content; } 
+  }
+  @else if $canvas == M {
+    @media only screen and (min-width: $M) { @content; } 
+  }
+  @else if $canvas == L {
+    @media only screen and (min-width: $L) { @content; } 
+  }
+}
+
+// -----------------------------------------------------------
+// center vertically and/or horizontally an absolute positioned element
+// -----------------------------------------------------------
+@mixin center($xy:xy) {
+  @if $xy == xy {
+    left: 50%;
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    @include transform(translateX(-50%) translateY(-50%));
+  }
+  @else if $xy == x {
+    left: 50%;
+    right: auto;
+    @include transform(translateX(-50%));
+  }
+  @else if $xy == y {
+    top: 50%;
+    bottom: auto;
+    @include transform(translateY(-50%));
+  }
+}
+
+// -----------------------------------------------------------
+// Border radius
+// -----------------------------------------------------------
+@mixin border-radius($pixels: 3px) {
+  @include border-top-radius($pixels);
+  @include border-right-radius($pixels);
+  @include border-bottom-radius($pixels);
+  @include border-left-radius($pixels);
+}
+
+// -----------------------------------------------------------
+// antialiasing mode font rendering
+// -----------------------------------------------------------
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// -----------------------------------------------------------
+// Background color and fallback
+// -----------------------------------------------------------
+@mixin background-color($color, $opacity: 100) { 
+  background: $color; // The Fallback
+  background: rgba($color, $opacity);
+}
+
+// --------------------------------------------------------------
+// Placehold mixin
+//
+// Usage:
+// .foo {
+//   @include placeholder {
+//     color: green;
+//   }
+// }
+// --------------------------------------------------------------
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+@mixin placeholder {
+  @include optional-at-root('::-webkit-input-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root('::-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-ms-input-placeholder') {
+    @content;
+  }
+}
+
+// --------------------------------------------------------------
+// Utility Mixins
+// --------------------------------------------------------------
+@mixin text-selection-color($bg-color: #ffb7b7, $text-color: #FFFFFF) {
+  ::selection {
+    color: $text-color;
+    background: $bg-color; /* WebKit/Blink Browsers */
+  }
+  ::-moz-selection {
+    color: $text-color;
+    background: $bg-color; /* Gecko Browsers */
+  }
+} 
+
+@mixin button-variant-alt(
+  $color, $background, $border, 
+  $color-hover: $background, $background-hover: $color, $border-hover: ''
+) {
+  color: $color;
+  background-color: $background;
+  border-color: $border;
+
+  &:hover,
+  &:focus,
+  &.focus,
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    color: $color-hover;
+    background-color: $background-hover;
+    
+    @if $border-hover != '' {
+      border-color: $border-hover;
+    } @else {
+      border-color: darken($border, 6%);
+    }
+  }
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: $background;
+          border-color: $border;
+    }
+  }
+
+  .badge {
+    color: $background;
+    background-color: $color;
+  }
+}

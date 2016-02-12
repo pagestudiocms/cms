@@ -1,94 +1,94 @@
 <?php 
     $nav_array = array(
         array(
-            'title' => 'Dashboard',
+            'label' => 'Dashboard',
             'url'   => '/',
             'id'    => 'dashboard',
             'sub'   => array(),
         ),
         array(
-            'title' => 'Content',
+            'label' => 'Content',
             'url'   => 'content/entries',
             'sub'   => array(
                     array(
-                        'title' => 'Entries',
+                        'label' => 'Entries',
                         'url'   => 'content/entries',
                     ),
                 ),
         ),
         array(
-            'title' => 'Plugins',
+            'label' => 'Plugins',
             'url'   => '#',
             'sub'   => array(
                 array(
-                    'title' => 'Calendar',
+                    'label' => 'Calendar',
                     'url'   => 'calendar/entries',
                 ),
                 array(
-                    'title' => 'Galleries',
+                    'label' => 'Galleries',
                     'url'   => 'galleries',
                 ),
                 array(
-                    'title' => 'Navigations',
+                    'label' => 'Navigations',
                     'url'   => 'navigations',
                 ),
             ),
         ),
         array(
-            'title' => 'Users',
+            'label' => 'Users',
             'url'   => 'users',
             'sub'   => array(
                     array(
-                        'title' => 'Users',
+                        'label' => 'Users',
                         'url'   => 'users',
                     ),
                     array(
-                        'title' => 'User Groups',
+                        'label' => 'User Groups',
                         'url'   => 'users/groups',
                     ),
                 ),
         ),
         array(
-            'title' => 'Tools',
+            'label' => 'Tools',
             'url'   => 'content/types',
             'sub'   => array(
                     array(
-                        'title' => 'Content Types',
+                        'label' => 'Content Types',
                         'url'   => 'content/types',
                     ),
                     array(
-                        'title'  => 'Content Fields',
+                        'label'  => 'Content Fields',
                         'url'    => 'content/fields',
                         'hidden' => TRUE, // Used for selected parents for this section
                     ),
                     array(
-                        'title' => 'Code Snippets',
+                        'label' => 'Code Snippets',
                         'url'   => 'content/snippets',
                     ),
                     array(
-                        'title' => 'Categories',
+                        'label' => 'Categories',
                         'url'   => 'content/categories/groups',
                     ),
                     array(
-                        'title' => 'Theme Editor',
+                        'label' => 'Theme Editor',
                         'url'   => 'settings/theme-editor',
                     ),
                 ),
         ),
         array(
-            'title' => 'System',
+            'label' => 'System',
             'url'   => 'settings/general-settings',
             'sub'   => array(
                     array(
-                        'title' => 'General Settings',
+                        'label' => 'General Settings',
                         'url'   => 'settings/general-settings',
                     ),
                     array(
-                        'title' => 'Clear Cache',
+                        'label' => 'Clear Cache',
                         'url'   => 'settings/clear-cache',
                     ),
                     array(
-                        'title' => 'Server Info',
+                        'label' => 'Server Info',
                         'url'   => 'settings/server-info',
                     ),
                 ),

@@ -1,0 +1,21 @@
+$footer-height: 50px;
+$footer-text-color: #999;
+$footer-border-color: #D9D9D9;
+
+.content-wrapper {
+  
+}
+.app-footer, .content-wrapper:after {
+  // height: $footer-height; 
+}
+.app-footer {
+  height: $footer-height; 
+  bottom: 0;
+  border-top: 1px solid $footer-border-color;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: $footer-height / 2.9;
+  > .copy {
+    color: $footer-text-color;
+  }
+}
