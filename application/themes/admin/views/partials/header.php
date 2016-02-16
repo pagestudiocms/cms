@@ -4,7 +4,7 @@
     <meta charset="UTF-8" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <?php echo $this->template->metadata() ?>
+    <?php echo $this->template->metadata(); ?>
     
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -20,18 +20,14 @@
         var ADMIN_URL = '<?php echo site_url(ADMIN_PATH); ?>';
         var THEME_URL = '<?php echo theme_url(); ?>';
     </script>
+    
+    <!-- Controller Defined JS Files -->
+    <?php echo $this->template->javascripts(); ?>
 
-    <script src="<?php echo theme_url('assets/js/jquery-2.1.4.js'); ?>"></script>
     <script src="<?php echo theme_url('assets/js/jquery.menu-aim.js'); ?>"></script>
     <script src="<?php echo theme_url('assets/js/main.js'); ?>"></script>
     <script src="<?php echo theme_url('assets/js/modernizr.js'); ?>"></script> <!-- Modernizr -->
     
-    <!-- Controller Defined JS Files -->
-    <?php echo $this->template->javascripts(); ?>
-    
-    <script type="text/javascript" src="<?php echo theme_url('assets/js/tablesorter-pager.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo theme_url('assets/js/tablesorter.js'); ?>"></script>
-    <script type="text/javascript" src="<?php echo theme_url('assets/js/app.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/helpers.js'); ?>"></script>
     <script type="text/javascript" src="<?php echo theme_url('assets/js/superfish.js'); ?>"></script>
 
@@ -56,6 +52,7 @@
 
 		<nav class="cd-nav">
 			<ul class="cd-top-nav">
+				<li><a class="btn blue small" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>">Visit Site</a></li>
 				<li><a class="settings-icon" href="<?php echo site_url(ADMIN_PATH .'/settings/general-settings'); ?>" title="Settings"><i class="fa fa-cog">&nbsp;</i><span>Settings</span></a></li>
 				<li class="has-children account">
 					<a href="#0">

@@ -92,3 +92,46 @@
 .vtabs-content {
   margin-left: 205px;
 }
+
+// Tabs 
+// Appears on pages like content_fields edit, etc.
+
+.subnav {
+  margin-bottom: 15px;
+  z-index: 1;
+  height: 36px;
+  clear: both;
+  min-width: 900px;
+  // background: url("../images/box.png") repeat-x scroll 0 0 transparent;
+  border-bottom: 1px solid $border-color-light;
+  // border-radius: 3px;
+  li {
+    float: left;
+    border-top: 1px solid $border-color-light;
+    border-right: 1px solid $border-color-light;
+    &:first-child {
+      border-left: 1px solid $border-color-light;
+      @include border-radius-separate($border-radius-base, 0, 0, 0);
+    }
+    &:last-child {
+      @include border-radius-separate(0, $border-radius-base, 0, 0);
+    }
+  }
+  > ul a {
+    display: block;
+    padding: 0px 15px;
+    height: 34px;
+    color: #999;
+    line-height: 34px;
+    text-decoration: none;
+    background-color: #F7F7F7;
+    &:hover {
+      color: $color-5;
+    }
+    
+    &.selected {
+      color: $color-5;
+      background-color: #FFF;
+    }
+  }
+}

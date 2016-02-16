@@ -40,15 +40,12 @@ $L:     $desktop;
   }
 }
 
-// -----------------------------------------------------------
-// Border radius
-// -----------------------------------------------------------
-@mixin border-radius($pixels: 3px) {
-  @include border-top-radius($pixels);
-  @include border-right-radius($pixels);
-  @include border-bottom-radius($pixels);
-  @include border-left-radius($pixels);
-}
+// @mixin border-separate($border_top: none, $border_right: none, $border_bottom: none, $border_left: none) {
+  // border-top:     $border_top;
+  // border-right:   $border_right;
+  // border-bottom:  $border_bottom;
+  // border-left:    $border_left;
+// }
 
 // -----------------------------------------------------------
 // antialiasing mode font rendering

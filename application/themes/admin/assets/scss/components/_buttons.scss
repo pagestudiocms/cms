@@ -1,0 +1,7 @@
+a, .list a,
+button {
+  &.button {
+    // @extend .btn;
+    // padding: 5px 15px;
+  }
+}
