@@ -64,13 +64,13 @@
 
 		&::before {
 			/* icon before item name */
-			position: absolute;
-			content: '';
-			left: 5%;
-			@include center(y);
-			height: 16px;
-			width: 16px;
-			background: url(../img/cd-nav-icons.svg) no-repeat 0 0;
+			// position: absolute;
+			// content: '';
+			// left: 5%;
+			// @include center(y);
+			// height: 16px;
+			// width: 16px;
+			// background: url(../img/cd-nav-icons.svg) no-repeat 0 0;
 		}
 	}
 
@@ -215,7 +215,7 @@
 		}
 
 		> ul > li > a {
-			padding: 1em 1em 1em 42px;
+			padding: 1em 1em 1em 20px; // 1em 1em 1em 20px
 			text-align: left;
 			border-bottom: none;
 

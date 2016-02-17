@@ -52,7 +52,7 @@
 
 		<nav class="cd-nav">
 			<ul class="cd-top-nav">
-				<li><a class="btn blue small" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>">Visit Site</a></li>
+				<li><a class="settings-icon" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>"><i class="fa fa-eye"></i>&nbsp;<span>Visit Site</span></a></li>
 				<li><a class="settings-icon" href="<?php echo site_url(ADMIN_PATH .'/settings/general-settings'); ?>" title="Settings"><i class="fa fa-cog">&nbsp;</i><span>Settings</span></a></li>
 				<li class="has-children account">
 					<a href="#0">

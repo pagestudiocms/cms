@@ -18,6 +18,8 @@ Top Navigation
 
 .cd-top-nav {
 	> li {
+    // @extend .border;
+    margin: 0 !important;
     > a {
       padding: 1em 5% !important;
       @media (min-width: $tablet) {
@@ -52,10 +54,10 @@ Top Navigation
 	img {
 		/* avatar image */
 		position: absolute;
-		left: 1.8em;
+		left: 1em;
 		@include center(y);
-		height: 20px;
-		width: 20px;
+		height: 30px;
+		width: 30px;
 		border-radius: 50%;
 		display: none;
 	}
