@@ -56,7 +56,7 @@
 				<li><a class="settings-icon" href="<?php echo site_url(ADMIN_PATH .'/settings/general-settings'); ?>" title="Settings"><i class="fa fa-cog">&nbsp;</i><span>Settings</span></a></li>
 				<li class="has-children account">
 					<a href="#0">
-						<img src="<?php echo theme_url('assets/img/cd-avatar.png'); ?>" alt="Profile Avatar">
+						<!-- <img src="<?php echo theme_url('assets/img/cd-avatar.png'); ?>" alt="Profile Avatar"> -->
 						<?php echo $this->secure->get_user_session()->first_name; ?>
 					</a>
 
