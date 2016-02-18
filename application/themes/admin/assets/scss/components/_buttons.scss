@@ -1,7 +1,17 @@
+$btn-primary-color: #1784C7;
+$btn-primary-border-color: $btn-primary-color;
+$btn-primary-text-color: #FFF;
+
 a, .list a,
 button {
   &.button {
-    // @extend .btn;
-    // padding: 5px 15px;
+    padding: 5px 15px;
+    @include button-variant-alt(
+      $btn-primary-text-color, 
+      $btn-primary-color, 
+      $btn-primary-border-color,
+      $btn-primary-text-color,
+      darken($btn-primary-color, 5%)
+    );
   }
 }

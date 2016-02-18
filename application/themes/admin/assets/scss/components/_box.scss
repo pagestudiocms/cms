@@ -32,17 +32,13 @@
       float: right;
       padding-top: 6px;
       .button {
-        // color: #fff;
-        // font-weight: bold;
-        // padding-top: 6px; 
-        // padding-bottom: 6px; 
-        // @include button-variant(#fff, #469ccf, #388abb);
+        
       }
     }
     
     &.position_top {
       position: fixed;
-      left: 200px;
+      left: $sidebar-width-large;
       right: 0px;
       top: 55px;
       padding: 0 15px 2px 7px;
@@ -54,6 +50,12 @@
         color: $brand-primary;
         font-size: 18px;
         padding-top: 8px;
+      }
+      > .buttons {
+        padding-top: 11px;
+        .button {
+          
+        }
       }
     }
   }
