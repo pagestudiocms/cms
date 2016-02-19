@@ -1,0 +1,51 @@
+/* -------------------------------- 
+Header
+-------------------------------- */
+
+.cd-main-header {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	height: $header-height-S;
+	width: 100%;
+  
+	@include clearfix;
+	@include font-smoothing;
+  
+  > .breadcrumb {
+    margin: 11px;
+  }
+
+  @media (min-width: $tablet) {
+    left: $sidebar-width-large;
+    background: $header-bg-color;
+    border-bottom: 1px solid #d9d9d9;
+    .cd-logo {
+      display: none;
+    }
+  }
+  @media (max-width: 991px) {
+    left: 0;
+    background: $header-bg-color-mobile;
+    box-shadow: 0 1px 3px rgba(#000, .2);
+  }
+	@include MQ(M) {
+		position: fixed;
+		height: $header-height-M;
+	}
+}
+
+.cd-logo {
+	float: left;
+	display: block;
+	margin: 11px 0 0 5%;
+  background-color: $color-1;
+
+	img {
+		display: block;
+	}
+
+	@include MQ(M) {
+		margin: 16px 0 0 36px;
+	}
+}

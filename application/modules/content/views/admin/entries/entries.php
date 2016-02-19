@@ -24,7 +24,7 @@
     </div>
     <div class="content">
         <?php echo form_open(); ?>
-        <div class="filter">
+        <div class="filter clearfix">
             <div class="left">
                 <div><label>Search:</label></div> 
                 <input type="text" name="filter[search]" value="<?php echo set_filter('entries', 'search'); ?>" /></td>
@@ -44,12 +44,11 @@
                 <button name="submit" class="button" type="submit"><span>Filter</span></button>
                 <button name="clear_filter" value="1" class="button" type="submit"><span>Clear</span></button>
             </div>
-            <div class="clear"></div>
         </div>
         <?php echo form_close(); ?>
 
         <?php echo form_open(null, 'id="form"'); ?>
-        <table id="entries_table" class="list">
+        <table id="entries_table" class="list entries-table">
             <thead>
                 <tr>
                     <th width="1" class="center"><input type="checkbox" onClick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></th>
@@ -59,7 +58,6 @@
                     <th><a rel="content_types_title" class="sortable" href="#">Content Type</a></th>
                     <th><a rel="status" class="sortable" href="#">Status</a></th>
                     <th><a rel="modified_date" class="sortable" href="#">Last Modified</a></th>
-                    <th class="right">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,13 +65,20 @@
                     <?php foreach($Entries as $Entry): ?>
                     <tr>
                         <td class="center"><input type="checkbox" value="<?php echo $Entry->id ?>" name="selected[]" /></td>
-                        <td><?php echo strip_tags($Entry->title); ?></td>
+                        <td>
+                            <div class="entry-title">
+                                <?php echo anchor(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id, strip_tags($Entry->title)); ?><br />
+                            </div>
+                            <div class="action-links">
+                                <?php echo anchor(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id, 'Edit', ['class' => 'edit']); ?>
+                                <?php if ($Entry->slug != ''): ?> | <?php echo anchor("$Entry->slug", 'View', ['target' => '_blank', 'class' => 'view']); ?> <?php endif; ?>
+                            </div>
+                        </td>
                         <td><?php echo ($Entry->slug) ? '/'. $Entry->slug : ''; ?></td>
                         <td class="right"><?php echo $Entry->id; ?></td>
                         <td><?php echo $Entry->content_types_title; ?></td>
                         <td><?php echo ucwords($Entry->status); ?></td>
                         <td><?php echo date('m/d/Y h:i a', strtotime($Entry->modified_date)); ?></td>
-                        <td class="right"><?php if ($Entry->slug != ''): ?>[ <?php echo anchor("$Entry->slug", 'View', 'target="_blank"'); ?> ]<?php endif; ?> [ <?php echo anchor(ADMIN_PATH . "/content/entries/edit/" . $Entry->content_type_id . "/" . $Entry->id, 'Edit'); ?> ]</td>
                     </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
