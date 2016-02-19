@@ -77,3 +77,25 @@
   }
 
 }
+
+// Form filter inputs 
+
+.filter {
+  .filter_buttons {
+    margin-top: 15px;
+    .button {
+      margin-right: 0px;
+      border: none;
+    }
+  }
+  .left {
+    float: left;
+    margin-right: 12px;
+    div {
+      margin-bottom: 3px;
+    }
+  }
+  label {
+    font-weight: bold;
+  }
+}
