@@ -167,7 +167,7 @@ if ( ! function_exists('admin_nav'))
             if (show_admin_nav_li($item) && empty($item['hidden']))
             {
                 $list_item .= '<li' . (($depth == 1 && is_admin_nav_li_selected($item)) ? ' class="selected"' : '') . ((isset($item['id'])) ? ' id="' . $item['id'] . '"' : '') . '>';
-                $list_item .= '<a href="' . (admin_is_permitted(ADMIN_PATH . '/' . $item['url']) ? site_url(ADMIN_PATH . '/' . $item['url']) : 'javascript:void(0)') . '"' . (($depth == 1) ? ' class="top"' : '') . '>' . $item['title'] . '</a>';
+                $list_item .= '<a href="' . (admin_is_permitted(ADMIN_PATH . '/' . $item['url']) ? site_url(ADMIN_PATH . '/' . $item['url']) : 'javascript:void(0)') . '"' . (($depth == 1) ? ' class="top"' : '') . '>' . $item['label'] . '</a>';
 
                 if ( ! empty($item['sub']))
                 {
@@ -203,7 +203,7 @@ if ( ! function_exists('admin_primary_nav'))
     {
         $menu_id    = (is_array($atts) && isset($atts['menu_id'])) ? ' id="' . $atts['menu_id'] . '" ' : '';
         $menu_class = (is_array($atts) && isset($atts['menu_class'])) ? ' class="' . $atts['menu_class'] . '" ' : '';
-        $list_item  = '<ul '. $menu_id . $menu_class .'>';
+        $list_item  = '<ul'. $menu_id . $menu_class .'>';
 
         foreach($nav as $item)
         {
@@ -211,10 +211,17 @@ if ( ! function_exists('admin_primary_nav'))
 
             if (show_admin_nav_li($item) && empty($item['hidden']))
             {
-                $list_item .= '<li' . (($depth == 1 && is_admin_nav_li_selected($item)) ? ' class="selected"' : '') . ((isset($item['id'])) ? ' id="' . $item['id'] . '"' : '') . '>';
-                $list_item .= '<a href="' . (admin_is_permitted(ADMIN_PATH . '/' . $item['url']) 
-                            ? site_url(ADMIN_PATH . '/' . $item['url']) 
-                            : 'javascript:void(0)') . '"' . (($depth == 1) ? ' class="top"' : '') . '>' . $item['title'] . '</a>';
+                $list_item_class  = '';
+                $list_item_class .= (isset($item['class'])) ? $item['class'] : '';
+                $list_item_class .= ($depth == 1 && is_admin_nav_li_selected($item)) ? ' active' : '';
+                $list_item .= '<li class="'.$list_item_class.'"' . ((isset($item['id'])) ? ' id="' . $item['id'] . '"' : '') . '>';
+                if(isset($item['no_url'])) { 
+                    $list_item .= $item['no_url'];
+                } else {
+                    $list_item .= '<a href="' . (admin_is_permitted(ADMIN_PATH . '/' . $item['url']) 
+                                ? site_url(ADMIN_PATH . '/' . $item['url']) 
+                                : 'javascript:void(0)') . '"' . (($depth == 1) ? ' class="top"' : '') . '>' . $item['label'] . '</a>';
+                }
 
                 if ( ! empty($item['sub']))
                 {

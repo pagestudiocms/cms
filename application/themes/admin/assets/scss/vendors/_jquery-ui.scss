@@ -1,0 +1,14 @@
+/* Different title styles */
+.ui-state-default a {
+  color: $link-color;
+  text-decoration: none;
+  outline: none;
+  &:link, &:visited {
+    color: $link-color;
+    text-decoration: none;
+    outline: none;
+  }
+}
+.ui-sortable-placeholder {
+  background: #ffffcc;
+}

@@ -1,0 +1,43 @@
+//------------------------------------------------------------
+// Main Page Content
+//------------------------------------------------------------
+
+.cd-main-content {
+  // @extend .border;
+  min-height: 100%;
+  font-size: 13px;
+
+	&::before {
+		/* never visible - used to check MQ in jQuery */
+		display: none;
+		content: 'mobile';
+	}
+
+	.content-wrapper {
+		padding: $header-height-S 5% 3em;
+    padding: 10px;
+	}
+
+	@include MQ(M) {
+
+		.content-wrapper {
+			margin-left: $sidebar-width-M;
+			padding-top: 70px;
+		}
+
+		&::before {
+			content: 'tablet';
+		}
+	}
+
+	@include MQ(L) {
+
+		.content-wrapper {
+			margin-left: $sidebar-width-L;
+		}
+
+		&::before {
+			content: 'desktop';
+		}
+	}
+}

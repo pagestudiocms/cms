@@ -1,0 +1,28 @@
+//----------------------------------------------------------------
+// Primary style
+//----------------------------------------------------------------
+
+@import "reset";
+
+*, *::after, *::before {
+	box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+html {
+	font-size: 62.5%;
+}
+
+body {
+	font: {
+		size: $font-size-normal;
+		family: $primary-font; // variables inside partials > _variables.scss
+	}
+	color: $color-1;
+	background-color: $body-bg-color;
+	@include clearfix;
+}
+
+@import "typography";

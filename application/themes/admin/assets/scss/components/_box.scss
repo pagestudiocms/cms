@@ -1,0 +1,101 @@
+
+.box {
+	margin-bottom: 15px;
+  > .heading {
+    height: 38px;
+    padding-left: 0;
+    padding-right: 0px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #DBDBDB; // #e6e6e6
+    // background-color: #f0f0f0;
+    // background: url('../images/box.png') repeat-x;
+    @include border-radius-separate(2px, 2px, 0px, 0px);
+
+    > h1 {
+      margin: 0px;
+      // padding: 11px 0px 0px 0px;
+      color: #1C2836;
+      font-family: $font-family-serif;
+      font-size: 22px;
+      float: left;
+      font-weight: normal;
+      img {
+        display: none;
+        float: left;
+        margin-top: -1px;
+        margin-left: 3px;
+        margin-right: 8px;
+      }
+    }
+    
+    > .buttons {
+      float: right;
+      padding-top: 6px;
+      .button {
+        
+      }
+    }
+    
+    &.position_top {
+      position: fixed;
+      left: $sidebar-width-large;
+      right: 0px;
+      top: 55px;
+      padding: 0 15px 2px 7px;
+      border-bottom: 1px solid $box-border-color;
+      background-color: #FFF;
+      border-radius: 0;
+      z-index: 100;
+      h1 {
+        color: $brand-primary;
+        font-size: 18px;
+        padding-top: 8px;
+      }
+      > .buttons {
+        padding-top: 11px;
+        .button {
+          
+        }
+      }
+    }
+  }
+
+  > .content {
+    padding: 10px;
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    
+    &.position_top {
+      padding-top: 48px;
+    }
+    h2 {
+      font-weight: bold;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+  }
+
+}
+
+// Form filter inputs 
+
+.filter {
+  .filter_buttons {
+    margin-top: 15px;
+    .button {
+      margin-right: 0px;
+      border: none;
+    }
+  }
+  .left {
+    float: left;
+    margin-right: 12px;
+    div {
+      margin-bottom: 3px;
+    }
+  }
+  label {
+    font-weight: bold;
+  }
+}
