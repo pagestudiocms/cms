@@ -96,6 +96,7 @@ class Grid_field extends Field_type
                     ->where('content_type_id', $content_type_id)
                     ->get('content_fields')
                     ->result();
+                    
                 return $this->table_markup([
                     'grid_headers' => $grid_headers->result(),
                     'grid_rows' => $grid_rows->result(),
@@ -129,6 +130,7 @@ class Grid_field extends Field_type
               <th class="matrix matrix-first matrix-tr-header">&nbsp;</th>';
               if ( ! empty($grid_headers)) {
                 foreach($grid_headers as $key => $col ) {
+                  $header_items[] = $col->id;
                   $out .= '
                   <th class="matrix'. (($count === $total_cols) ? 'matrix-last ' : '') .'">'. $col->label .'</th>';
                   $count++;
@@ -137,34 +139,76 @@ class Grid_field extends Field_type
       $out .= '</tr>
           </thead>
           <tbody class="matrix">';
+            
           if( ! empty($grid_rows)) {
-            $count = 0;
-
+            $count          = 1;
+            $missing_fields = $header_items;
+            $total_cols     = $total_cols + 1;
+            $rows           = [];
+            $known_ids      = [];
+            
+            // Find new grid fields 
+            // Find fields that are in the grid_cols table that have no data 
+            // associated with them in the grid_col_data table if any...
             foreach($grid_rows as $key => $col ) {
-              if($count === $total_cols) {
-                $count = 0;
-                $out .= '<tr class="matrix matrix-first" id="tbl_row_1">';
-                $row_count++;
-              }
-              if($count === 0) {
-                $out .= '
-                <th class="matrix matrix-first matrix-tr-header">
-                    <div>
-                        <span>'.$row_count.'</span><a class="delRow" style="opacity: 1; display: inline;" title="Options"></a>
-                    </div>
-                </th>';
-              }
-              $out .= $this->format_field_type(
-                $col->content_field_type_id,
-                $col->grid_col_id,
-                $col->options,
-                $col->row_data,
-                $col->id
-              );
-              
-              $out .= ($count === $total_cols) ? '</tr>' : '';
-              $count++;
+                if(($row_key = array_search($col->grid_col_id, $missing_fields)) !== false) {
+                    unset($missing_fields[$row_key]);
+                }
+                if( ! in_array($col->grid_col_id, $known_ids)){
+                    $known_ids[] = $col->grid_col_id;
+                }
             }
+            
+            // Build associatve array containing rows and columns 
+            $key = 0;
+            $j = 0;
+            for($i = 0; $i < count($grid_rows); $i++) {
+                $rows[$key][$j] = $grid_rows[$i];
+                if(count($known_ids) === $count) {
+                    foreach($missing_fields as $x) {
+                        $j++;
+                        $rows[$key][$j] = $this->_get_missin_field_atts($x, $grid_headers);
+                    }
+                    $key++;
+                    $count = 0;
+                    $j = -1;
+                }
+                $j++;
+                $count++;
+            }
+            
+            // Build html table rows with newly constructed associative array... 
+            if( ! empty($rows)) {
+                $count = 1;
+                foreach($rows as $key => $columns ) {
+                    $out .= '<tr class="matrix matrix-first" id="tbl_row_1">';
+                    foreach($columns as $key => $col) {
+                        if($count === $total_cols) {
+                            $count = 1;
+                            $row_count++;
+                        }
+                        if($count === 1) {
+                            $out .= '
+                            <th class="matrix matrix-first matrix-tr-header">
+                                <div>
+                                    <span>'.$row_count.'</span><a class="delRow" style="opacity: 1; display: inline;" title="Options"></a>
+                                </div>
+                            </th>';
+                        }
+                        $out .= $this->format_field_type(
+                            $col->content_field_type_id,
+                            $col->grid_col_id,
+                            $col->options,
+                            $col->row_data,
+                            $col->id
+                        );
+                        
+                        $count++;
+                    }
+                    $out .= '</tr>';
+                }
+            }
+            
           }
       $out .= '
           </tbody>
@@ -301,7 +345,7 @@ class Grid_field extends Field_type
                     $select_field .= '<option value="'.$option.'" '.(($row_data === $option) ? 'SELECTED' : '').'>'. $option .'</option>';
                 }
                 $field = '
-                <td style="width: auto;" class="matrix matrix-firstcell">
+                <td style="width: auto;" class="matrix matrix-text">
                     <select name="grid_col_data['.$grid_col_data_id.']['.$grid_col_id.']">
                     '. $select_field .'  
                     </select>
@@ -310,5 +354,29 @@ class Grid_field extends Field_type
         }
         
         return $field;
+    }
+
+    // ------------------------------------------------------------------
+    
+    /**
+     * Helper function to $this->table_markup() method
+     */
+    private function _get_missin_field_atts($field_id, $fields_array) 
+    {
+        $missing_fields = [];
+        
+        foreach($fields_array as $key => $field) {
+            if($field_id === $field->id) {
+                $missing_fields = (object) [
+                    'id' => '',
+                    'grid_col_id' => $field->id,
+                    'row_data' => '',
+                    'content_field_type_id' => $field->content_field_type_id,
+                    'options' => $field->options,
+                ];
+            }
+        }
+        
+        return $missing_fields;
     }
 }

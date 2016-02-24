@@ -52,4 +52,9 @@ class Grid_fields_model extends CI_Model
             $this->db->insert('grid_cols', $data);
         }
     }
+    
+    public function get_fields()
+    {
+        return [];
+    }
 }
