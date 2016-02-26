@@ -111,6 +111,8 @@ class Entries_cache_model extends CI_Model
             $Grid_Fields_library = new Grid_Fields_library();
             $grid_content_array = $Grid_Fields_library->get_data($this->content_fields);
             
+            // var_dump($grid_content_array); die();
+            
             if ( ! empty($grid_content_array)) {
               $this->content_array = $grid_content_array;
             }

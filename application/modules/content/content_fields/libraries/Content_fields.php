@@ -144,7 +144,7 @@ class Content_fields
         }
 
         $Field_type = Field_type::factory($type, $Field);
-
+        
         return $Field_type->settings(); 
     }
 

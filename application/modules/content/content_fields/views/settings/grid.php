@@ -1,4 +1,70 @@
 <div class="grid_settings" style="">
+    <?php
+    if( ! empty($Field->child_fields)){
+        $field_count = 1;
+        // Print child fields 
+        foreach($Field->child_fields as $key => $field) { 
+        ?>
+            <div class="grid_col_item js_grid_col_item">
+                <div class="grid-heading">
+                    Child Field
+                </div>
+                <div style="display:none;">
+                    <?php echo form_input(['name' => 'grid_cols[field_'.$field_count.'][id]', 'value' => $field->id]); ?>
+                </div>
+                <div>
+                    <label for="type">Field Type</label>
+                    <?php echo form_dropdown(
+                        'grid_cols[field_'.$field_count.'][content_field_type_id]', 
+                        array('' => '', '4' => 'Dropdown', '8'  => 'Image', '1' => 'Rich Text', '3' => 'Text Field', '6' => 'Textarea',), 
+                        set_value('grid_cols[field_'.$field_count.'][content_field_type_id]', 
+                            ( ! empty($field->content_field_type_id)) ? $field->content_field_type_id : ''
+                        ), 
+                        'id="grid_col_type"'
+                    ); ?>
+                </div>
+
+                <div>
+                    <label for="grid_col_label"><span class="required">*</span> Field Label </label>
+                    <?php echo form_input(array(
+                        'name'=>'grid_cols[field_'.$field_count.'][label]', 'id'=>'grid_col_label', 'class'=>'js_grid_col_label',
+                        'value'=>set_value('grid_cols[field_'.$field_count.'][label]', ( ! empty($field->label)) ? $field->label : '')
+                    )); ?>
+                </div>
+
+                <div>
+                    <label for="short_tag"><span class="required">*</span> Short Tag</label>
+                    <?php echo form_input(array(
+                        'name'=>'grid_cols[field_'.$field_count.'][short_tag]', 'id'=>'short_tag', 'class'=>'js_short_tag', 
+                        'value'=>set_value('grid_cols[field_'.$field_count.'][short_tag]', ( ! empty($field->short_tag)) ? $field->short_tag : '')
+                    )); ?>
+                </div>
+                
+                <div>
+                    <label for="type">Required? </label>
+                    <span>
+                        <label><?php echo form_radio(array('name'  => 'grid_cols[field_'.$field_count.'][required]', 'value' => '1', 'checked' => ($field->required) ? TRUE : FALSE)); ?>Yes</label>
+                        <label><?php echo form_radio(array('name'  => 'grid_cols[field_'.$field_count.'][required]', 'value' => '0', 'checked' => ( ! $field->required) ? TRUE : FALSE)); ?>No</label>
+                    </span>
+                </div>
+                
+                <div>
+                    <label for="type">Allow Search? </label>
+                    <span>
+                        <label><?php echo form_radio(array('name'  => 'grid_cols[field_'.$field_count.'][is_searchable]', 'value' => 'y', 'checked' => ($field->is_searchable && $field->is_searchable === 'y') ? TRUE : FALSE)); ?>Yes</label>
+                        <label><?php echo form_radio(array('name'  => 'grid_cols[field_'.$field_count.'][is_searchable]', 'value' => 'n', 'checked' => ($field->is_searchable && $field->is_searchable === 'n') ? TRUE : FALSE)); ?>No</label>
+                    </span>
+                </div>
+                
+                <div class="action">
+                    <a class="matrix-btn matrix-add clone" title="Add row"></a>
+                    <a class="matrix-btn matrix-remove remove" title="Remove row"></a>
+                </div>
+            </div>
+    <?php 
+        $field_count++;
+        }
+    } else { ?>
     <div class="grid_col_item js_grid_col_item">
         <div>
             <label for="type">Field Type</label>
@@ -44,12 +110,14 @@
             </span>
         </div>
         
-        <div class="actions">
+        <div class="action">
             <a class="matrix-btn matrix-add clone" title="Add row"></a>
             <a class="matrix-btn matrix-remove remove" title="Remove row"></a>
         </div>
-        
     </div>
+    <?php 
+    }
+    ?>
     
     <div class="js_dynamic_fields_placeholder" style="border:none;margin:0;padding:0;"></div>
     
@@ -85,9 +153,8 @@
         function clone(){
             $(this).parents(".js_grid_col_item").clone()
                 .appendTo(".js_dynamic_fields_placeholder")
-                .attr("id", "js_grid_col_item" +  cloneIndex)
-                .find("*")
-                .each(function() {
+                .attr("id", "js_grid_col_item" + cloneIndex)
+                .find("*").each(function() {
                     var id = this.id || "";
                     var match = id.match(regex) || [];
                     if (match.length == 3) {

@@ -81,24 +81,27 @@ class Grid_Fields_library
             $array = [];
             $fields = [];
             
-            foreach($grid_rows as $key => $value) {
-              foreach($value as $key => $item) {
-                  if($count % 2 !== 0) {
-                      $tag = $item; 
-                  } else {
-                      $array[$tag] = $item;
-                      if($count === $break) {
-                          $fields[] = $array;
-                          $count = 0;
-                      }
-                  }
+                var_dump($grid_rows); 
+            foreach($grid_rows as $ojb => $value) {
+                foreach($value as $key => $item) {
+                    if(($count % 2) !== 0) {
+                        $tag = $item; 
+                    } else {
+                        $array[$tag] = $item;
+                        if($count === $break) {
+                            $fields[] = $array;
+                            $count = 0;
+                        }
+                    }
                   $count++;
-              }
+                }
             }
             
             $data[$content_field->short_tag] = $fields;
           }
         }
+          
+          var_dump($data); die();
         
         return $data;
     }
