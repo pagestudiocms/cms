@@ -18,8 +18,8 @@
             <tr>
                 <td>PHP Version:</td>
                 <td class="align_center"><?php echo phpversion(); ?></td>
-                <td class="align_center">5.1.6+</td>
-                <td class="align_center"><img src="<?php echo base_url() . 'assets/images/' . ((phpversion() >= '5.1.6') ? 'good' : 'bad'); ?>.png" /></td>
+                <td class="align_center">5.4.6+</td>
+                <td class="align_center"><img src="<?php echo base_url() . 'assets/images/' . ((phpversion() >= '5.4.6') ? 'good' : 'bad'); ?>.png" /></td>
             </tr>
             <tr>
                 <td>Register Globals:</td>
