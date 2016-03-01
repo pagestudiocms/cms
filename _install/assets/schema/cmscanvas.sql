@@ -453,7 +453,7 @@ INSERT INTO `settings` (`id`, `slug`, `value`, `module`) VALUES
 (11, 'ga_email', '', NULL),
 (12, 'ga_password', '', NULL),
 (13, 'ga_profile_id', '', NULL),
-(14, 'theme', 'cedargrove', NULL),
+(14, 'theme', 'default', NULL),
 (15, 'layout', '404-page', NULL),
 (16, 'enable_profiler', '0', NULL),
 (17, 'editor_stylesheet', 'assets/css/content.css', NULL),
