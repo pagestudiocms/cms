@@ -182,7 +182,8 @@ class Categories_library
      */
     protected function _get_cache($category_group_id, $parent_id = 0, $recursive = true)
     {
-        $cache_key = $category_group_id . $parent_id . $recursive . ($this->entry_id) ? $this->entry_id : '';
+        $cache_key = $category_group_id . $parent_id . $recursive;
+        $cache_key = ($this->entry_id) ? $cache_key . $this->entry_id : $cache_key;
         return $this->CI->cache->get(sha1($cache_key), 'categories');
     }
 
@@ -202,7 +203,8 @@ class Categories_library
      */
     protected function _set_cache($category_group_id, $parent_id, $recursive, $tree)
     {
-        $cache_key = $category_group_id . $parent_id . $recursive . ($this->entry_id) ? $this->entry_id : '';
+        $cache_key = $category_group_id . $parent_id . $recursive;
+        $cache_key = ($this->entry_id) ? $cache_key . $this->entry_id : $cache_key;
         $this->CI->cache->save(sha1($cache_key), 'categories', $tree);
     }
 
@@ -238,18 +240,19 @@ class Categories_library
     protected function _build_tree($category_group_id, $parent_id = 0, $recursive = true)
     {
         $categories_array = array();
-
+        
         // Using CI ActiveRecord, thinking there might be a slight gain 
         // in performance over Datamapper ORM
         if($this->entry_id) {
-            $Query = $this->CI->db->select('categories.*')
+            $Query = $this->CI->db->select('categories.*, categories_entries.*')
                 ->from('categories')
-                ->where('category_group_id', $category_group_id)
-                ->where('parent_id', $parent_id)
                 ->join('categories_entries', 'categories_entries.category_id = categories.id')
+                ->where('categories.category_group_id', $category_group_id)
+                ->where('categories.parent_id', $parent_id)
+                ->where('categories_entries.entry_id = '.$this->entry_id)
                 ->order_by('categories.sort', 'asc')
-                ->get();
-        } else {            
+                ->get();            
+        } else {          
             $Query = $this->CI->db->select('categories.*')
                 ->from('categories')
                 ->where('category_group_id', $category_group_id)
@@ -610,9 +613,9 @@ class Categories_library
         // Determine the array size
         $output = '';
         $array_count = 1;
-        $array_size = count($tree);
+        $array_size = count($tree);        
 
-        if ($this->nested)
+        if ($this->nested === true)
         {
             if ($depth == 1)
             {
@@ -666,7 +669,7 @@ class Categories_library
 
             $class = trim($class . ' ' . $Category->class);
 
-            if ($this->nested)
+            if ($this->nested === true)
             {
                 $output .= '<li' . ( ! empty($Category->tag_id) ? ' id="' . $Category->tag_id . '"' : '') . ( ! empty($class) ? ' class="' . $class . '"' : '') . '>';
             }
@@ -716,7 +719,7 @@ class Categories_library
                 }
             }
 
-            if ($this->nested)
+            if ($this->nested === true)
             {
                 $output .= '</li>';
             }
@@ -724,7 +727,7 @@ class Categories_library
             $array_count++;
         }
 
-        if ($this->nested)
+        if ($this->nested === true)
         {
             $output .= '</ul>';
         }
