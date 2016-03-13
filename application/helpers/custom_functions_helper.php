@@ -40,21 +40,25 @@ if ( ! function_exists('_vd'))
 
 // ------------------------------------------------------------------------
 
-/*
+/**
  * Array to Object
  * 
- * Converts an array to an object
+ * Converts an array to an object with optional param for recursion 
  *
- * @param array
- * @return object
+ * @param   int $recursion Defaults to false 
+ * @param   array $array 
+ * @return  object
  */
 if ( ! function_exists('array_to_object'))
 {
-    function array_to_object($array)
+    function array_to_object($array, $recursion = false)
     {
         $Object = new stdClass();
-        foreach($array as $key=>$value)
+        foreach($array as $key => $value)
         {
+            if ($recursion && is_array($value)) {
+                $value = array_to_object($value);
+            }
             $Object->$key = $value; 
         }
 
