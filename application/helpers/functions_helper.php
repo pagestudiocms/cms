@@ -205,58 +205,6 @@ if( ! function_exists('shorten_phrase')) {
     }
 }
 
-/*****************************************************************************
-*         Name: make_slug
-*       Syntax: make_slug($text)
-*  Description: This function replaces 'spaces' from @text with dashes.
-* 				Then returns the @text to the caller. 
-*   Parameters:
-*               $text   (Required): The @text to be processed
-*
-*Return Values: $text, If @text is empty return 'n-a'
-******************************************************************************/
-function make_slug($text)
-{ 
-	// replace non letter or digits by -
-	$text = preg_replace('~[^\\pL\d]+~u', '-', $text);
-
-	// trim
-	$text = trim($text, '-');
-
-	// transliterate
-	$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-
-	// lowercase
-	$text = strtolower($text);
-
-	// remove unwanted characters
-	$text = preg_replace('~[^-\w]+~', '', $text);
-
-	return (empty($text)) ?  '' : $text;
-}
-
-/**
- * Replace dashes with underscores
- *
- * Find dashes in a string and replace it with underscores.
- *
- * @Since: 1.1.0 
- */ 
-function dash_to_underscore($string)
-{
-	return str_replace("-","_",$string);
-}
-
-/**
- * Replace dashes, underscores, with spaces
- *
- * @Since: 1.1.0 
- */ 
-function remove_dash_and_underscore($string)
-{
-	return preg_replace('/[-_]+/', ' ', $string);
-} 
-
 /**
  * List the contents of a directory, receive file path to read from, 
  * accept @param $blacklist as array of items not to display. 
@@ -389,27 +337,6 @@ function remove_from_string($chars, $string)
 function wrap_in_html_entities($param)
 {
 	return htmlentities($param, ENT_QUOTES);
-}
-
-/**
- * @length - length of random string (must be a multiple of 2)
- * @Note: consider using this for password generated scripts.
- */
-function random_readable_string( $length = 6 )
-{
-    $conso = array("b","c","d","f","g","h","j","k","l","m","n","p","r","s","t","v","w","x","y","z");
-    
-	$vocal = array("a","e","i","o","u");
-    $string = "";
-    srand (( double )microtime()*1000000);
-    $max = $length/2;
-   
-   for ($i=1; $i<=$max; $i++)
-   {
-		$string .= $conso[rand(0,19)];
-		$string .= $vocal[rand(0,4)];
-   }
-   return $string;
 }
 
 /**

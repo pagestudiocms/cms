@@ -600,7 +600,11 @@ class Navigations_library
             }
             else
             {
+              if(isset($config['framework'])) {
+                return $this->_boostrap_list_nav($this->tree);
+              } else {
                 return $this->_list_nav($this->tree);
+              }
             }
         }
         else
@@ -609,6 +613,164 @@ class Navigations_library
         }
     }
 
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Bootstrap Navbar and dropdowns 
+     *
+     * Builds Bootstrap 3.5+ navigation HTML markup
+     *
+     * Added by Cosmo Mathieu <cosmo@cosmointeractive.co>
+     *
+     * @since   version 1.2.0
+     * @access  protected
+     * @param   array
+     * @param   int
+     * @return  string
+     */
+    protected function _boostrap_list_nav($array, $depth = 1)
+    {
+      $ul_dropdown = '';
+      
+      // Return empty string if no nav items found
+      if ( empty($array)) {
+        return '';
+      }
+
+      // Remove hidden categories from array
+      foreach($array as $key => $Item) {
+        if ($Item->hide) {
+          unset($array[$key]);
+        }
+          
+        if($Item->sub) {
+          $this->ul_dropdown = 'dropdown-menu';
+        }
+      }
+
+      // Determine the array size
+      $output = '';
+      $array_count = 1;
+      $array_size = count($array);
+
+      if ($this->nested) {
+        if ($depth == 1) {
+          $nav = '<ul' . (($this->tag_id) ? ' id="' . $this->tag_id . '"' : '') . ' class="nav navbar-nav ' . (($this->class) ? $this->class : '') . '">';
+        }
+        else {
+          $nav = '<ul' . (( ! empty($this->ul_dropdown) && $depth === 2) ? ' class="' . $this->ul_dropdown . '"' : '') .'>';
+        }
+      } else {
+        $nav = '';
+      }
+
+        $content = $this->_content;
+        $has_children = '';
+
+        // Build unordered list of navigation
+        foreach($array as $Item) {
+            if(is_array( $Item->sub)) {
+              if( ! empty( $Item->sub) && $depth === 1) {
+                $has_children = ' dropdown';
+              }
+            } 
+            $class = '' . $has_children;
+
+            if ($array_count == 1) {
+              $class .= ' first';
+            }
+
+            if ($array_count == $array_size) {
+              $class .= ' last';
+            }
+
+            if ($Item->current) {
+              $class .= ' active';
+            }
+
+            if ($Item->current_trail) {
+              $class .= ' current_trail';
+            }
+
+            $class = trim($class . ' ' . $Item->class);
+
+            if ($this->nested) {
+                $nav .= '<li' . ( ! empty($Item->tag_id) ? ' id="' . $Item->tag_id . '"' : '') . ( ! empty($class) ? ' class="' . $class . '"' : '') . '>';
+            }
+
+            // Check if content was provided to use
+            if ( ! empty($this->_content))
+            {
+                $the_url = ( $Item->url === 'home') ? '/' : $Item->url;
+                $the_url = (($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($the_url) : $the_url);
+                
+                $item_array = array(
+                    'node_id' => $Item->id,
+                    'title' => $Item->title,
+                    'target' => $Item->target,
+                    'id' => $Item->tag_id,
+                    'class' => $class,
+                    'url' => $the_url,
+                    'path' => ($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($the_url) : $the_url,
+                );
+                
+
+                // Backspace last element if backspace specified
+                if ($array_count == $array_size && $this->backspace)
+                {
+                    $content = substr($content, 0, $this->backspace * -1);
+                }
+
+                $nav .= $this->CI->parser->parse_string($content, $item_array, true);
+            }
+            else
+            {
+                $the_url = ($Item->url == 'home') ? '/' : $Item->url;
+                $the_url = (($Item->type == 'page' || $Item->type == 'dynamic_route') ? site_url($the_url) : $the_url);
+                
+              if( ! empty($has_children)) {
+                $nav .= '<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ' . (($Item->target) ? 'target="' . $Item->target . '"': '') . ' href="' . $the_url . '">' . $Item->title . ' <span class="caret"></span></a>';
+              } else {
+                $nav .= '<a ' . (($Item->target) ? 'target="' . $Item->target . '"': '') . ' href="' . $the_url . '">' . $Item->title . '</a>';
+              }
+            }
+
+            // Check if subnav visibility overridden by parameter else use default settings
+            if ( ! empty($Item->sub) && (empty($this->max_depth) || $depth < $this->max_depth))
+            {
+                if ( ! empty($this->subnav_visibility))
+                {
+                    if ($this->subnav_visibility == 'show' || ($this->subnav_visibility == 'current_trail' && $Item->current_trail))
+                    {
+                        $nav .= $this->_boostrap_list_nav($Item->sub, $depth + 1);
+                    }
+                }
+                else
+                {
+                    if ($Item->subnav_visibility == 'show' || ($Item->subnav_visibility == 'current_trail' && $Item->current_trail))
+                    {
+                        $nav .= $this->_boostrap_list_nav($Item->sub, $depth + 1);
+                    }
+                }
+            }
+
+            if ($this->nested)
+            {
+                $nav .= '</li>';
+            }
+
+            $array_count++;
+            $has_children = '';
+        }
+
+        if ($this->nested)
+        {
+            $nav .= '</ul>';
+        }
+
+        return $nav;
+    }
+    
     // ------------------------------------------------------------------------
  
     /*

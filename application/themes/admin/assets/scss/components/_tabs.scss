@@ -1,0 +1,137 @@
+.htabs {
+  padding: 0px 0px 0px 10px;
+  height: 30px;
+  line-height: 16px;
+  border-bottom: 1px solid #DDDDDD;
+  margin-bottom: 15px;
+  li {
+    float: left;
+  }
+  a {
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    background: #FFFFFF url('../images/tab.png') repeat-x;
+    padding: 7px 15px 6px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #000000;
+    margin-right: 2px;
+    float: left;
+    border-radius: 3px 3px 0 0;
+    outline: 0;
+  }
+  li.ui-tabs-active a {
+    padding-bottom: 7px;
+    background: #FFFFFF;
+  }
+}
+
+.ui-tabs .ui-tabs-hide {
+  display: none !important;
+}
+
+.vtabs {
+  width: 190px;
+  padding: 10px 0px;
+  min-height: 578px;
+  float: left;
+  display: block;
+  border-right: 1px solid #DDDDDD;
+  a {
+    display: none;
+    display: block;
+    float: left;
+    width: 160px;
+    margin-bottom: 5px;
+    clear: both;
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background: #F7F7F7;
+    padding: 6px 14px 7px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: right;
+    text-decoration: none;
+    color: #000000;
+  }
+  span {
+    display: block;
+    float: left;
+    width: 160px;
+    margin-bottom: 5px;
+    clear: both;
+    border-top: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
+    background: #F7F7F7;
+    padding: 6px 14px 7px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: right;
+    text-decoration: none;
+    color: #000000;
+  }
+  li.ui-tabs-selected a {
+    padding-right: 15px;
+    background: #FFFFFF;
+  }
+  a img, span img {
+    position: relative;
+    top: 3px;
+    cursor: pointer;
+  }
+}
+
+.vtabs-content {
+  margin-left: 205px;
+}
+
+// Tabs 
+// Appears on pages like content_fields edit, etc.
+
+.subnav {
+  margin-bottom: 15px;
+  z-index: 1;
+  height: 36px;
+  clear: both;
+  min-width: 900px;
+  // background: url("../images/box.png") repeat-x scroll 0 0 transparent;
+  border-bottom: 1px solid $border-color-light;
+  // border-radius: 3px;
+  li {
+    float: left;
+    border-top: 1px solid $border-color-light;
+    border-right: 1px solid $border-color-light;
+    &:first-child {
+      border-left: 1px solid $border-color-light;
+      @include border-radius-separate($border-radius-base, 0, 0, 0);
+    }
+    &:last-child {
+      @include border-radius-separate(0, $border-radius-base, 0, 0);
+    }
+  }
+  > ul a {
+    display: block;
+    padding: 0px 15px;
+    height: 34px;
+    color: #999;
+    line-height: 34px;
+    text-decoration: none;
+    background-color: #F7F7F7;
+    &:hover {
+      color: $color-5;
+    }
+    
+    &.selected {
+      color: $color-5;
+      background-color: #FFF;
+    }
+  }
+}

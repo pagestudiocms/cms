@@ -33,6 +33,21 @@
                     <?php echo form_textarea(array( 'name' => 'description', 'id' => 'description', 'value' => set_value('description', isset($Image->description) ? $Image->description : ''))); ?>
                 </div>
             </div>
+            
+            <div>
+                <?php echo form_label('Credits:', 'credits'); ?>
+                <?php echo form_input(array( 'name' => 'credits', 'value' => set_value('credits', isset($Image->credits) ? $Image->credits : ''))); ?> <span style="display: inline;" class="help">(The author name or URL)<span>
+            </div>
+            
+            <div>
+                <?php echo form_label('Link:', 'link'); ?>
+                <?php echo form_input(array( 'name' => 'link', 'value' => set_value('link', isset($Image->link) ? $Image->link : ''))); ?> <span style="display: inline;" class="help">(The full URL)<span>
+            </div>
+            
+            <div>
+                <?php echo form_label('Link Text:', 'link_text'); ?>
+                <?php echo form_input(array( 'name' => 'link_text', 'value' => set_value('link_text', isset($Image->link_text) ? $Image->link_text : ''))); ?> <span style="display: inline;" class="help"><span>
+            </div>
 
             <div>
                 <?php echo form_label('', '')?>
@@ -71,11 +86,26 @@
             );
         });
 
-
         var thin_config = {
             toolbar : [
-                        { name: 'basicstyles', items : [ 'Bold','Italic','-','NumberedList','BulletedList','-','Link','Unlink'] }
-                    ],
+                { 
+                    name: 'basicstyles', 
+                    items: [ 'Format','Bold','Italic','-','NumberedList','BulletedList','-','Link','Unlink','-','Source' ]
+                }
+            ],
+            entities : false,
+            resize_maxWidth : '400px',
+            width : '550px',
+            height : '120px'
+        };
+        
+        var thin_config = {
+            toolbar : [
+                { 
+                    name: 'basicstyles', 
+                    items: [ 'Format','Bold','Italic','-','NumberedList','BulletedList','-','Link','Unlink','-','Source' ]
+                }
+            ],
             entities : false,
             resize_maxWidth : '400px',
             width : '550px',

@@ -1,10 +1,11 @@
 Page Studio
 =============
 
-A lightweight PHP CMS built on Open Source technology.
+A lightweight PHP CMS built to speed up web development and simplify content 
+management.
 
 #Website
-https://www.pagestudioapp.com/
+http://www.pagestudiocms.com/
 
 #Requirements
 A web host or server with:
@@ -14,7 +15,7 @@ A web host or server with:
 A modern and updated web browser
 
 #Documentation
-http://docs.pagestudioapp.com/1.2.0/
+http://pagestudiocms.com/docs/
 
 ##License for PageStudio
 
@@ -39,8 +40,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ## Acknowledgements
-This project is a fork of CMS Canvas originally created by Mark Price 
+This project began as a fork of CMSCanvas created by Mark Price 
 http://cmscanvas.com.
 
-Thank you to the CodeIgniter <http://codeigniter.com> to their work on an 
+Thank you to the CodeIgniter <http://codeigniter.com> team for their work on an 
 amazing framework.

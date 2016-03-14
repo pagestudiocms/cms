@@ -1,4 +1,35 @@
 <?php
+/*
+ * ---------------------------------------------------------------------------
+ * DOMAIN PREFIX/SUFFIX DETERMINER
+ * ---------------------------------------------------------------------------
+ *
+ * This function is used to pull out either the prefix or suffix of the
+ * current url. You should not need to modify this, use this variable below
+ * to switch between the two methods: $domains['environment']
+ *
+ * @source      https://github.com/jedkirby/ci-multi-environments
+ */
+if ( ! function_exists('domains_determine_uri'))
+{
+	function domains_determine_uri($domain_environment = 'prefix')
+	{
+		$http_host = (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : FALSE);
+		$http_split = ($http_host ? explode('.', $http_host) : FALSE);
+		switch(strtolower($domain_environment))
+		{
+			case 'prefix':
+				$domain_uri = $http_split[0];
+				break;
+			case 'suffix':
+				$domain_uri = end($http_split);
+				break;
+			default:
+				exit('The domain environment has not been set correctly, please use either prefix or suffix.');	
+		}
+		return (isset($domain_uri) ? $domain_uri : FALSE);
+	}
+}
 
 /*
  *---------------------------------------------------------------
@@ -26,7 +57,27 @@ date_default_timezone_set('America/New_York');
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'development');
+$domains['environment'] = 'prefix';
+switch( domains_determine_uri( $domains['environment'] ) )
+{
+	case 'dev':
+	case 'local':
+		define('ENVIRONMENT', 'development');
+			$system_path = 'system';
+			$application_folder = 'application';
+        break;
+	case 'stage':
+	case 'staging':
+		define('ENVIRONMENT', 'staging');
+			$system_path = 'system';
+			$application_folder = 'application';
+        break;		
+	default:
+		define('ENVIRONMENT', 'production');
+			$system_path = 'system';
+			$application_folder = 'application';
+}
+
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
