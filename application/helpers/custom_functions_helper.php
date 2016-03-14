@@ -1,5 +1,65 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * PageStudioCMS
+ *
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on CMS Canvas, a CodeIgniter based application, 
+ * http://cmscanvas.com/. It has been greatly altered to work for the 
+ * purposes of our development team. Additional resources and concepts have 
+ * been borrowed from PyroCMS http://pyrocms.com, for further improvement
+ * and reliability. 
+ *
+ * @package     PageStudioCMS
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, Cosmo Interactive, LLC
+ * @license     MIT License
+ * @link        http://pagestudiocms.com
+ */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Helper Functions
+ *
+ * Helper functions are a collection of functions that helps you with tasks. 
+ * Unlike most other systems, in this CMS, Helper Functions are not written 
+ * in an Object Oriented format. They are simple, procedural functions. 
+ * Each helper function performs one specific task, and may be dependent of one or 
+ * more other Helper Functions.
+ * Helper functions are not native to this application alone. They can be reused in 
+ * other php applications. 
+ *
+ * @version:    Version 0.2.0 
+ * @modified:   03/12/2016
+ *
+ * Table of Contents:
+ * ------------------------------
+ * - mime_file_type()
+ * - datetime()                         Function with formated date
+ * - remove_am_pm()                     Removes AM PM from a given string
+ * - _pr()                              Simply wraps a print_r() in pre tags
+ * - _vd()
+ * - array_to_object()
+ * - object_to_array()
+ * - is_ajax()
+ * - image_thumb()
+ * - br2nl()                            Converts html <br /> to new line \n
+ * - option_array_value()
+ * - in_uri()
+ * - theme_partial()
+ * - theme_url()
+ * - domain_name()
+ * - glob_recursive()
+ * - url_base64_encode()
+ * - url_base64_decode()
+ * - xml_output()
+ * - js_start()
+ * - js_end()
+ * - str_to_bool()
+ * - is_inline_editable()
+ * - 
+ */
 /*
  * Print Recursive
  *
@@ -517,5 +577,144 @@ if ( ! function_exists('is_inline_editable'))
         {
             return FALSE;
         }
-    }   
-}  
+    }
+    
+}
+    
+// ------------------------------------------------------------------------
+
+/**
+ * Replace dashes with underscores
+ *
+ * @since   1.1.0 
+ * @return  string 
+ */
+if ( ! function_exists('dash_to_underscore'))
+{ 
+    function dash_to_underscore($string)
+    {
+        return str_replace("-", "_", $string);
+    }
+}
+
+/**
+ * Replace underscores with dashes
+ *
+ * @since   1.1.0 
+ * @return  string 
+ */
+if ( ! function_exists('underscore_to_dash'))
+{ 
+    function underscore_to_dash($string)
+    {
+        return str_replace("_", "-", $string);
+    }
+}
+
+/**
+ * Replace dashes and underscores. By default replaces with spaces.
+ * 
+ * @since   1.1.0 
+ * @param   string $replace Specifies character replacement
+ * @return  string
+ */ 
+if ( ! function_exists('remove_dash_and_underscore'))
+{
+    function remove_dash_and_underscore($string, $replace = ' ')
+    {
+        return preg_replace('/[-_]+/', $replace, $string);
+    } 
+} 
+
+// ------------------------------------------------------------------------
+
+/**
+ * This function replaces 'spaces' from @text with dashes.
+ * Then returns the @text to the caller. 
+ * 
+ * @param    $text (Required): The text to be processed
+ * @return   string $text
+ */
+if ( ! function_exists('make_slug'))
+{
+    function make_slug($text, $options = [])
+    { 
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+        $text = trim($text, '-');   // trim
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);   // transliterate
+        $text = strtolower($text);   // lowercase
+
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+
+        return (empty($text)) ?  '' : $text;
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if ( ! function_exists('random_number'))
+{
+    function random_number($length = 8) 
+    {
+        $numeric = '0123456789';
+        $number  = '';
+        
+        for ($i = 0; $i < $length; $i++) {
+            $number .= $numeric[rand(0, strlen($numeric) - 1)];
+        }
+        
+        return $number;
+    }
+}
+    
+// ------------------------------------------------------------------------
+
+/**
+ * Creates a human readable string 
+ *
+ * @param   int $length String length (must be a multiple of 2)
+ * @note    consider using this for password generated scripts.
+ *
+ * @return  string
+ */
+if ( ! function_exists('random_readable_string'))
+{
+    function random_readable_string($length = 6)
+    {
+        $conso = array("b","c","d","f","g","h","j","k","l","m","n","p","r",
+            "s","t","v","w","x","y","z"
+        );
+        $vocal = array("a","e","i","o","u");
+        
+        $string = "";
+        srand (( double )microtime()*1000000);
+        $max = $length/2;
+       
+        for ($i = 1; $i <= $max; $i++)
+        {
+            $string .= $conso[rand(0,19)];
+            $string .= $vocal[rand(0,4)];
+        }
+        
+        return $string;
+    }
+}
+
+function hash_passwd($string, $options = [])
+{
+    $secure = (isset($options['secure'])) ? true : false;
+
+    switch($secure) {
+        case true :
+        case 'encrypt' :
+        case 'sha1'	:
+            $CI =& get_instance();
+            $CI->load->helper('security');
+            return do_hash(uniqid(mt_rand(), TRUE), 'sha1');
+            break;
+        default:
+            return $string;
+    }
+}
