@@ -38,3 +38,36 @@
         <?php endif; ?>
     </div>
 </form>
+
+<?php if($ajax_submit): js_start(); ?>
+<script type="text/javascript">
+    $( document ).ready( function() {
+        $(".js-contact-form").find("input,textarea,select").jqBootstrapValidation({
+            preventSubmit: true,
+            submitError: function($form, event, errors) {
+                // console.log(errors);
+            },
+            submitSuccess: function($form, event) {
+                event.preventDefault();
+                $.ajax({
+                    url: "<?php echo base_url() . ADMIN_PATH . '/contact/ajax/'; ?>",
+                    async: false,
+                    cache: false,
+                    type: 'POST',
+                    data: $('.js-contact-form').serialize(),
+                    success: function(data){
+                        var message = data.replace('Invalid address: ','');
+                        if(message === '1') {
+                            $('.js-result').html('<p class="success">Thank you! Your message was successfully sent.</p>');
+                            $('.js-contact-form').find("input[type=text], input[type=email], textarea").val("");
+                        } else {
+                            $('.js-result').html('<p class="error">Something went wrong. We were unable to send your email.</p>');
+                        }
+                        // console.log(data);
+                    }
+                });
+            },
+        });
+    });
+</script>
+<?php js_end(); endif;?>
