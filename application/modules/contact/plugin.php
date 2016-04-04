@@ -16,6 +16,7 @@
  */
 class Contact_plugin extends Plugin
 {
+    public $ajax = [];
     /*
      * Form
      *
@@ -40,6 +41,20 @@ class Contact_plugin extends Plugin
         $data['anchor'] = $this->attribute('anchor');
         $data['captcha'] = str_to_bool($this->attribute('captcha'));
         $data['content'] = $this->parser->parse_string($this->content(), $parse_data, TRUE);
+        
+        // Set ajax attributes
+        if ($this->attribute('ajax') !== '')
+        {
+            $ajax = $this->attribute('ajax');
+            foreach(explode('|', $ajax) as $atts) {
+                $this->ajax[] = $atts;
+            }
+            
+            $this->ajax_submit = ( ! empty($this->ajax) && $this->ajax[0] === 'true') ? true : false;
+            $this->ajax_result_class = ( ! empty($this->ajax) && ! empty($this->ajax[1])) ? $this->ajax[1] : null;
+            $data['ajax_submit'] = $this->ajax_submit;
+            $data['ajax_result_class'] = $this->ajax_result_class;
+        }
 
         // Wrap content with form tags and add a spam check field
         // A theory that spam bots do not read css and will attempt to fill all fields
@@ -73,13 +88,13 @@ class Contact_plugin extends Plugin
                 {
                     $this->form_validation->set_rules($name, $name, 'required');
                 }
-            }
+            }            
 
             if (str_to_bool($this->attribute('captcha')))
             {
                 $this->form_validation->set_rules('captcha_input', 'CAPTCHA', 'validate_captcha|required');
             }
-
+            
             // Process Form
             if ($this->form_validation->run() == TRUE && $this->input->post('spam_check') == '')
             {

@@ -2,18 +2,25 @@
 
 class Pages extends Public_Controller 
 {
+	private $theme_config = '';
 
 	function __construct()
 	{
 		parent::__construct();	
+		
+		$this->load->helper('shortcodes');
+		include_once $this->theme_config = THEME_PATH . $this->settings->theme . '/config.php';
+		
+		$theme = array_to_object($config['theme_config'], true);
+		if(isset($theme->shortcodes)) {
+			include_once $this->theme_config = THEME_PATH . $this->settings->theme . '/' . $theme->shortcodes;
+		}
 	}
 	
 	function index()
 	{
         $this->load->model('pages_model');
         $this->load->helper('functions');
-        $this->load->helper('shortcodes');
-        $this->load->helper('shortcode_list');
 
         if ($this->settings->enable_profiler)
         {
