@@ -9,9 +9,7 @@
                     {{ hero_text }}
                     <div class="row">
                         <div class="columns twelve alpha offset-by-four">
-                            {{ search:form_simple label="yes|Blah" placeholder="Type to search..." redirect="search" }}
-							
-							{{ search:form label="yes|blah blah" placeholder="Type to search..." redirect="search" }}
+                            {{ search:form_simple placeholder="Type to search..." redirect="search" }}
                         </div>
                     </div>
                 </div>
