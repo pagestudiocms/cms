@@ -34,6 +34,8 @@
  */
 class Search extends Public_Controller 
 {
+	private $theme_config = '';
+	
     function __construct()
     {
         parent::__construct();
@@ -188,11 +190,15 @@ class Search extends Public_Controller
     // List results to the view 
     private function build($search = array())
 	{
-        $this->load->model('content/pages_model');
-        $this->load->helper('functions');
-        $this->load->helper('shortcodes');
-        $this->load->helper('shortcode_list');
         $this->load->library('cache');
+        $this->load->model('content/pages_model');
+		$this->load->helper('shortcodes');
+		include_once $this->theme_config = THEME_PATH . $this->settings->theme . '/config.php';
+		
+		$theme = array_to_object($config['theme_config'], true);
+		if(isset($theme->shortcodes)) {
+			include_once $this->theme_config = THEME_PATH . $this->settings->theme . '/' . $theme->shortcodes;
+		}
 
         if ($this->settings->enable_profiler) {
             $this->output->enable_profiler(TRUE);
@@ -246,6 +252,8 @@ class Search extends Public_Controller
       
         if (isset($Page) && $Page->exists())
         {
+			$this->load->helper('text');
+			
             // Check and enforce access permissions
             $this->pages_model->check_permissions($Page->content_types);
 
@@ -267,7 +275,7 @@ class Search extends Public_Controller
              */
             foreach($Page->content_fields as $key => $field) {
                 $id = 'field_id_'.$field->id;
-                $Page->entry_data->$id = do_shortcode( 
+                $Page->entry_data->$id = do_shortcode(
                     shortcode_empty_paragraph_fix( 
                         html_entity_decode($Page->entry_data->$id)
                     ));
@@ -288,7 +296,7 @@ class Search extends Public_Controller
                 if( isset($search['results']) && ! empty($search['results']) ) {            
                     foreach($search['results'] as $item) {
                         $data['_content'] .= '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
-                        $data['_content'] .= ( ! empty($item->meta_description)) ? shorten_phrase( $item->meta_description, 100 ) . '<hr>' : '...<hr>';
+                        $data['_content'] .= ( ! empty($item->meta_description)) ? ellipsize( $item->meta_description, 100 ) . '<hr>' : '...<hr>';
                     }
                 } else {
                     $data['_content'] = '<h2>Search Results </h2>
@@ -318,14 +326,16 @@ class Search extends Public_Controller
 
             // Display admin toolbar
             $this->pages_model->admin_toolbar($Content_type->id);
+			
+			$content = $Content_type->build_content();
 
             $data['title'] = $Content_type->title;
-            $data['_content'] = $Content_type->build_content();
-            $data['_content'] = shortcode_empty_paragraph_fix( 
-                html_entity_decode($data['_content'])
-            );
-            $data['_content'] = do_shortcode( $data['_content'] );
-            
+            $data['_content'] = do_shortcode(
+				shortcode_empty_paragraph_fix(
+					html_entity_decode($content)
+				));
+				
+			$content = null;
 
             $this->template->set('content_type', $Content_type->short_name);
 
@@ -343,4 +353,38 @@ class Search extends Public_Controller
             return $this->_404_error();
         }
 	}
+	
+	private function _404_error()
+    {
+        $Page = $this->cache->model('entries_cache_model', 'cacheable_get_by', array('id' => $this->settings->content_module->custom_404), 'entries');
+
+        // Send a 404 Header
+        header("HTTP/1.0 404 Not Found");
+
+        if ($Page->exists())
+        {
+            // Show admin_toolbar on page
+            $this->pages_model->admin_toolbar($Page->content_type_id, $Page->id);
+
+            $this->template->set('entry_id', $Page->id);
+            $this->template->set('content_type', $Page->content_types->short_name);
+
+            // Set content type's theme layout, css and javascript
+            $this->pages_model->content_type_template($Page->content_types);
+
+			$content = $Content_type->build_content();
+            $data['_content'] = do_shortcode(
+				shortcode_empty_paragraph_fix(
+					html_entity_decode($content)
+				));
+				
+			$content = null;
+        }
+        else
+        {
+            $data['_content'] = "Page not found.";
+        }
+
+        $this->template->view('pages', $data);
+    }
 }
