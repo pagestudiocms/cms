@@ -222,6 +222,7 @@ CREATE TABLE IF NOT EXISTS `entries` (
   `meta_title` varchar(65) DEFAULT NULL,
   `meta_description` text,
   `meta_keywords` text,
+	`entry_layout` varchar(65) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   `published_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
@@ -239,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `entries` (
 --
 
 INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `created_date`, `published_date`, `modified_date`, `author_id`) VALUES
-(1, 'home', 'Welcome to Perfect Studio', NULL, 0, 1, 'published', NULL, 'A wonderfully crafted responsive theme for PageStudioCMS', NULL, '2016-03-15 14:15:43', '2016-03-15 14:15:43', '2016-03-15 14:50:39', 1);
+(1, 'home', 'Welcome to Perfect Studio', NULL, 0, 1, 'published', NULL, 'A wonderfully crafted responsive theme for PageStudioCMS', NULL, NULL, '2016-03-15 14:15:43', '2016-03-15 14:15:43', '2016-03-15 14:50:39', 1);
 
 -- --------------------------------------------------------
 
