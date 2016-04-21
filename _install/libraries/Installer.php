@@ -149,7 +149,7 @@ class Installer
 
     public function import_schema()
     {
-        $file = APPPATH . 'assets/schema/cmscanvas.sql';
+        $file = APPPATH . 'assets/schema/pagestudiocms.sql';
     
         if ($sql = file($file)) 
         {

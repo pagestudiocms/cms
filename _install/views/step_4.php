@@ -1,7 +1,7 @@
 <h1 id="finished">Step 4 - Finished</h1>
 <p class="error">Don't forget to delete your installation directory!</p>
 <br />
-<p>Congratulations! You have successfully installed CMS Canvas.</p>
+<p>Congratulations! You have successfully installed Page Studio CMS.</p>
 
 <table width="100%">
     <tr>

@@ -75,9 +75,9 @@ class Step2 extends CI_Controller
             }
         }
 
-        if (phpversion() < '5.1.6')
+        if (phpversion() < '5.4.6')
         {
-            $this->errors[] = 'You need to use PHP 5.1.6 or greater.';
+            $this->errors[] = 'You need to use PHP 5.4.6 or greater.';
         }
 
         if ( ! ini_get('file_uploads'))
