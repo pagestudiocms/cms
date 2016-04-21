@@ -66,7 +66,7 @@ class Pages extends Public_Controller
                     }
                 }
             }
-        }
+        }	
 
         if (isset($Page) && $Page->exists())
         {

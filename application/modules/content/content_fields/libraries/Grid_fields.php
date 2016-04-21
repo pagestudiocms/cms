@@ -59,6 +59,7 @@ class Grid_fields
      */
     public function run()
     {
+		// var_dump($this->post['data']);
       if($this->post['data']){
         $this->gridData = $this->post['data']['grid_col_data'];
         $this->save($this->gridData); // Call the save method | true/false
@@ -80,7 +81,7 @@ class Grid_fields
      * @param       array $gridData Array of post data
      * @return      bool true/false
      */
-    private function save($gridData)
+    private function save($gridData, $row_order = [])
     {
       if( ! empty($gridData)) {
         foreach($gridData as $id => $row_data) {
@@ -95,12 +96,15 @@ class Grid_fields
           
           // Update existing fields 
           $this->update($id, $data);
-          
+		  
           // Insert new fields in database if not exists
           if( ! $this->exists($id)) {
+			// $data['row_order'] = 5;
+			// var_dump($data);
             $this->insert($data);
           }
         }
+		  // die();
         return true;
         
       } else {

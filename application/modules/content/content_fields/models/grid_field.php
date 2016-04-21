@@ -236,7 +236,9 @@ class Grid_field extends Field_type
               var row = '';
               row +=
               '<tr class=\"matrix matrix-first matrix-last matrix-norows even\">' +
-              '    <td colspan=\"". ($total_cols = $total_cols + 1) ."\" class=\"matrix matrix-first matrix-firstcell matrix-last\">No rows exist yet. <a>Create the first one.</a></td>' +
+              '    	<td colspan=\"". ($total_cols = $total_cols + 1) ."\" class=\"matrix matrix-first matrix-firstcell matrix-last\">' +
+			  '  		No rows exist yet. <a>Create the first one.</a>' +
+			  '		</td>' +
               '</tr>';
               $('table#content_type_{$content_field_id}').append(row);
             }
@@ -292,7 +294,7 @@ class Grid_field extends Field_type
               '    <div>' +
               '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
               '    </div>' +
-              '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"row_new_1\" type=\"hidden\">' +
+              '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"'+ counter +'\" type=\"hidden\">' +
               '</th>';
               cols += 'jQuery.parseJSON({$dynamic_rows})';
               newRow.append(cols);

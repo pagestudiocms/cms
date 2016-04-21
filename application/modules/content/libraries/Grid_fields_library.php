@@ -50,58 +50,62 @@ class Grid_Fields_library
         // And clear benchmarks for profiling
         $this->db =& $this->CI->db;
     }
+	
+	// --------------------------------------------------------------------
     
     /**
-     *
+     * This method builds the grid field data to be displayed to the view
+     * 
+     * @param 		mixed|array $content_fields
+     * @access		public 
+     * @return 		array 
      */
     public function get_data($content_fields)
     {
         $data = []; // Final data to be returned to the caller 
         
         foreach($content_fields as $key => $content_field) {
-          // Get field names associated with the content field 
-          $this->db->select('id, short_tag');
-          $this->db->where('content_field_id', $content_field->id);
-          $grid_cols = count($this->db->get('grid_cols')->result());
+			// Get field names associated with the content field 
+			$this->db->select('id, short_tag');
+			$this->db->where('content_field_id', $content_field->id);
+			$grid_cols = count($this->db->get('grid_cols')->result());
           
-          if ($grid_cols) {
-            // Get the table rows
-            $this->db->select('
-                short_tag,
-                grid_col_data.row_data
-            ');
-            $grid_rows = $this->db->where('grid_cols.content_field_id', $content_field->id)
-                ->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left')
-                ->order_by("grid_col_data.row_order", 'asc')
-                ->get('grid_col_data')->result();
-                
-            $grid_data = [];
-            $break = $grid_cols * 2;
-            $count = 1;
-            $array = [];
-            $fields = [];
-            
-                var_dump($grid_rows); 
-            foreach($grid_rows as $ojb => $value) {
-                foreach($value as $key => $item) {
-                    if(($count % 2) !== 0) {
-                        $tag = $item; 
-                    } else {
-                        $array[$tag] = $item;
-                        if($count === $break) {
-                            $fields[] = $array;
-                            $count = 0;
-                        }
-                    }
-                  $count++;
-                }
-            }
-            
-            $data[$content_field->short_tag] = $fields;
-          }
+			if ($grid_cols) 
+			{
+				// Get the table rows
+				$query = $this->db->select('short_tag, grid_col_data.row_data');
+				$query = $this->db->where('grid_cols.content_field_id', $content_field->id)
+					->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left')
+					->order_by("grid_col_data.row_order", 'asc')
+					->get('grid_col_data');
+					
+				$grid_rows = $query->result();
+				$grid_data = [];
+				$break = $grid_cols * 2;
+				$count = 1;
+				$array = [];
+				$fields = [];
+				$rows = 3;
+				$new_array = [];
+				
+				foreach($grid_rows as $row => $data_set) {
+					foreach($data_set as $key => $value) {
+						if($count % 2) {
+							$label = $value;
+						} else {
+							$new_array[$label] = $value;
+							if($count % $rows === 0) {
+								$data[$content_field->short_tag][] = $new_array;
+								$new_array = [];
+							}
+						}
+						$count++;
+					}
+				}				
+			}
         }
-          
-          var_dump($data); die();
+        
+		// var_dump($data); die();
         
         return $data;
     }
