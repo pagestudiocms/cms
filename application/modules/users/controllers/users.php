@@ -188,30 +188,19 @@ class Users extends Public_Controller
 
         if ($this->form_validation->run() == TRUE)
         {
-            // Characters to generate password from;
-            $chars = "abcdefghijkmnopqrstuvwxyz023456789";
-
-            $i = 0;
-            $pass = '' ;
-
-            // Randomly string together a 7 character password
-            while ($i <= 7) 
-            {
-                $num = rand(0, 33);
-                $tmp = $chars[$num];
-                $pass .= $tmp;
-                $i++;
-            }
+            // Randomly string together a human readable 8 character password 
+            $pass = ucfirst(random_readable_string(4)) . random_number(4);
 
             $User = $this->input->post('user');
 
-            // Generate and send email
-            $this->load->library('email');
-            $this->email->from('noreply@' . domain_name(), $this->settings->site_name);
-            $this->email->to($User->email);
-            $this->email->subject('Password Reset');
-            $this->email->message("Your " . $this->settings->site_name . " password has been reset.\n\nYour new password is: $pass");
-            $this->email->send();
+            // Generate and send email            
+            $this->_send_email(
+                $this->settings->mail_reply_email, // From  
+                $this->settings->site_name, // From name 
+                $User->email, // To 
+                'Password Reset',   // Subject
+                "Your " . $this->settings->site_name . " password has been reset.\n\nYour new password is: $pass"  // Message body
+            );
 
             // Set users password in database
             $User->password = md5($this->config->item('encryption_key') . $pass);
@@ -330,5 +319,74 @@ class Users extends Public_Controller
         {
             return TRUE;
         }
+    }
+    
+    // ------------------------------------------------------------------------
+
+    /**
+     * Send Mail
+     *
+     * Builds and sends email to the specified address
+     * Using PHPMailer to sent email as html using SMTP service.
+     *
+     * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
+     * @access     private
+     * @return     void
+     */
+    private function _send_email($from, $fromName, $to, $subject, $message)
+    {
+        $config = array(
+            'protocol'   => $this->settings->mail_protocol,
+            'smtp_host'  => $this->settings->mail_server,
+            'smtp_port'  => $this->settings->mail_outgoing_port,
+            'smtp_user'  => $this->settings->mail_login,
+            'smtp_pass'  => $this->settings->mail_password,
+            'mailtype'   => $this->settings->mail_send_as_html, 
+            'mail_authen_srvc' => $this->settings->mail_authen_srvc,
+            'wrapchars'  => 76, 
+            'wordwrap'   => true,
+            'smtp_reply' => ''
+        );
+        
+        $this->load->library('SMTP');
+        $this->load->library('PHPMailer');
+        
+        $mail = new PHPMailer();
+		$mail->IsSMTP(); 
+		$mail->Host         = $config['smtp_host']; 
+		$mail->Port         = $config['smtp_port'];
+		$mail->SMTPSecure   = $config['mail_authen_srvc'];
+        $mail->SMTPAuth     = true;
+        
+        $mail->Username     = $config['smtp_user'];
+        $mail->Password     = $config['smtp_pass'];
+		
+		$mail->From 		= $from;
+		$mail->FromName 	= $fromName;
+		$mail->AddAddress($to);
+		$mail->AddReplyTo($config['smtp_reply']);		
+		$mail->WordWrap 	= $config['wrapchars']; // set word wrap
+		$mail->IsHTML(true);		
+		$mail->Subject  	= $subject;
+		$mail->Body 		= $message;
+        
+        // 2 to enable SMTP debug information
+        if (defined('ENVIRONMENT')) {
+            if(ENVIRONMENT !== 'production') {
+                $mail->SMTPDebug   = 2; 
+            } else {
+                $mail->SMTPDebug   = 0; 
+            }
+        }
+		
+		/**
+		 * Log error message if delivery failed. 
+		 */
+		if ( $mail->Send() ) {
+			return true;
+		} else {
+            log_message('error', $mail->ErrorInfo);
+			return false;
+		}        
     }
 }

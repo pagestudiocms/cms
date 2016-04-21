@@ -152,12 +152,15 @@
                             <?php echo form_dropdown('author_id', $authors, $this->secure->get_user_session()->id, 'id=\'author_id\'')?>
                         <?php endif; ?>
                     </div>
+					<div>
+                        <?php echo form_label('Entry Layout:', 'entry_layout'); ?>
+                        <?php echo form_dropdown('entry_layout', $theme_layouts, '', 'id="entry_layout"'); ?>
+                    </div>
                     <div>
                         <?php echo form_label('Content Type Change:', 'content_type_id'); ?>
                         <?php echo form_dropdown('content_type_change', $change_content_types, '', 'id="content_type_change"'); ?>
                         <a class="ex" id="load_content_type"; href="javascript:void(0);">Load</a>
                     </div>
-
                 </div>
             </div>
         </div>

@@ -151,7 +151,7 @@ class Image_field extends Field_type
         else
         {
             $class = ($settings['class']) ? ' class="' . $settings['class'] . '"' : '';
-            return '<img' . $id . $class . $alt . ' src="' . $image_src . '" />';
+            return ( ! empty($image_src) && $image_src !== site_url()) ? '<img' . $id . $class . $alt . ' src="' . $image_src . '" />' : null;
         }
     }
 }

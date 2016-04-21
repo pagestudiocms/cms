@@ -43,6 +43,7 @@ class Categories_library
         $this->max_depth = 0;
         $this->backspace = 0;
         $this->_content = '';
+        $this->entry_id = '';
     }
 
     // ------------------------------------------------------------------------
@@ -81,7 +82,7 @@ class Categories_library
         $this->clear();
 
         // Set Config Parameters
-        $this->_set_config($config);
+        $this->_set_config($config);        
 
         // Build tree
         $this->tree = $this->_get_category_group();
@@ -146,7 +147,7 @@ class Categories_library
         if ( ! empty($this->subnav_visibility) && ($this->subnav_visibility != 'show' || $this->subnav_visibility != 'current_trail'))
         {
             $recursive = FALSE;
-        }
+        }        
 
         if ($cache)
         {
@@ -181,7 +182,9 @@ class Categories_library
      */
     protected function _get_cache($category_group_id, $parent_id = 0, $recursive = true)
     {
-        return $this->CI->cache->get(sha1($category_group_id . $parent_id . $recursive), 'categories');
+        $cache_key = $category_group_id . $parent_id . $recursive;
+        $cache_key = ($this->entry_id) ? $cache_key . $this->entry_id : $cache_key;
+        return $this->CI->cache->get(sha1($cache_key), 'categories');
     }
 
     // ------------------------------------------------------------------------
@@ -200,7 +203,9 @@ class Categories_library
      */
     protected function _set_cache($category_group_id, $parent_id, $recursive, $tree)
     {
-        $this->CI->cache->save(sha1($category_group_id . $parent_id . $recursive), 'categories', $tree);
+        $cache_key = $category_group_id . $parent_id . $recursive;
+        $cache_key = ($this->entry_id) ? $cache_key . $this->entry_id : $cache_key;
+        $this->CI->cache->save(sha1($cache_key), 'categories', $tree);
     }
 
     // ------------------------------------------------------------------------
@@ -235,15 +240,26 @@ class Categories_library
     protected function _build_tree($category_group_id, $parent_id = 0, $recursive = true)
     {
         $categories_array = array();
-
+        
         // Using CI ActiveRecord, thinking there might be a slight gain 
         // in performance over Datamapper ORM
-        $Query = $this->CI->db->select('categories.*')
-            ->from('categories')
-            ->where('category_group_id', $category_group_id)
-            ->where('parent_id', $parent_id)
-            ->order_by('sort', 'asc')
-            ->get();
+        if($this->entry_id) {
+            $Query = $this->CI->db->select('categories.*, categories_entries.*')
+                ->from('categories')
+                ->join('categories_entries', 'categories_entries.category_id = categories.id')
+                ->where('categories.category_group_id', $category_group_id)
+                ->where('categories.parent_id', $parent_id)
+                ->where('categories_entries.entry_id = '.$this->entry_id)
+                ->order_by('categories.sort', 'asc')
+                ->get();            
+        } else {          
+            $Query = $this->CI->db->select('categories.*')
+                ->from('categories')
+                ->where('category_group_id', $category_group_id)
+                ->where('parent_id', $parent_id)
+                ->order_by('sort', 'asc')
+                ->get();
+        }
 
             foreach ($Query->result() as $Category)
             {
@@ -597,9 +613,9 @@ class Categories_library
         // Determine the array size
         $output = '';
         $array_count = 1;
-        $array_size = count($tree);
+        $array_size = count($tree);        
 
-        if ($this->nested)
+        if ($this->nested === true)
         {
             if ($depth == 1)
             {
@@ -653,7 +669,7 @@ class Categories_library
 
             $class = trim($class . ' ' . $Category->class);
 
-            if ($this->nested)
+            if ($this->nested === true)
             {
                 $output .= '<li' . ( ! empty($Category->tag_id) ? ' id="' . $Category->tag_id . '"' : '') . ( ! empty($class) ? ' class="' . $class . '"' : '') . '>';
             }
@@ -703,7 +719,7 @@ class Categories_library
                 }
             }
 
-            if ($this->nested)
+            if ($this->nested === true)
             {
                 $output .= '</li>';
             }
@@ -711,7 +727,7 @@ class Categories_library
             $array_count++;
         }
 
-        if ($this->nested)
+        if ($this->nested === true)
         {
             $output .= '</ul>';
         }

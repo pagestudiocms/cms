@@ -2,18 +2,25 @@
 
 class Pages extends Public_Controller 
 {
+	private $theme_config = '';
 
 	function __construct()
 	{
 		parent::__construct();	
+		
+		$this->load->helper('shortcodes');
+		include_once $this->theme_config = THEME_PATH . $this->settings->theme . '/config.php';
+		
+		$theme = array_to_object($config['theme_config'], true);
+		if(isset($theme->shortcodes)) {
+			include_once $this->theme_config = THEME_PATH . $this->settings->theme . '/' . $theme->shortcodes;
+		}
 	}
 	
 	function index()
 	{
         $this->load->model('pages_model');
         $this->load->helper('functions');
-        $this->load->helper('shortcodes');
-        $this->load->helper('shortcode_list');
 
         if ($this->settings->enable_profiler)
         {
@@ -81,7 +88,7 @@ class Pages extends Public_Controller
                 {
                     return $this->_404_error();
                 }
-            }
+            }			
             
             /**
              * Applying Shortcodes to all content_types tag content
@@ -112,7 +119,10 @@ class Pages extends Public_Controller
                            ->set_meta_keywords($Page->meta_keywords);
 
             // Set the content type's theme layout, css, and javascript
-            $this->pages_model->content_type_template($Page->content_types);
+			if(isset($Page->entry_layout)) {				
+				$Page->content_types->theme_layout = $Page->entry_layout;
+			}
+			$this->pages_model->content_type_template($Page->content_types);
             
             // Output Page
             $this->template->view('pages', $data);
@@ -136,6 +146,9 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Content_type->short_name);
 
             // Set content type's theme layout, css and javascript
+			if(isset($Content_type->entry_layout)) {				
+				$Content_type->content_types->theme_layout = $Content_type->entry_layout;
+			}			
             $this->pages_model->content_type_template($Content_type);
 
             // Output Content Type
