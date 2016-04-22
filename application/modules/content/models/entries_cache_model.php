@@ -109,14 +109,12 @@ class Entries_cache_model extends CI_Model
              */
             $CI->load->library('grid_fields_library');
             $Grid_Fields_library = new Grid_Fields_library();
-            $grid_content_array = $Grid_Fields_library->get_data($this->content_fields);
-            
-            // var_dump($grid_content_array); die();
+            $grid_content_array = $Grid_Fields_library->get_data($this->id, $this->content_fields);
             
             if ( ! empty($grid_content_array)) {
-              $this->content_array = $grid_content_array;
+				$this->content_array = array_replace($this->content_array, $grid_content_array);
             }
-
+			
             return $this->content_array;
         }
     }

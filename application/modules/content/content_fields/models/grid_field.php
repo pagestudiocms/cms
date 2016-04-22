@@ -72,9 +72,13 @@ class Grid_field extends Field_type
         $content_fields_array = ($this->session->userdata('content_fields')) ? $this->session->userdata('content_fields') : [];
         
         // Get all elligible fields 
-        $content_fields = $this->db->select('*')->where('content_type_id', $content_type_id)->get('content_fields');
-        
-        for($i=0;$i<count($content_field_array = $content_fields->result());$i++) {
+        $content_fields = $this->db->select('*')
+							   ->where('content_type_id', $content_type_id)
+							   ->where('content_field_type_id', 16)
+							   ->get('content_fields');
+        $content_field_array = $content_fields->result();
+		
+        for($i=0; $i<count($content_field_array); $i++) {
             if( ! array_key_exists($i, $content_fields_array)) {
                 $content_fields_array[] = $content_field_array[$i]->id;
                 $this->session->set_userdata(['content_fields' => $content_fields_array]);
@@ -86,6 +90,7 @@ class Grid_field extends Field_type
                 
                 // Get the table rows
                 $this->db->select('*, grid_col_data.id');
+                $this->db->where('grid_col_data.entry_id', $entry_id);
                 $this->db->where('grid_cols.content_field_id', $content_field_array[$i]->id);
                 $this->db->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left');
                 $this->db->order_by("grid_col_data.row_order", 'asc'); 
@@ -321,6 +326,28 @@ class Grid_field extends Field_type
               showNoRowExist();
             }
           });
+		  
+		// -----------------------------------------------------------
+		// ckeditor config 
+		var grid_ckeditor_config = { 
+			toolbar : [
+				{ name: 'basicstyles', items : [ 'Undo','Redo','-','Bold','Italic','Underline','Strike' ] },
+				{ name: 'styles', items : [ 'Format' ] },
+				{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Blockquote','- ','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+				
+				{ name: 'tools', items : [ 'Maximize' ] },
+				'/',
+				{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+				{ name: 'insert', items : [ 'HorizontalRule', 'ShowBlocks', '-', 'Source' ] }
+			],
+			entities : true,
+			// height : '150px',
+		};
+
+		$('textarea.ckeditor_grid_textarea').each(function(index) {
+			grid_ckeditor_config.height = $(this).height();
+			CKEDITOR.replace($(this).attr('name'), grid_ckeditor_config); 
+		});
       });";
 
       $this->template->add_script($script);
@@ -334,7 +361,14 @@ class Grid_field extends Field_type
     {
         $field = '';
         switch($type) {
-            case 3 : $field = '
+            case 1 : $field = '
+                <td style="width: auto;" class="matrix matrix-text">
+                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea ckeditor_grid_textarea" height="150" name="grid_col_data['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
+                    <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>
+                </td>';
+            break;
+			
+			case 3 : $field = '
                 <td style="width: auto;" class="matrix matrix-text">
                     <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="grid_col_data['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
                     <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>

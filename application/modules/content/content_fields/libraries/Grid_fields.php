@@ -40,12 +40,14 @@ class Grid_fields
             $post = '',
             $gridData = [],
             $CI, 
+			$entry_id = '',
             $grid_col_data = 'grid_col_data';
     
     public function __construct($data = [])
     {
-        $this->post = $data;
+        $this->post = $data;		
         $this->CI = get_instance();
+		$this->entry_id = $this->CI->uri->segment(6);
     }
     
     /**
@@ -90,6 +92,7 @@ class Grid_fields
           foreach($row_data as $grid_col_id => $col_data) {
           }
           $data = [
+			'entry_id' => $this->entry_id,
             'grid_col_id' => $grid_col_id,
             'row_data' => $col_data,
           ];

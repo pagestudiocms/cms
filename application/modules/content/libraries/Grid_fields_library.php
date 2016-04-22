@@ -60,9 +60,11 @@ class Grid_Fields_library
      * @access		public 
      * @return 		array 
      */
-    public function get_data($content_fields)
+    public function get_data($entry_id, $content_fields)
     {
         $data = []; // Final data to be returned to the caller 
+		
+		// var_dump($content_fields); die();
         
         foreach($content_fields as $key => $content_field) {
 			// Get field names associated with the content field 
@@ -73,30 +75,29 @@ class Grid_Fields_library
 			if ($grid_cols) 
 			{
 				// Get the table rows
-				$query = $this->db->select('short_tag, grid_col_data.row_data');
-				$query = $this->db->where('grid_cols.content_field_id', $content_field->id)
+				$query = $this->db->select('short_tag, grid_col_data.row_data')
+					->where('grid_cols.content_field_id', $content_field->id)
+					->where('grid_col_data.entry_id', $entry_id)
 					->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left')
 					->order_by("grid_col_data.row_order", 'asc')
 					->get('grid_col_data');
 					
 				$grid_rows = $query->result();
 				$grid_data = [];
-				$break = $grid_cols * 2;
 				$count = 1;
-				$array = [];
-				$fields = [];
-				$rows = 3;
-				$new_array = [];
+				// @note: This should count the relating total grid_cols 
+				// 		  to the entry being called. 
+				$rows = 3;		
 				
 				foreach($grid_rows as $row => $data_set) {
 					foreach($data_set as $key => $value) {
 						if($count % 2) {
 							$label = $value;
 						} else {
-							$new_array[$label] = $value;
+							$grid_data[$label] = $value;
 							if($count % $rows === 0) {
-								$data[$content_field->short_tag][] = $new_array;
-								$new_array = [];
+								$data[$content_field->short_tag][] = $grid_data;
+								$grid_data = [];
 							}
 						}
 						$count++;
@@ -104,8 +105,6 @@ class Grid_Fields_library
 				}				
 			}
         }
-        
-		// var_dump($data); die();
         
         return $data;
     }
