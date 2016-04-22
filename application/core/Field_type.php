@@ -214,7 +214,20 @@ class Field_type extends CI_Model
         {
             $Field->$property = $Field_mixed->$property;
         }
-
+        
+        // Add child fields for Grid content types 
+        // As of version 1.2.0
+        if($this->CI->uri->segment(3) == 'fields') {
+            $Field_mixed->grid_child_fields = $this->CI->Grid_fields
+                ->get_child_fields(
+                    $this->CI->uri->segment(6) // Grid content type ID from url segment
+                );
+                
+            if(property_exists($Field_mixed, 'grid_child_fields')) {
+                $Field->child_fields = $Field_mixed->grid_child_fields;
+            }
+        }
+        
         $Field->settings = @unserialize($Field->settings);
 
         $this->Field = $Field;

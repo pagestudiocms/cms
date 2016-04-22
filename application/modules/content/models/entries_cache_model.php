@@ -36,9 +36,9 @@ class Entries_cache_model extends CI_Model
             $CI =& get_instance();
             $CI->load->library('parser');
 
-            // Build entry data using the entries library
+            // Build entry data using the entries and grid_fields libraries
             $data = $this->get_content_array();
-            
+        
             // Parse the content with data
             $return = $CI->parser->parse_string($this->content_types->layout, $data, TRUE);
 
@@ -101,7 +101,20 @@ class Entries_cache_model extends CI_Model
 
             $Entries_library->build_entry_data($Object);
             $this->content_array = current($Entries_library->entries);
-
+            
+            /**
+             * Add Grid fields to content_array 
+             *
+             * @since      1.2.0
+             */
+            $CI->load->library('grid_fields_library');
+            $Grid_Fields_library = new Grid_Fields_library();
+            $grid_content_array = $Grid_Fields_library->get_data($this->id, $this->content_fields);
+            
+            if ( ! empty($grid_content_array)) {
+				$this->content_array = array_replace($this->content_array, $grid_content_array);
+            }
+			
             return $this->content_array;
         }
     }

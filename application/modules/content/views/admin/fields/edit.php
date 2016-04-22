@@ -61,7 +61,7 @@
             });
         });
 
-        $('#content_field_type_id').trigger('change');
+        // $('#content_field_type_id').trigger('change'); // May not be necessary... 
 
         <?php if ( ! $edit_mode): ?>
             $('#label').keyup( function(e) {
