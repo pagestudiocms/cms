@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `content_field_types` (
   `model_name` varchar(50) NOT NULL,
   `datatype` varchar(50) NOT NULL DEFAULT 'text',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `content_field_types`
@@ -150,7 +150,8 @@ INSERT INTO `content_field_types` (`id`, `title`, `model_name`, `datatype`) VALU
 (12, 'Page URL', 'page_url', 'text'),
 (13, 'Gallery', 'gallery_id', 'int'),
 (14, 'Checkbox', 'checkbox', 'text'),
-(15, 'Integer', 'text', 'int');
+(15, 'Integer', 'text', 'int'),
+(16, 'Grid', 'grid', 'text');
 
 -- --------------------------------------------------------
 
@@ -233,13 +234,13 @@ CREATE TABLE IF NOT EXISTS `entries` (
   KEY `url_title` (`url_title`),
   KEY `author_id` (`author_id`),
   KEY `status` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `entries`
 --
 
-INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `created_date`, `published_date`, `modified_date`, `author_id`) VALUES
+INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `entry_layout`, `created_date`, `published_date`, `modified_date`, `author_id`) VALUES
 (1, 'home', 'Welcome to Perfect Studio', NULL, 0, 1, 'published', NULL, 'A wonderfully crafted responsive theme for PageStudioCMS', NULL, NULL, '2016-03-15 14:15:43', '2016-03-15 14:15:43', '2016-03-15 14:50:39', 1);
 
 -- --------------------------------------------------------
@@ -320,6 +321,49 @@ INSERT INTO `gallery_images` (`id`, `filename`, `gallery_id`, `title`, `alt`, `d
 (2, '/assets/cms/uploads/images/galleries/2.jpg', 1, '2', NULL, NULL, NULL, NULL, NULL, 0, 2),
 (3, '/assets/cms/uploads/images/galleries/3.jpg', 1, '3', NULL, NULL, NULL, NULL, NULL, 0, 3),
 (4, '/assets/cms/uploads/images/galleries/4.jpg', 1, '4', NULL, NULL, NULL, NULL, NULL, 0, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grid_cols`
+--
+
+DROP TABLE IF EXISTS `grid_cols`;
+CREATE TABLE IF NOT EXISTS `grid_cols` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content_field_id` int(11) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `content_field_type_id` int(11) NOT NULL,
+  `label` varchar(50) NOT NULL,
+  `short_tag` varchar(50) NOT NULL,
+  `required` tinyint(1) NOT NULL DEFAULT '0',
+  `is_searchable` varchar(4) DEFAULT NULL,
+  `options` text,
+  `settings` text,
+  `sort` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `content_field_type_id` (`content_field_type_id`),
+  KEY `content_type_id` (`content_type_id`),
+  KEY `grid_id` (`content_field_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grid_col_data`
+--
+
+DROP TABLE IF EXISTS `grid_col_data`;
+CREATE TABLE IF NOT EXISTS `grid_col_data` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `entry_id` int(11) NOT NULL,
+  `grid_col_id` int(6) UNSIGNED DEFAULT NULL,
+  `is_draft` tinyint(1) UNSIGNED DEFAULT '0',
+  `row_order` int(4) UNSIGNED DEFAULT NULL,
+  `row_data` text,
+  PRIMARY KEY (`id`),
+  KEY `field_id` (`grid_col_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
