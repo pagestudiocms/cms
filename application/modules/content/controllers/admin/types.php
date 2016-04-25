@@ -85,6 +85,7 @@ class Types extends Admin_Controller {
         $this->form_validation->set_rules('title', 'Title', 'trim|required');
         $this->form_validation->set_rules('short_name', 'Short Name', 'trim|required|alpha_dash|max_length[50]|is_unique[content_types.short_name.id.' . $content_type_id . ']');
         $this->form_validation->set_rules('enable_dynamic_routing', 'Enable Dynamic Routing', 'trim');
+        $this->form_validation->set_rules('enable_static_routing', 'Enable Static Routing', 'trim');
         $this->form_validation->set_rules('enable_versioning', 'Enable Versioning', 'trim|required');
         $this->form_validation->set_rules('max_revisions', 'Max Revisions', 'trim|required|integer|less_than[26]');
         $this->form_validation->set_rules('category_group_id', 'Category Group', 'trim');
@@ -100,6 +101,12 @@ class Types extends Admin_Controller {
         if ($this->input->post('enable_dynamic_routing') == 1)
         {
             $this->form_validation->set_rules('dynamic_route', 'Dynamic Route', 'trim|required|max_length[255]|callback_unique_dynamic_route['. $Content_type->dynamic_route . ']');
+        }
+		
+		// Add static route validation if enable static routing checkbox selected
+        if ($this->input->post('enable_static_routing') == 1)
+        {
+            $this->form_validation->set_rules('static_route', 'Static Route', 'trim|required|max_length[255]');
         }
 
         // Form validation
@@ -122,6 +129,7 @@ class Types extends Admin_Controller {
             $Content_type->from_array($this->input->post());
             $Content_type->id = $content_type_id;
             $Content_type->dynamic_route = ($this->input->post('dynamic_route') != '' && $this->input->post('enable_dynamic_routing')) ? $this->input->post('dynamic_route') : NULL;
+            $Content_type->static_route = ($this->input->post('static_route') != '' && $this->input->post('enable_static_routing')) ? strip_final_slash($this->input->post('static_route')) : NULL;
             $Content_type->restrict_to = ($this->input->post('access') == 2) ? serialize($this->input->post('restrict_to')) : NULL;
             $Content_type->category_group_id = ($this->input->post('category_group_id') != '') ? $this->input->post('category_group_id') : NULL;
             $Content_type->layout = (trim($this->input->post('layout')) != '') ? $this->input->post('layout') : NULL;
@@ -187,7 +195,7 @@ class Types extends Admin_Controller {
         }
 
         $data['Fields'] = $this->content_types_model->content_fields->order_by('sort')->get();
-
+		
         $this->template->view('admin/types/edit', $data);
     }
 

@@ -173,7 +173,10 @@
     $(document).ready(function() {
         // Auto fill short name based on title
         $('#title').keyup( function(e) {
-            $('#slug').val($(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, ''))
+			var url_route = '<?php echo $Content_type->static_route . '/'; ?>';
+			var slug = $(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, '');
+			var new_url = url_route + slug;
+            $('#slug').val(new_url);
         });
 
         $( ".tabs" ).tabs();

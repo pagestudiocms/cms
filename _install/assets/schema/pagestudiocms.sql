@@ -168,6 +168,7 @@ CREATE TABLE IF NOT EXISTS `content_types` (
   `page_head` text,
   `theme_layout` varchar(50) DEFAULT NULL,
   `dynamic_route` varchar(255) DEFAULT NULL,
+	`static_route` varchar(255) DEFAULT NULL,
   `required` tinyint(1) NOT NULL DEFAULT '0',
   `access` tinyint(1) NOT NULL DEFAULT '0',
   `restrict_to` text,
