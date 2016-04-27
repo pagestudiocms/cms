@@ -225,13 +225,16 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Page->content_types->short_name);
 
             // Set content type's theme layout, css and javascript
+			if(isset($Page->entry_layout)) {				
+				$Page->content_types->theme_layout = $Page->entry_layout;
+			}
             $this->pages_model->content_type_template($Page->content_types);
 
             $data['_content'] = $Page->build_content();
-            $data['_content'] = shortcode_empty_paragraph_fix( 
-                html_entity_decode($data['_content'])
-            );
-            $data['_content'] = do_shortcode( $data['_content'] );
+            $data['_content'] = do_shortcode( 
+                shortcode_empty_paragraph_fix( 
+                    html_entity_decode($data['_content'])
+                ));
         }
         else
         {
