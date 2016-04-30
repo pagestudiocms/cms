@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   PRIMARY KEY (`id`),
   KEY `category_group_id` (`category_group_id`,`parent_id`),
   KEY `url_title` (`url_title`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `categories_entries` (
   `entry_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`,`entry_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `category_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `content_fields` (
   PRIMARY KEY (`id`),
   KEY `content_field_type_id` (`content_field_type_id`),
   KEY `content_type_id` (`content_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `content_fields`
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `content_field_types` (
   `model_name` varchar(50) NOT NULL,
   `datatype` varchar(50) NOT NULL DEFAULT 'text',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `content_field_types`
@@ -150,7 +150,8 @@ INSERT INTO `content_field_types` (`id`, `title`, `model_name`, `datatype`) VALU
 (12, 'Page URL', 'page_url', 'text'),
 (13, 'Gallery', 'gallery_id', 'int'),
 (14, 'Checkbox', 'checkbox', 'text'),
-(15, 'Integer', 'text', 'int');
+(15, 'Integer', 'text', 'int'),
+(16, 'Grid', 'grid', 'text');
 
 -- --------------------------------------------------------
 
@@ -167,6 +168,7 @@ CREATE TABLE IF NOT EXISTS `content_types` (
   `page_head` text,
   `theme_layout` varchar(50) DEFAULT NULL,
   `dynamic_route` varchar(255) DEFAULT NULL,
+	`static_route` varchar(255) DEFAULT NULL,
   `required` tinyint(1) NOT NULL DEFAULT '0',
   `access` tinyint(1) NOT NULL DEFAULT '0',
   `restrict_to` text,
@@ -179,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `content_types` (
   KEY `short_name` (`short_name`),
   KEY `dynamic_route` (`dynamic_route`),
   KEY `category_group_id` (`category_group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `content_types`
@@ -202,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `content_types_admin_groups` (
   PRIMARY KEY (`id`),
   KEY `content_type_id` (`content_type_id`),
   KEY `group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -222,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `entries` (
   `meta_title` varchar(65) DEFAULT NULL,
   `meta_description` text,
   `meta_keywords` text,
+	`entry_layout` varchar(65) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   `published_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
@@ -232,14 +235,14 @@ CREATE TABLE IF NOT EXISTS `entries` (
   KEY `url_title` (`url_title`),
   KEY `author_id` (`author_id`),
   KEY `status` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `entries`
 --
 
-INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `created_date`, `published_date`, `modified_date`, `author_id`) VALUES
-(1, 'home', 'Welcome to Perfect Studio', NULL, 0, 1, 'published', NULL, 'A wonderfully crafted responsive theme for PageStudioCMS', NULL, '2016-03-15 14:15:43', '2016-03-15 14:15:43', '2016-03-15 14:50:39', 1);
+INSERT INTO `entries` (`id`, `slug`, `title`, `url_title`, `required`, `content_type_id`, `status`, `meta_title`, `meta_description`, `meta_keywords`, `entry_layout`, `created_date`, `published_date`, `modified_date`, `author_id`) VALUES
+(1, 'home', 'Welcome to Perfect Studio', NULL, 0, 1, 'published', NULL, 'A wonderfully crafted responsive theme for PageStudioCMS', NULL, NULL, '2016-03-15 14:15:43', '2016-03-15 14:15:43', '2016-03-15 14:50:39', 1);
 
 -- --------------------------------------------------------
 
@@ -258,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `entries_data` (
   `field_id_5` text,
   PRIMARY KEY (`id`),
   KEY `entry_id` (`entry_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `entries_data`
@@ -278,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `galleries` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `galleries`
@@ -308,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `gallery_images` (
   `sort` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `gallery_id` (`gallery_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `gallery_images`
@@ -319,6 +322,49 @@ INSERT INTO `gallery_images` (`id`, `filename`, `gallery_id`, `title`, `alt`, `d
 (2, '/assets/cms/uploads/images/galleries/2.jpg', 1, '2', NULL, NULL, NULL, NULL, NULL, 0, 2),
 (3, '/assets/cms/uploads/images/galleries/3.jpg', 1, '3', NULL, NULL, NULL, NULL, NULL, 0, 3),
 (4, '/assets/cms/uploads/images/galleries/4.jpg', 1, '4', NULL, NULL, NULL, NULL, NULL, 0, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grid_cols`
+--
+
+DROP TABLE IF EXISTS `grid_cols`;
+CREATE TABLE IF NOT EXISTS `grid_cols` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content_field_id` int(11) NOT NULL,
+  `content_type_id` int(11) NOT NULL,
+  `content_field_type_id` int(11) NOT NULL,
+  `label` varchar(50) NOT NULL,
+  `short_tag` varchar(50) NOT NULL,
+  `required` tinyint(1) NOT NULL DEFAULT '0',
+  `is_searchable` varchar(4) DEFAULT NULL,
+  `options` text,
+  `settings` text,
+  `sort` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `content_field_type_id` (`content_field_type_id`),
+  KEY `content_type_id` (`content_type_id`),
+  KEY `grid_id` (`content_field_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `grid_col_data`
+--
+
+DROP TABLE IF EXISTS `grid_col_data`;
+CREATE TABLE IF NOT EXISTS `grid_col_data` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `entry_id` int(11) NOT NULL,
+  `grid_col_id` int(6) UNSIGNED DEFAULT NULL,
+  `is_draft` tinyint(1) UNSIGNED DEFAULT '0',
+  `row_order` int(4) UNSIGNED DEFAULT NULL,
+  `row_data` text,
+  PRIMARY KEY (`id`),
+  KEY `field_id` (`grid_col_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -336,7 +382,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `modifiable_permissions` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `groups`
@@ -358,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `navigations` (
   `title` varchar(255) NOT NULL,
   `required` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `navigations`
@@ -392,7 +438,7 @@ CREATE TABLE IF NOT EXISTS `navigation_items` (
   `disable_current_trail` tinyint(1) NOT NULL DEFAULT '0',
   `sort` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `navigation_items`
@@ -427,7 +473,7 @@ CREATE TABLE IF NOT EXISTS `revisions` (
   KEY `revision_resource_type_id` (`revision_resource_type_id`),
   KEY `content_type_id` (`content_type_id`),
   KEY `resource_id` (`resource_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `revisions`
@@ -451,7 +497,7 @@ CREATE TABLE IF NOT EXISTS `revision_resource_types` (
   `key_name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `key_name` (`key_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -466,7 +512,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   `value` text NOT NULL,
   `module` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `settings`
@@ -544,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `snippets` (
   `snippet` text,
   PRIMARY KEY (`id`),
   KEY `short_name` (`short_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -572,4 +618,4 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_login` datetime DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

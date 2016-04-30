@@ -702,19 +702,40 @@ if ( ! function_exists('random_readable_string'))
     }
 }
 
-function hash_passwd($string, $options = [])
-{
-    $secure = (isset($options['secure'])) ? true : false;
+// ------------------------------------------------------------------------
 
-    switch($secure) {
-        case true :
-        case 'encrypt' :
-        case 'sha1'	:
-            $CI =& get_instance();
-            $CI->load->helper('security');
-            return do_hash(uniqid(mt_rand(), TRUE), 'sha1');
-            break;
-        default:
-            return $string;
-    }
+if( ! function_exists('hash_passwd')) 
+{	
+	function hash_passwd($string, $options = [])
+	{
+		$secure = (isset($options['secure'])) ? true : false;
+
+		switch($secure) {
+			case true :
+			case 'encrypt' :
+			case 'sha1'	:
+				$CI =& get_instance();
+				$CI->load->helper('security');
+				return do_hash(uniqid(mt_rand(), TRUE), 'sha1');
+				break;
+			default:
+				return $string;
+		}
+	}
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Removes final slashes from a given string 
+ *
+ * @param 		string $string The string to be processed
+ * @return 		string
+ */
+if( ! function_exists('strip_final_slash')) 
+{
+	function strip_final_slash($string) 
+	{
+		return rtrim($string, '/');
+	}
 }

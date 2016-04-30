@@ -73,7 +73,7 @@ class Pages extends Public_Controller
                     }
                 }
             }
-        }
+        }	
 
         if (isset($Page) && $Page->exists())
         {
@@ -88,7 +88,7 @@ class Pages extends Public_Controller
                 {
                     return $this->_404_error();
                 }
-            }
+            }			
             
             /**
              * Applying Shortcodes to all content_types tag content
@@ -119,7 +119,10 @@ class Pages extends Public_Controller
                            ->set_meta_keywords($Page->meta_keywords);
 
             // Set the content type's theme layout, css, and javascript
-            $this->pages_model->content_type_template($Page->content_types);
+			if(isset($Page->entry_layout)) {				
+				$Page->content_types->theme_layout = $Page->entry_layout;
+			}
+			$this->pages_model->content_type_template($Page->content_types);
             
             // Output Page
             $this->template->view('pages', $data);
@@ -143,6 +146,9 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Content_type->short_name);
 
             // Set content type's theme layout, css and javascript
+			if(isset($Content_type->entry_layout)) {				
+				$Content_type->content_types->theme_layout = $Content_type->entry_layout;
+			}			
             $this->pages_model->content_type_template($Content_type);
 
             // Output Content Type
@@ -219,13 +225,16 @@ class Pages extends Public_Controller
             $this->template->set('content_type', $Page->content_types->short_name);
 
             // Set content type's theme layout, css and javascript
+			if(isset($Page->entry_layout)) {				
+				$Page->content_types->theme_layout = $Page->entry_layout;
+			}
             $this->pages_model->content_type_template($Page->content_types);
 
             $data['_content'] = $Page->build_content();
-            $data['_content'] = shortcode_empty_paragraph_fix( 
-                html_entity_decode($data['_content'])
-            );
-            $data['_content'] = do_shortcode( $data['_content'] );
+            $data['_content'] = do_shortcode( 
+                shortcode_empty_paragraph_fix( 
+                    html_entity_decode($data['_content'])
+                ));
         }
         else
         {

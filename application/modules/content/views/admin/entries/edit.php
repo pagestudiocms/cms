@@ -152,12 +152,15 @@
                             <?php echo form_dropdown('author_id', $authors, $this->secure->get_user_session()->id, 'id=\'author_id\'')?>
                         <?php endif; ?>
                     </div>
+					<div>
+                        <?php echo form_label('Entry Layout:', 'entry_layout'); ?>
+                        <?php echo form_dropdown('entry_layout', $theme_layouts, '', 'id="entry_layout"'); ?>
+                    </div>
                     <div>
                         <?php echo form_label('Content Type Change:', 'content_type_id'); ?>
                         <?php echo form_dropdown('content_type_change', $change_content_types, '', 'id="content_type_change"'); ?>
                         <a class="ex" id="load_content_type"; href="javascript:void(0);">Load</a>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -170,7 +173,10 @@
     $(document).ready(function() {
         // Auto fill short name based on title
         $('#title').keyup( function(e) {
-            $('#slug').val($(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, ''))
+			var url_route = '<?php echo ( ! empty($Content_type->static_route)) ? $Content_type->static_route . '/' : ''; ?>';
+			var slug = $(this).val().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-_]/g, '');
+			var new_url = url_route + slug;
+            $('#slug').val(new_url);
         });
 
         $( ".tabs" ).tabs();

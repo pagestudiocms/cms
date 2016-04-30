@@ -69,12 +69,16 @@ class Fields extends Admin_Controller {
         $Content_field_types = $this->content_field_types_model->order_by('title')->get();
         $datatype_ref_array = option_array_value($Content_field_types, 'id', 'datatype');
         $data['Content_field_types'] = option_array_value($Content_field_types, 'id', 'title');
-
+        
+        // Get Grid child fields and settings 
+        // As of v1.2.0
+        $Grid_fields = $this->load->model('grid_fields_model', 'Grid_fields');
+            
         // Get setting fields
         $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
         $Content_fields = $this->load->library('content_fields');
         $data['setting_fields'] = $Content_fields->settings($Field);
-
+        
         // Form Validation
         $this->form_validation->set_rules('content_field_type_id', 'Type', 'trim|required');
         $this->form_validation->set_rules('label', 'Label', 'trim|required');
@@ -90,7 +94,6 @@ class Fields extends Admin_Controller {
             $this->form_validation->set_rules('short_tag', 'Short Tag', 'trim|alpha_dash|required|callback_unique_short_tag');
         }
 
-
         if ($this->form_validation->run() == TRUE)
         {
             $this->load->model('content_fields_model');
@@ -99,6 +102,10 @@ class Fields extends Admin_Controller {
             $Content_fields->from_array($this->input->post());
             $Content_fields->content_type_id = $type_id;
             $Content_fields->short_tag = $this->input->post('short_tag');
+            
+            // Save Grid fields 
+            // As of v1.2.0
+            $Grid_fields->save($this->input->post('grid_cols'));
 
             // Setting fields
             $Content_fields->settings = ($this->input->post('settings')) ? serialize($this->input->post('settings')) : NULL;
@@ -134,8 +141,7 @@ class Fields extends Admin_Controller {
 
             redirect(ADMIN_PATH . '/content/fields/index/' . $Type->id);
         }
-
-
+        
         $this->template->view('admin/fields/edit', $data);
     }
 

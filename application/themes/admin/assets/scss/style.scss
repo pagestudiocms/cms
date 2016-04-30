@@ -4,6 +4,8 @@
 
 @import 'vendors/css3-mixins/css3-mixins'; // custom mixins
 
+@import 'modules/base';
+
 // @import 'vendors/bourbon-bootstrap-grid/base'; // https://gist.github.com/johnkoht/6405117
 
 @import 'helpers/mixins'; // custom mixins
@@ -94,3 +96,6 @@ a {
 .CodeMirror-gutter {
   z-index: 0 !important;
 }
+
+// Matrix fields 
+@import url('matrix.css'); 

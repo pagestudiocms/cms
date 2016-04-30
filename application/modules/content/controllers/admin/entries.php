@@ -182,6 +182,10 @@ class Entries extends Admin_Controller {
         $this->load->add_package_path(APPPATH . 'modules/content/content_fields');
         $Content_fields = $this->load->library('content_fields');
         $Content_fields->initialize($config);
+        
+        // This session var is used in the Grid_field content type model
+        // /application/modules/content/content_types/models/grid_field.php
+        $this->session->unset_userdata('content_fields');
 
         // Check if versioning is enabled and whether a revision is loaded
         if ($Content_type->enable_versioning && is_numeric($revision_id))
@@ -219,7 +223,18 @@ class Entries extends Admin_Controller {
                 $data['change_content_types'][$Change_content_type->id] = $Change_content_type->title;
             }
         }
-
+		
+		// Get theme layout options for the 
+		// change layout option
+		$entry_layout = $Entry->stored->entry_layout;
+		$theme_layout = [];
+		$theme_layout[$entry_layout] = $entry_layout;
+		$theme_layouts = $this->template->get_theme_layouts();
+		if ( ! empty($entry_layout)) {
+			$theme_layout['NULL'] = ''; 
+		}
+		$data['theme_layouts'] = array_merge($theme_layout, $theme_layouts);
+		
         // Get Admins and Super Admins for the setting's
         // author dropdown
         $Users = $this->users_model->where_in_related('groups', 'type', array(SUPER_ADMIN, ADMINISTRATOR))->order_by('first_name')->get();
@@ -284,6 +299,14 @@ class Entries extends Admin_Controller {
 
         // Get content fields html
         $field_validation = $Content_fields->validate();
+        
+        // Get Grid content fields 
+        // Process Grid fields separately from normal content types
+        $Grid_fields = $this->load->library(
+            'Grid_fields',
+            $params = ['data'=> $this->input->post()]
+        );
+        $Grid_fields->run();
 
         // Validation and process form
         if ($this->form_validation->run() == TRUE && $field_validation)
@@ -298,6 +321,8 @@ class Entries extends Admin_Controller {
             $Entry->meta_title = ($this->input->post('meta_title') != '') ? $this->input->post('meta_title') : NULL;
             $Entry->meta_description = ($this->input->post('meta_description') != '') ? $this->input->post('meta_description') : NULL;
             $Entry->meta_keywords = ($this->input->post('meta_keywords') != '') ? $this->input->post('meta_keywords') : NULL;
+            $Entry->entry_layout = ($this->input->post('entry_layout') != '') ? $this->input->post('entry_layout') : NULL;
+			if($this->input->post('entry_layout') === 'NULL') $Entry->entry_layout = null;
             $Entry->content_type_id = $content_type_id;
             $Entry->author_id = ($this->input->post('author_id') != '') ? $this->input->post('author_id') : NULL;
 

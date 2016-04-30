@@ -111,6 +111,14 @@
                             <label for="dynamic_route"><span class="required">*</span> Dynamic Route:<span class="help">Path and identifieer of the content type. When rendered, any additional url segments appended are considered parameters.</span></label>
                             <?php echo site_url(); ?><?php echo form_input(array('name'=>'dynamic_route', 'id'=>'dynamic_route', 'value'=>set_value('dynamic_route', !empty($Content_type->dynamic_route) ? $Content_type->dynamic_route : ''))); ?>
                         </div>
+						<div>
+                            <?php echo form_label('Enable Static Routing:', 'enable_static_routing'); ?>
+                            <?php echo form_checkbox(array('name'=>'enable_static_routing', 'id'=>'enable_static_routing', 'value'=>'1', 'checked' => set_checkbox('enable_static_routing', '1',  !empty($Content_type->static_route) ? TRUE : FALSE))); ?>
+                        </div>
+						<div style="display: none;" id="static_route_div">
+                            <label for="static_route"><span class="required">*</span> Static Route:<span class="help">Path and identifieer of the content type. When rendered, any additional url segments appended are considered parameters.</span></label>
+                            <?php echo site_url(); ?><?php echo form_input(array('name'=>'static_route', 'id'=>'static_route', 'value'=>set_value('static_route', !empty($Content_type->static_route) ? $Content_type->static_route : ''))); ?>
+                        </div>
                         <div>
                             <?php echo form_label('<span class="required">*</span> Enable Versioning:', 'enable_versioning'); ?>
                             <span>
@@ -306,6 +314,19 @@
             }
         });
         $('#enable_dynamic_routing').trigger('change');
+		
+		// Hide / Show Static Routing
+        $('#enable_static_routing').change( function(e) {
+            if ($('#enable_static_routing').is(':checked'))   
+            {
+                $('#static_route_div').show();
+            }
+            else
+            {
+                $('#static_route_div').hide();
+            }
+        });
+        $('#enable_static_routing').trigger('change');
     });
 </script>
 <?php js_end(); ?>
