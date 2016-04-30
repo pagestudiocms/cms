@@ -64,7 +64,9 @@ $route['([a-zA-Z_-]+)/admin/([a-zA-Z_-]+)'] = "";
 $route[ADMIN_PATH . '/users/login'] = "users/login";
 $route[ADMIN_PATH . '/users/forgot-password'] = "users/forgot-password";
 
-$route[ADMIN_PATH . '/contact/ajax'] = "contact/ajax";
+// This routing option forces http://mywebsite.com/contact to map to the 
+// 'content' module and the 'pages' object.
+$route['contact'] = "content/pages"; 
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -3,6 +3,8 @@
 class Contact extends Public_Controller 
 {
     private $e_config = [];
+	
+	// List of form fields to exclude in mailing list
     private $excluded = [
         'form_id', 'spam_check'
     ];
@@ -30,6 +32,13 @@ class Contact extends Public_Controller
         );
     }
     
+	/**
+	 * This method should never be called as long as the custom 
+	 * route exits to map /contact to content/pages 
+	 *
+	 * @access 	public 
+	 * @return  void
+	 */
     public function index()
     {
         show_404();
