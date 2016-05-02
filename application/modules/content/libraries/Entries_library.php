@@ -550,7 +550,7 @@ class Entries_library
             {
                 if ($current_page < $total_pages)
                 {
-                    $parse_data['pagination_url'] = $Pagination->prefix . ($current_page + 1) . $Pagination->suffix;
+                    $parse_data['pagination_url'] = $Pagination->base_url . $Pagination->prefix . ($current_page + 1) . $Pagination->suffix;
                     $next_page_content = $this->CI->parser->parse_string($next_page_cond_matches[1], $parse_data, TRUE);
                     $pagination_content = preg_replace('/\{\{\s*if\s*next_page\s*\}\}(.*?)\{\{\s*endif\s*\}\}/ms', $next_page_content, $pagination_content);
                 }
@@ -565,7 +565,7 @@ class Entries_library
             {
                 if ($current_page != 1)
                 {
-                    $parse_data['pagination_url'] = $Pagination->prefix . ($current_page - 1) . $Pagination->suffix;
+                    $parse_data['pagination_url'] = $Pagination->base_url . $Pagination->prefix . ($current_page - 1) . $Pagination->suffix;
                     $prev_page_content = $this->CI->parser->parse_string($prev_page_cond_matches[1], $parse_data, TRUE);
                     $pagination_content = preg_replace('/\{\{\s*if\s*previous_page\s*\}\}(.*?)\{\{\s*endif\s*\}\}/ms', $prev_page_content, $pagination_content);
                 }
