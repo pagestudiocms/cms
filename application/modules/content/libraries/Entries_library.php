@@ -10,6 +10,7 @@ class Entries_library
     public $content_fields = array();
     public $entry_id = NULL;
     public $content_type = NULL;
+	public $status = NULL;
     public $category = NULL;
     public $order_by = NULL;
     public $sort = 'asc';
@@ -109,18 +110,8 @@ class Entries_library
             ->join('entries_data', 'entries.id = entries_data.entry_id')
             ->join('content_types', 'entries.content_type_id = content_types.id');
 
-        // Show published and drafts for administrators
-        // everyone else only show published
-        if ($this->CI->secure->group_types(array(ADMINISTRATOR))->is_auth())
-        {
-            $this->db->where_in('status', array('published', 'draft'));
-        }
-        else
-        {
-            $this->db->where('status', 'published');
-        }
-
         $this->_content_type();
+		$this->_status();
         $this->_category();
         $this->_segment();
         $this->_archive_filter();
@@ -203,6 +194,7 @@ class Entries_library
             $content['modified_date'] = $Entry->modified_date;
             $content['url_title'] = $Entry->url_title;
             $content['slug'] = $Entry->slug;
+			$content['status'] = $Entry->status;
             $content['dynamic_route'] = $Entry->dynamic_route;
             $content['content_type'] = $Entry->short_name;
             $content['count'] = $count;
@@ -267,7 +259,7 @@ class Entries_library
      */
     private function _content_type(&$DB_object = null)
     {
-        if ( ! is_null($this->content_type))
+		if ( ! is_null($this->content_type))
         {
             // If no db object was passed. Default to the class db object
             if ( ! is_object($DB_object))
@@ -287,9 +279,58 @@ class Entries_library
             {
                 $DB_object->where_in('short_name', explode('|', $this->content_type));
             }
-        } 
+        }
     }
 
+    // ------------------------------------------------------------------------
+	
+	/**
+     * Queries entries with a particular status.
+     * And sets the default status(es) viewable to admins and regular users.
+     *
+     * @since 		Version 1.2.0
+     * @access 		private
+     * @return 		void
+     */
+    private function _status(&$DB_object = null)
+    {
+		// Show published and drafts for administrators
+        // everyone else only show published
+        if ($this->CI->secure->group_types(array(ADMINISTRATOR))->is_auth())
+        {
+            $this->db->where_in('status', array('published', 'draft', 'disabled', 'closed'));
+        }
+        else
+        {
+			if ( ! is_null($this->status))
+			{
+				// If no db object was passed. Default to the class db object
+				if ( ! is_object($DB_object))
+				{
+					$DB_object =& $this->db;
+				}
+				
+				// Check if not keyword was used to do a not equal condition
+				$not_position = stripos($this->status, 'not ');
+
+				if ($not_position === 0)
+				{
+					$status = substr($this->status, 4) ;
+					$DB_object->where_not_in('status', explode('|', $status));
+				}
+				else
+				{
+					$DB_object->where_in('status', explode('|', $this->status));
+				}
+			}
+			else
+			{
+				$this->db->where('status', 'published');
+			}			
+        }
+		
+    }
+	
     // ------------------------------------------------------------------------
 
     /*
