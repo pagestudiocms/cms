@@ -16,6 +16,7 @@ Options -Indexes
     # Allow access to asset directories
     RewriteCond $1 ^application.*
     RewriteCond $1 !(assets.*)
+    RewriteCond $1 !(third_party/file_manager.*)
     RewriteRule ^(.*)$ /index.php/$1 [L]
 
     # Allow access to asset directories

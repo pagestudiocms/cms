@@ -16,6 +16,10 @@ $nav_array = array(
         'label' => 'Entries',
         'url'   => 'content/entries',
     ),
+	array(
+        'label' => 'File Manager',
+        'url'   => 'filemanager',
+    ),
     array(
         'label' => 'Calendar',
         'url'   => 'calendar/entries',
