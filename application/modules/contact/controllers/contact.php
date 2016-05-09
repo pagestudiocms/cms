@@ -47,7 +47,9 @@ class Contact extends Public_Controller
     public function ajax()
     {            
         // Only process ajax requests from this method
-        if(is_ajax()) {
+        if(is_ajax()) 
+		{
+			$result = []; // Stores the json result set
             $message = '';
             include_once CMS_ROOT . APPPATH . 'modules/contact/helpers/contact_helper.php';
             
@@ -75,10 +77,15 @@ class Contact extends Public_Controller
                 $message,
                 $this->e_config
             );
-            
-            echo ($submit) ? true : false;
-            
-        } else {
+			// $submit = true; // Uncomment for testing purposes only
+           
+			$result['errors'] = '';
+			$result['result'] = ($submit) ? 'success' : 'fail';
+			
+			echo json_encode($result);
+        } 
+		else 
+		{
             show_404();
         }
     }
