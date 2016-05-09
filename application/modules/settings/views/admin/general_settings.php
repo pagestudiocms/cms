@@ -104,7 +104,7 @@
                     </div>
                     <div>
                         <?php echo form_label('<span class="required">*</span> Email Password:', 'mail_password'); ?>
-                        <?php echo form_input(array('name' => 'mail_password', 'id' => 'mail_password', 'value' => set_value('mail_password', isset($Settings->mail_password->value) ? $Settings->mail_password->value : ''))); ?>
+                        <?php echo form_password(array('name' => 'mail_password', 'id' => 'mail_password', 'value' => set_value('mail_password', isset($Settings->mail_password->value) ? $Settings->mail_password->value : ''))); ?>
                     </div>
                     <div>
                         <?php echo form_label('<span class="required">*</span> Send as HTML?:', 'mail_send_as_html'); ?>
@@ -119,7 +119,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Analytics Tab -->
             <!-- Users Tab -->
             <div id="users-tab">
                 <div class="form">
