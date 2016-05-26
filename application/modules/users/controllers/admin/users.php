@@ -222,13 +222,17 @@ class Users extends Admin_Controller
             return show_404();
         }
 
-        $this->load->library('email');
-
-        $this->email->from('noreply@' . domain_name(), $this->settings->site_name);
-        $this->email->to($User->email);
-        $this->email->subject($this->settings->site_name . ' Activation');
-        $this->email->message("Thank you for your new member registration.\n\nTo activate your account, please visit the following URL\n\n" . site_url('users/activate/' . $User->id . '/' . $User->activation_code) . "\n\nThank You!\n\n" . $this->settings->site_name);
-        $this->email->send();
+        $subject = $this->settings->site_name . ' Activation';
+        $message = "Thank you for your new member registration.\n\nTo activate your account, please visit the following URL\n\n" . site_url('users/activate/' . $User->id . '/' . $User->activation_code) . "\n\nThank You!\n\n" . $this->settings->site_name;
+        
+        // Generate and send email            
+        $this->_sendmail(
+            $this->settings->mail_reply_email, // From  
+            $this->settings->site_name, // From name 
+            $User->email, // To 
+            $subject,   // Subject
+            $message  // Message body
+        );
     }
 
     function login_as_user()
@@ -267,6 +271,46 @@ class Users extends Admin_Controller
         {
             return TRUE;
         }
+    }
+    
+    // ------------------------------------------------------------------------
+
+    /**
+     * Send Mail
+     *
+     * Builds and sends email to the specified address
+     * Using PHPMailer to send email as html using SMTP service.
+     *
+     * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
+     * @access     private
+     * @return     bool
+     */
+    private function _sendmail($from, $fromName, $to, $subject, $message)
+    {
+        $config = array(
+            'protocol'    => $this->settings->mail_protocol,
+            'smtp_host'   => $this->settings->mail_server,
+            'smtp_port'   => $this->settings->mail_outgoing_port,
+            'smtp_user'   => $this->settings->mail_login,
+            'smtp_pass'   => $this->settings->mail_password,
+            'smtp_crypto' => $this->settings->mail_authen_srvc,
+            'smtp_debug'  => ((ENVIRONMENT !== 'production') ? 2 : 0), // 2 to enable SMTP debug information
+            'mailtype'    => 'html',
+            'wrapchars'  => 76, 
+            'wordwrap'   => true,
+        );
+        $this->load->library('email', $config);        
+        // $this->load->library('parser');
+		
+		$result = $this->email
+                ->from($from, $this->settings->site_name)
+                ->reply_to($this->settings->mail_reply_email)    // Optional, an account where a human being reads.
+                ->to($to)
+                ->subject($subject)
+                ->message($message)
+                ->send();
+                
+        return $result;       
     }
 
 }

@@ -34,11 +34,22 @@ class MY_Parser extends CI_Parser {
      * @param string
      * @param array
      * @param bool
+     * @param bool $is_external_view Tells the parser to look for a view file outsite the theme folder
      * @return string
      */
-    function parse($view, $data = array(), $return = FALSE, $inject_noparse = FALSE)
+    function parse($view, $data = array(), $return = FALSE, $inject_noparse = FALSE, $is_external_view = FALSE)
     {
-        $string = $this->_ci->load->view($view, $data, TRUE);
+        if($is_external_view)
+        {
+            $folder = (is_array($view) && isset($view['folder'])) ? $view['folder'] : null;
+            $file   = (is_array($view) && isset($view['view'])) ? $view['view'] : null;
+            
+            $string = $this->_ci->load->ext_view($folder, $file, $data, $return);         
+        }
+        else 
+        {
+            $string = $this->_ci->load->view($view, $data, TRUE);            
+        }
 
         return $this->_parse($string, $data, $return, $inject_noparse);
     }

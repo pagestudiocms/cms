@@ -132,31 +132,26 @@ class Contact_plugin extends Plugin
      */
     private function _send_form()
     {
-        $config = array(
-            'protocol'   => $this->settings->mail_protocol,
-            'smtp_host'  => $this->settings->mail_server,
-            'smtp_port'  => $this->settings->mail_outgoing_port,
-            'smtp_user'  => $this->settings->mail_login,
-            'smtp_pass'  => $this->settings->mail_password,
-            'mailtype'   => $this->settings->mail_send_as_html, 
-            'mail_authen_srvc' => $this->settings->mail_authen_srvc,
+        $config = [
+            'protocol'    => $this->settings->mail_protocol,
+            'smtp_host'   => $this->settings->mail_server,
+            'smtp_port'   => $this->settings->mail_outgoing_port,
+            'smtp_user'   => $this->settings->mail_login,
+            'smtp_pass'   => $this->settings->mail_password,
+            'smtp_crypto' => $this->settings->mail_authen_srvc,
+            'smtp_debug'  => 0,
+            'mailtype'    => 'html', 
             // 'charset'   => 'iso-8859-1'
-            'wrapchars'  => 76, 
-            'wordwrap'   => true,
-            'smtp_reply' => ''
-        );
-        // $config['crlf'] = "\r\n";
-        // $config['newline'] = "\r\n";
-        // $this->load->library('email', $config);
-        // $this->email->initialize($config);
-        // $this->email->from($this->attribute('from', 'noreply@' . domain_name()), $this->attribute('from_name', $this->settings->site_name));
-        // $this->email->to($this->attribute('to', $this->settings->notification_email)); 
-        // $this->email->subject($this->attribute('subject', 'Contact Form Submission'));
+            // 'wrapchars'  => 76,
+            // 'wordwrap'   => true,
+            // 'smtp_reply' => ''
+        ];
 
         $from       = $this->attribute('from', $this->settings->mail_reply_email);
         $fromName   = $this->attribute('from_name', $this->settings->site_name);
         $to         = $this->attribute('to', $this->settings->notification_email); 
         $subject    = $this->attribute('subject', 'Contact Form Submission');
+        $template   = ['view' => 'system_plain', 'folder' => ADMIN_THEME_PATH . 'email/views'];
         
         // Remove Spam Check
         unset($_POST['spam_check']);
@@ -178,81 +173,29 @@ class Contact_plugin extends Plugin
             }
         }
         
-        $this->load->helper('contact_helper');
-        $message = html_template($subject, $message);
-
-        $this->mailForm(
-            $from, 
-            $fromName,
-            $to, 
-            $subject,
-            $message,
-            $config
-        );
-
-        // $this->email->message($message);  
-        // $this->email->send();
-    }
-
-    // ------------------------------------------------------------------------
-    
-    private function mailForm(
-        $from, 
-        $fromName,
-        $to, 
-        $subject,
-        $message,
-        $config
-    ) {
-        $this->load->library('SMTP');
-        $this->load->library('PHPMailer');
+        $this->load->library('parser');
+        $this->load->library('email', $config);
         
-        $mail = new PHPMailer();
+        $data = [
+            'subject' => $subject,
+            'paragraphs' => [
+                ['paragraph' => $message],
+            ],
+            'company' => [
+                'name' => $fromName, 
+                'website' => site_url(),
+            ], 
+            'signature' => 'Cheers,<br>'.$fromName.' Team'
+        ];
+        $body = $this->parser->parse($template, $data, TRUE, FALSE, TRUE);
 
-		/*
-		 * send via SMTP
-		 */
-		$mail->IsSMTP(); 
-		
-		/*
-		 * SMTP server setup
-		 */
-		$mail->Host = $config['smtp_host']; 
-		$mail->Port = $config['smtp_port'];
-		$mail->SMTPSecure = $config['mail_authen_srvc'];
-        
-        // 2 to enable SMTP debug information
-        if (defined('ENVIRONMENT')) {
-            if(ENVIRONMENT !== 'production') {
-                $mail->SMTPDebug   = 2; 
-            }
-        }
-        
-        $mail->SMTPAuth = true;
-        $mail->Username = $config['smtp_user'];
-        $mail->Password = $config['smtp_pass']; 
-		
-		/*
-		 * phpMailer email configuration
-		 */
-		$mail->From 		= $from;
-		$mail->FromName 	= $fromName;
-		$mail->AddAddress($to);
-		$mail->AddReplyTo($config['smtp_reply']);		
-		$mail->WordWrap 	= $config['wrapchars']; // set word wrap
-		$mail->IsHTML(true);		
-		$mail->Subject  	= $subject;
-		$mail->Body 		= $message;
-		
-		/**
-		 * Log error message if delivery failed. 
-		 */
-		if ( $mail->Send() ) {
-			return 1;
-		} else {
-            log_message('error', $mail->ErrorInfo);
-			return 0;
-		}
+        $result = $this->email
+            ->from($from)
+            ->reply_to($to)    // Optional, an account where a human being reads.
+            ->to($to)
+            ->subject($subject)
+            ->message($body)
+            ->send();
     }
     
     // ------------------------------------------------------------------------
