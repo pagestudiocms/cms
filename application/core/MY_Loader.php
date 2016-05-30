@@ -49,7 +49,7 @@ class MY_Loader extends MX_Loader
         {
             ($_alias = $object_name) OR $_alias = basename($model);
             
-            echo $path = (is_array($path) && isset($path['module'])) 
+            $path = (is_array($path) && isset($path['module'])) 
                 ? APPPATH . 'modules/' . $path['module'] .'/models/'
                 : $path . '/';
             
