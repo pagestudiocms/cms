@@ -30,7 +30,7 @@ class MY_Loader extends MX_Loader
     // --------------------------------------------------------------------
     
     /**
-     * Method to travers modules and load model files.
+     * Method to traverse modules and load model files.
      * You may also specify a folder path for the model file.
      *
      * @since   Version 1.2.0
