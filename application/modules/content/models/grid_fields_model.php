@@ -38,30 +38,38 @@ class Grid_fields_model extends CI_Model
     private $content_field_id;
     private $content_type_id;
     
-    public function save($post_data)
+    public function save($post_data, $content_field_id = null)
     {
         $edit_mode = 0;
-        $this->content_field_id = $this->uri->segment(6);
+        $this->content_field_id = ( ! is_null($content_field_id)) ? $content_field_id : $this->uri->segment(6);
         $this->content_type_id = $this->uri->segment(5);
         
-        $data = array(
+        $_data = array(
            'content_field_id' => $this->content_field_id,
            'content_type_id' => $this->content_type_id,
         );
         
-        foreach($post_data as $fields){
-            foreach($fields as $field => $value){
-                $data[$field] = $value;
-            }
-            
-            // Perform insert if id was passed else perform insert...
-            if(array_key_exists('id', $data)) {
-                $this->db->where('id', $data['id'])->update('grid_cols', $data);
-            } else {
-                $this->db->insert('grid_cols', $data);
+        foreach($post_data as $fields) {
+            if(is_array($fields)) {
+                $data = array_merge($_data, $fields);
+                $data['options'] = (array_key_exists('options', $data) && ! empty($data['options'])) 
+                    ? serialize($data['options']) : $data['options'];
+                    
+                if(array_key_exists('id', $data) && ! empty($data['id'])) {
+                    $this->db->where('id', $data['id'])->update('grid_cols', $data);
+                } 
+                elseif(array_key_exists('id', $data) && empty($data['id'])) {
+                    unset($data['id']);
+                    $this->db->insert('grid_cols', $data);
+                }
+                else {
+                    $this->db->insert('grid_cols', $data);
+                }
             }
         }
     }
+    
+    // --------------------------------------------------------------------
     
     /**
      * Get child fields from the database and return to the view 

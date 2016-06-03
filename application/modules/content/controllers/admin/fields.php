@@ -102,10 +102,6 @@ class Fields extends Admin_Controller {
             $Content_fields->from_array($this->input->post());
             $Content_fields->content_type_id = $type_id;
             $Content_fields->short_tag = $this->input->post('short_tag');
-            
-            // Save Grid fields 
-            // As of v1.2.0
-            $Grid_fields->save($this->input->post('grid_cols'));
 
             // Setting fields
             $Content_fields->settings = ($this->input->post('settings')) ? serialize($this->input->post('settings')) : NULL;
@@ -117,6 +113,11 @@ class Fields extends Admin_Controller {
             }
 
             $Content_fields->save();
+            
+            // Save Grid fields 
+            // As of v1.2.0
+            $content_field_id = $Content_fields->stored->id;            
+            $Grid_fields->save($this->input->post('grid_cols'), $content_field_id);
 
             // If new record add column to entries data and set sort
             if ( ! $data['edit_mode'])

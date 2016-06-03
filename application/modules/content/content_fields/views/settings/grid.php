@@ -56,6 +56,19 @@
                     </span>
                 </div>
                 
+                 <div>
+                    <label for="type">Options</label>
+                    <span>
+                        <?php 
+                        echo form_textarea(array(
+                            'name' => 'grid_cols[field_'.$field_count.'][options]', 
+                            'value'=>set_value('grid_cols[field_'.$field_count.'][options]', unserialize($field->options)),
+                            'rows' => 5,
+                        )); 
+                        ?>
+                    </span>
+                </div>
+                
                 <div class="action">
                     <a class="matrix-btn matrix-add clone" title="Add row"></a>
                     <a class="matrix-btn matrix-remove remove" title="Remove row"></a>
@@ -110,6 +123,18 @@
             </span>
         </div>
         
+        <div>
+            <label for="type">Options</label>
+            <span>
+                <?php 
+                echo form_textarea(array(
+                    'name' => 'grid_cols[field_1][options]', 
+                    'rows' => 5,
+                )); 
+                ?>
+            </span>
+        </div>
+        
         <div class="action">
             <a class="matrix-btn matrix-add clone" title="Add row"></a>
             <a class="matrix-btn matrix-remove remove" title="Remove row"></a>
@@ -122,7 +147,6 @@
     <div class="js_dynamic_fields_placeholder" style="border:none;margin:0;padding:0;"></div>
     
 </div>
-
 
 <script type="text/javascript">
     $(document).ready( function() {
@@ -161,20 +185,15 @@
                         this.id = match[1] + (cloneIndex);
                     }
                 })
-                .find('select').each(function(){
+                .find('input, select, textarea').each(function(i){
                     this.name = this.name.replace(/\[field_(\d+)\]/,
                         function(str, p1){
                             return '[field_' + (parseInt(p1,10)+1) + ']'
                         }
                     );
-                })
-                .end()
-                .find('input').each(function(){
-                    this.name = this.name.replace(/\[field_(\d+)\]/,
-                        function(str, p1){
-                            return '[field_' + (parseInt(p1,10)+1) + ']'
-                        }
-                    );
+                    if(i == 0){
+                        this.value = "";
+                    }
                 })
                 .end()
                 .on('click', 'a.clone', clone)

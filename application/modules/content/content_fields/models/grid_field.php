@@ -359,6 +359,8 @@ class Grid_field extends Field_type
    
     private function format_field_type($type, $grid_col_id, $options, $row_data, $grid_col_data_id = '')
     {
+        $options = (is_serialized($options)) ? unserialize($options) : $options;
+        
         $field = '';
         switch($type) {
             case 1 : $field = '
