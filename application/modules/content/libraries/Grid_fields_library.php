@@ -54,56 +54,75 @@ class Grid_Fields_library
 	// --------------------------------------------------------------------
     
     /**
-     * This method builds the grid field data to be displayed to the view
+     * Builds an array of Grid parent to child fields
+     *
+     * It receives an array containing all the fields relating to the entry 
+     * to be viewed. Strips out all content types which are not of Grid type,
+     * retrieves the child data for each Grid field type, and returns it to the caller.
      * 
-     * @param 		mixed|array $content_fields
+     * Makes the following possible in templates: 
+     * <code>
+     * {{ grid_field_short_tag }}
+     *    {{ child_field_one_short_tag }}
+     *    {{ child_field_two_short_tag }}
+     * {{ /grid_field_short_tag }}
+     * <code>
+     *
+     * @param 		string $entry_id
+     * @param 		array $content_fields
      * @access		public 
-     * @return 		array 
+     * @return 		array
      */
     public function get_data($entry_id, $content_fields)
     {
-        $data = []; // Final data to be returned to the caller 
-		
-		// var_dump($content_fields); die();
+        $data = []; // Holds processed data to be returned to the caller 
         
+        // Remove all non-Grid content types from the $content_fields array
+        $needle = 0;
+        foreach($content_fields as $field) {
+            if($field->content_field_type_id != '16') { // 16 is the Grid field type id
+                unset($content_fields[$needle]);
+                $needle++;
+            }
+        }
+        
+        // Fetch all child records per content type, and process each content type 
+        // individually.
         foreach($content_fields as $key => $content_field) {
-			// Get field names associated with the content field 
-			$this->db->select('id, short_tag');
-			$this->db->where('content_field_id', $content_field->id);
-			$grid_cols = count($this->db->get('grid_cols')->result());
-          
-			if ($grid_cols) 
-			{
-				// Get the table rows
-				$query = $this->db->select('short_tag, grid_col_data.row_data')
-					->where('grid_cols.content_field_id', $content_field->id)
-					->where('grid_col_data.entry_id', $entry_id)
-					->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left')
-					->order_by("grid_col_data.row_order", 'asc')
-					->get('grid_col_data');
-					
-				$grid_rows = $query->result();
-				$grid_data = [];
-				$count = 1;
-				// @note: This should count the relating total grid_cols 
-				// 		  to the entry being called. 
-				$rows = 3;		
-				
-				foreach($grid_rows as $row => $data_set) {
-					foreach($data_set as $key => $value) {
-						if($count % 2) {
-							$label = $value;
-						} else {
-							$grid_data[$label] = $value;
-							if($count % $rows === 0) {
-								$data[$content_field->short_tag][] = $grid_data;
-								$grid_data = [];
-							}
-						}
-						$count++;
-					}
-				}				
-			}
+            $query = $this->db->select('short_tag, grid_col_data.row_data')
+                ->where('grid_cols.content_field_id', $content_field->id)
+                ->where('grid_col_data.entry_id', $entry_id)
+                ->join('grid_cols', 'grid_cols.id = grid_col_data.grid_col_id', 'left')
+                ->order_by("grid_col_data.row_order", 'asc')
+                ->get('grid_col_data');
+                
+            $grid_cols_data = $grid_rows  = $query->result();
+            $i          = 1;
+            $needle     = 0;
+
+            // Create a new array (of unique short_tags) for later comparison 
+            $row_short_tags = array_unique( array_map( function ($i) { 
+                    return $i->short_tag; 
+                }, $grid_cols_data
+            ));
+            // Flip the array so we can later use array_key_exists() 
+            $row_short_tag_keys = array_flip($row_short_tags);
+
+            // Format $data array how the Lex Parser expects it
+            foreach($grid_cols_data as $col_item) {
+                if(array_key_exists($col_item->short_tag, $row_short_tag_keys)) {
+                    $data[$content_field->short_tag][$needle][$col_item->short_tag] = $col_item->row_data;
+                }
+                
+                if ($i < 3) { 
+                    $needle = $needle;
+                }
+                else {
+                    $needle++;
+                    $i = 0;
+                }
+                $i++;
+            }			
         }
         
         return $data;
