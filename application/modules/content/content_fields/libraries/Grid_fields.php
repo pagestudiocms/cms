@@ -61,11 +61,14 @@ class Grid_fields
      */
     public function run()
     {
-		// var_dump($this->post['data']);
-      if($this->post['data']){
-        $this->gridData = $this->post['data']['grid_col_data'];
-        $this->save($this->gridData); // Call the save method | true/false
-      }
+		// var_die($this->post['data']);
+        if($this->post['data']){
+            $this->gridData = $this->post['data']['grid_col_data'];
+            $this->save($this->gridData); // Call the save method | true/false
+            
+            $this->gridData = $this->post['data']['new_field'];
+            $this->save($this->gridData, TRUE); // Call the save method | true/false
+        }
     }
     
     // --------------------------------------------------------------------
@@ -83,36 +86,46 @@ class Grid_fields
      * @param       array $gridData Array of post data
      * @return      bool true/false
      */
-    private function save($gridData, $row_order = [])
+    private function save($gridData, $insert = FALSE)
     {
-      if( ! empty($gridData)) {
-        foreach($gridData as $id => $row_data) {
-          // This empty foreach loop is responsible for assigning values 
-          // for $grid_col_data, $col_data
-          foreach($row_data as $grid_col_id => $col_data) {
-          }
-          $data = [
-			'entry_id' => $this->entry_id,
-            'grid_col_id' => $grid_col_id,
-            'row_data' => $col_data,
-          ];
-          
-          // Update existing fields 
-          $this->update($id, $data);
-		  
-          // Insert new fields in database if not exists
-          if( ! $this->exists($id)) {
-			// $data['row_order'] = 5;
-			// var_dump($data);
-            $this->insert($data);
-          }
+        if( ! empty($gridData)) 
+        {
+            // var_die($gridData);
+            $count = 0;
+            foreach($gridData as $id => $row_data) {
+                // This empty foreach loop is responsible for assigning values 
+                // for $grid_col_data, $col_data
+                foreach($row_data as $grid_col_id => $col_data) {
+                }
+                
+                // This empty foreach loop is responsible for assigning values 
+                // for $row_order, $row_data
+                foreach($col_data as $row_order => $row_data) {
+                }
+                
+                $data = [
+                    'entry_id' => $this->entry_id,
+                    'grid_col_id' => $grid_col_id,
+                    'row_order' => $row_order,
+                    'row_data' => $row_data,
+                ];
+                
+                // Insert new fields in database if not exists
+                if($insert) {
+                    $this->insert($data);
+                } else {
+                    // Update existing fields 
+                    $this->update($id, $data);
+                }
+                
+                $count++;
+            }
+            return true;
+        } 
+        else 
+        {
+            return false;
         }
-		  // die();
-        return true;
-        
-      } else {
-        return false;
-      }
     }
 
     // --------------------------------------------------------------------
