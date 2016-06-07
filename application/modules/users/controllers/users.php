@@ -14,8 +14,10 @@ class Users extends Public_Controller
     {
         parent::__construct();
     }
+    
+    // ------------------------------------------------------------------------
 
-    function login()
+    public function login()
     {
         // Init
         $data = array();
@@ -66,7 +68,7 @@ class Users extends Public_Controller
         // If the user was attempting to log into the admin panel use the admin theme
         if ($this->uri->segment(1) == ADMIN_PATH)
         {
-            $this->template->set_theme('admin', 'default', 'application/themes');
+            $this->template->set_theme('admin', 'default', ADMIN_THEME_PATH);
             $this->template->set_layout('default_wo_errors');
 
             $this->template->add_package('jquery');
@@ -82,8 +84,10 @@ class Users extends Public_Controller
             $this->template->view("/users/login", $data);
         }
     }
+    
+    // ------------------------------------------------------------------------
 
-    function register()
+    public function register()
     {
         // Init
         $data = array();
@@ -101,12 +105,12 @@ class Users extends Public_Controller
         $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');
         $this->form_validation->set_rules('first_name', 'First Name', 'trim|required');
         $this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
-        $this->form_validation->set_rules('phone', 'Phone', 'required|format_phone');
-        $this->form_validation->set_rules('address', 'Address', 'trim|required');
-        $this->form_validation->set_rules('address2', 'Address 2', 'trim');
-        $this->form_validation->set_rules('city', 'City', 'trim|required');
-        $this->form_validation->set_rules('state', 'State', 'trim|required');
-        $this->form_validation->set_rules('zip', 'Zip', 'trim|required');
+        // $this->form_validation->set_rules('phone', 'Phone', 'required|format_phone');
+        // $this->form_validation->set_rules('address', 'Address', 'trim|required');
+        // $this->form_validation->set_rules('address2', 'Address 2', 'trim');
+        // $this->form_validation->set_rules('city', 'City', 'trim|required');
+        // $this->form_validation->set_rules('state', 'State', 'trim|required');
+        // $this->form_validation->set_rules('zip', 'Zip', 'trim|required');
         $this->form_validation->set_rules('spam_check', 'Spam Check', 'trim');
 
         if ($this->form_validation->run() == TRUE)
@@ -117,8 +121,6 @@ class Users extends Public_Controller
             {
                 return $this->template->view('/users/register', $data);
             }
-
-            $this->load->library('email');
 
             $this->load->model('users_model');
             $this->users_model->from_array($this->input->post());
@@ -134,26 +136,37 @@ class Users extends Public_Controller
                 $this->users_model->activated = 0;
                 $this->users_model->save();
 
-                $this->email->from('noreply@' . domain_name(), $this->settings->site_name);
-                $this->email->to($this->users_model->email);
-                $this->email->subject($this->settings->site_name . ' Activation');
-                $this->email->message("Thank you for your new member registration.\n\nTo activate your account, please visit the following URL\n\n" . site_url('users/activate/' . $this->users_model->id . '/' . $this->users_model->activation_code) . "\n\nThank You!\n\n" . $this->settings->site_name);
-                $this->email->send();
+                $subject = $this->settings->site_name . ' Activation';
+                $message = "Thank you for your new member registration.\n\nTo activate your account, please visit the following URL\n\n" . site_url('users/activate/' . $this->users_model->id . '/' . $this->users_model->activation_code) . "\n\nThank You!\n\n" . $this->settings->site_name;
+                
+                // Generate and send email            
+                $this->_sendmail(
+                    $this->settings->mail_reply_email, // From  
+                    $this->settings->site_name, // From name 
+                    $this->users_model->email, // To 
+                    $subject,  // Subject
+                    $message // Message body
+                );
+                
+                $this->session->set_flashdata('message', '<p class="success">An email containing your activation code has been sent to your email address.</p>');
+                
+                redirect('/users/login');
             }
             else
             {
                 $this->users_model->save();
+                $this->users_model->create_session(); // Create session and log the user in
+
+                redirect('/');
             }
-
-            $this->users_model->create_session();
-
-            redirect('/');
         }
 
         $this->template->view('/users/register', $data);
     }
+    
+    // ------------------------------------------------------------------------
 
-    function logout()
+    public function logout()
     {
         $this->load->model('users_model');    
 
@@ -177,8 +190,10 @@ class Users extends Public_Controller
         // redirect('/');
         redirect(ADMIN_PATH);
     }
+    
+    // ------------------------------------------------------------------------
 
-    function forgot_password()
+    public function forgot_password()
     {
         // Init
         $data = array();
@@ -194,7 +209,7 @@ class Users extends Public_Controller
             $User = $this->input->post('user');
 
             // Generate and send email            
-            $this->_send_email(
+            $this->_sendmail(
                 $this->settings->mail_reply_email, // From  
                 $this->settings->site_name, // From name 
                 $User->email, // To 
@@ -238,8 +253,10 @@ class Users extends Public_Controller
             $this->template->view("/users/forgot_password", $data);
         }
     }
+    
+    // ------------------------------------------------------------------------
 
-    function activate()
+    public function activate()
     {
         // Init
         $data = array();
@@ -327,66 +344,37 @@ class Users extends Public_Controller
      * Send Mail
      *
      * Builds and sends email to the specified address
-     * Using PHPMailer to sent email as html using SMTP service.
+     * Using PHPMailer to send email as html using SMTP service.
      *
      * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
      * @access     private
-     * @return     void
+     * @return     bool
      */
-    private function _send_email($from, $fromName, $to, $subject, $message)
+    private function _sendmail($from, $fromName, $to, $subject, $message)
     {
         $config = array(
-            'protocol'   => $this->settings->mail_protocol,
-            'smtp_host'  => $this->settings->mail_server,
-            'smtp_port'  => $this->settings->mail_outgoing_port,
-            'smtp_user'  => $this->settings->mail_login,
-            'smtp_pass'  => $this->settings->mail_password,
-            'mailtype'   => $this->settings->mail_send_as_html, 
-            'mail_authen_srvc' => $this->settings->mail_authen_srvc,
+            'protocol'    => $this->settings->mail_protocol,
+            'smtp_host'   => $this->settings->mail_server,
+            'smtp_port'   => $this->settings->mail_outgoing_port,
+            'smtp_user'   => $this->settings->mail_login,
+            'smtp_pass'   => $this->settings->mail_password,
+            'smtp_crypto' => $this->settings->mail_authen_srvc,
+            'smtp_debug'  => ((ENVIRONMENT !== 'production') ? 2 : 0), // 2 to enable SMTP debug information
+            'mailtype'    => 'html',
             'wrapchars'  => 76, 
             'wordwrap'   => true,
-            'smtp_reply' => ''
         );
-        
-        $this->load->library('SMTP');
-        $this->load->library('PHPMailer');
-        
-        $mail = new PHPMailer();
-		$mail->IsSMTP(); 
-		$mail->Host         = $config['smtp_host']; 
-		$mail->Port         = $config['smtp_port'];
-		$mail->SMTPSecure   = $config['mail_authen_srvc'];
-        $mail->SMTPAuth     = true;
-        
-        $mail->Username     = $config['smtp_user'];
-        $mail->Password     = $config['smtp_pass'];
+        $this->load->library('email', $config);        
+        // $this->load->library('parser');
 		
-		$mail->From 		= $from;
-		$mail->FromName 	= $fromName;
-		$mail->AddAddress($to);
-		$mail->AddReplyTo($config['smtp_reply']);		
-		$mail->WordWrap 	= $config['wrapchars']; // set word wrap
-		$mail->IsHTML(true);		
-		$mail->Subject  	= $subject;
-		$mail->Body 		= $message;
-        
-        // 2 to enable SMTP debug information
-        if (defined('ENVIRONMENT')) {
-            if(ENVIRONMENT !== 'production') {
-                $mail->SMTPDebug   = 2; 
-            } else {
-                $mail->SMTPDebug   = 0; 
-            }
-        }
-		
-		/**
-		 * Log error message if delivery failed. 
-		 */
-		if ( $mail->Send() ) {
-			return true;
-		} else {
-            log_message('error', $mail->ErrorInfo);
-			return false;
-		}        
+		$result = $this->email
+                ->from($from, $this->settings->site_name)
+                ->reply_to($this->settings->mail_reply_email)    // Optional, an account where a human being reads.
+                ->to($to)
+                ->subject($subject)
+                ->message($message)
+                ->send();
+                
+        return $result;       
     }
 }

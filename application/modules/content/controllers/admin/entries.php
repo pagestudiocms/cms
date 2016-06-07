@@ -300,14 +300,6 @@ class Entries extends Admin_Controller {
         // Get content fields html
         $field_validation = $Content_fields->validate();
         
-        // Get Grid content fields 
-        // Process Grid fields separately from normal content types
-        $Grid_fields = $this->load->library(
-            'Grid_fields',
-            $params = ['data'=> $this->input->post()]
-        );
-        $Grid_fields->run();
-
         // Validation and process form
         if ($this->form_validation->run() == TRUE && $field_validation)
         {
@@ -331,6 +323,13 @@ class Entries extends Admin_Controller {
             {
                 $Entry->id = $entry_id;
             }
+            
+            // Load Grid fields library and save grid fields data if found
+            $Grid_fields = $this->load->library(
+                'Grid_fields',
+                $params = ['data'=> $this->input->post()]
+            );
+            $Grid_fields->run();
 
             $Entry->save();
 

@@ -69,20 +69,6 @@ $(document).ready(function() {
 	});
 
 	// Dialog auto open			
-	$('#welcome').dialog({
-		autoOpen: false,
-		width: 470,
-		height: 180,
-		bgiframe: true,
-		modal: true,
-		buttons: {
-			"View Admintasia V1.0": function() { 
-				$(this).dialog("close"); 
-			}			
-		}
-	});
-
-	// Dialog auto open			
 	$('#welcome_login').dialog({
 		autoOpen: true,
 		width: 370,
@@ -156,35 +142,71 @@ $(document).ready(function() {
 
 	$(".header").append('<span class="ui-icon ui-icon-carat-2-n-s"></span>');
 
+	/**
+	 * Make iframes full height of browser window
+	 * 
+	 * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
+	 * @source     http://stackoverflow.com/questions/20125340/can-i-use-jquery-to-resize-an-iframe-to-fill-the-remaining-window-space
+	 */
+	$(window).on('load resize', function(){
+			$window = $(window);
+			$('iframe.fullheight').height(function(){
+					return $window.height()-$(this).offset().top;   
+			});
+	});
 	
 });
 
-	/* Tooltip */
+/* Tooltip */
 
-	$(function() {
-		$('.tooltip').tooltip({
-			track: true,
-			delay: 0,
-			showURL: false,
-			showBody: " - ",
-			fade: 250
-			});
-		});
+$(function() {
+	$('.tooltip').tooltip({
+		track: true,
+		delay: 0,
+		showURL: false,
+		showBody: " - ",
+		fade: 250
+	});
+});
 		
     
     
- 	/* Check all table rows */
+/* Check all table rows */
 	
 var checkflag = "false";
 function check(field) {
-if (checkflag == "false") {
-for (i = 0; i < field.length; i++) {
-field[i].checked = true;}
-checkflag = "true";
-return "check_all"; }
-else {
-for (i = 0; i < field.length; i++) {
-field[i].checked = false; }
-checkflag = "false";
-return "check_none"; }
+	if (checkflag == "false") 
+	{
+		for (i = 0; i < field.length; i++) {
+			field[i].checked = true;
+		}
+		checkflag = "true";
+		return "check_all"; 
+	}
+	else 
+	{
+		for (i = 0; i < field.length; i++) {
+			field[i].checked = false; 
+		}
+		checkflag = "false";
+		return "check_none"; 
+	}
 }
+
+/*
+ * This script checks and unchecks boxes on a form 
+ * Checks and unchecks unlimited number in the group...
+ * Pass the Checkbox group name...
+ */
+function selectToggle(toggle, form) {
+	 var myForm = document.forms[form];
+	 for( var i=0; i < myForm.length; i++ ) { 
+		  if(toggle) {
+			   myForm.elements[i].checked = "checked";
+		  } 
+		  else {
+			   myForm.elements[i].checked = "";
+		  }
+	 }
+}
+//  End -->

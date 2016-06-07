@@ -38,6 +38,7 @@
 class Grid_field extends Field_type
 {
     public $tracker = [];
+    public $entry_id = null;
     
     public function settings()
     {
@@ -67,7 +68,7 @@ class Grid_field extends Field_type
     
     private function build_table()
     {
-        $entry_id = $this->uri->segment(6);
+        $this->entry_id = $entry_id = $this->uri->segment(6);
         $content_type_id = $this->uri->segment(5);
         $content_fields_array = ($this->session->userdata('content_fields')) ? $this->session->userdata('content_fields') : [];
         
@@ -185,6 +186,7 @@ class Grid_field extends Field_type
             // Build html table rows with newly constructed associative array... 
             if( ! empty($rows)) {
                 $count = 1;
+                $row_order = 1;
                 foreach($rows as $key => $columns ) {
                     $out .= '<tr class="matrix matrix-first" id="tbl_row_1">';
                     foreach($columns as $key => $col) {
@@ -198,14 +200,17 @@ class Grid_field extends Field_type
                                 <div>
                                     <span>'.$row_count.'</span><a class="delRow" style="opacity: 1; display: inline;" title="Options"></a>
                                 </div>
+                                <input name="content_type_'.$content_field_id.'[row_order][]" value="'.$row_order.'" type="hidden">
                             </th>';
+                            $row_order++;
                         }
                         $out .= $this->format_field_type(
                             $col->content_field_type_id,
                             $col->grid_col_id,
                             $col->options,
                             $col->row_data,
-                            $col->id
+                            $col->id, 
+                            $row_order
                         );
                         
                         $count++;
@@ -220,135 +225,162 @@ class Grid_field extends Field_type
         </table>
         <a class="matrix-btn matrix-add" id="field_'.$content_field_id.'_addrow_btn" title="Add row"></a>';
         
+        // Build a single html table row for the javascript methods 
+        // to append to tables when the add new row button is clicked.
         $dynamic_rows = '';
         $count = 0;
         foreach($grid_headers as $key => $col ) {
-          $dynamic_rows .= $this->format_field_type(
-            $col->content_field_type_id,
-            $col->id,
-            $col->options,
-            ''
-          );
-          $count++;
+            $dynamic_rows .= $this->format_field_type(
+                $col->content_field_type_id,
+                $col->id,
+                $col->options,
+                '', 
+                '', 
+                '',
+                TRUE
+            );
+            $count++;
         }
-        $dynamic_rows = json_encode($dynamic_rows);
+        $dynamic_rows = json_encode($dynamic_rows); 
+        
+        // echo json_decode($dynamic_rows); die();
         
         // Add module level javascript to html head
         $script = "$(document).ready( function(){
-          
-          if ( ! $.isFunction($.fn.showNoRowExist) ) {
-            function showNoRowExist() {
-              var row = '';
-              row +=
-              '<tr class=\"matrix matrix-first matrix-last matrix-norows even\">' +
-              '    	<td colspan=\"". ($total_cols = $total_cols + 1) ."\" class=\"matrix matrix-first matrix-firstcell matrix-last\">' +
-			  '  		No rows exist yet. <a>Create the first one.</a>' +
-			  '		</td>' +
-              '</tr>';
-              $('table#content_type_{$content_field_id}').append(row);
-            }
-          } 
-          if ( ! $.isFunction($.fn.renumberRows) ) {
-            var spanOpen = '<div><span>';
-            var spanClose = '</span><a class=\"delRow\" style=\"opacity: 1; display: inline;\" title=\"Options\"></a></div>';
-          
-            function renumberRows(tableRow = '') {
-              $(tableRow).each(function(index, el){
-                $(this).children('th').first().html(function(i, text) {
-                  if(index > 0){
-                    return spanOpen + index++ + spanClose;
-                  }
-                });
-              });
-            } 
-          }
-          
-          // -----------------------------------------------------------
-          
-          var counter = ". (($row_count >= 0) ? (($row_count === 1) ? 1 : $row_count + 1) : 1) .";
-          
-          if(counter > 1){
-            $('table#content_type_".$content_field_id." .matrix-norows').remove();
-          }
-          
-          if(counter === 1) {
-            showNoRowExist();
-          }
-
-          $('table#content_type_".$content_field_id.".matrix tbody').sortable({
-              axis: 'y',
-              placeholder: \"ui-state-highlight\",
-              update: function(event, ui){
-                  var data = $(this).sortable('serialize');
-                  // POST to server using $.post or $.ajax
-                  // $.ajax({
-                      // data: data,
-                      // type: 'POST',
-                      // url: '/your/url/here'
-                  // });
-              }
-          });
-
-          $('#field_{$content_field_id}_addrow_btn').on('click', function(){
-              var newRow = $('<tr class=\"matrix\" id=\"tbl_row_\"+ counter +\"\">');
-              var cols   = '';
-              $('table#content_type_".$content_field_id." .matrix-norows').remove();
-              
-              cols += 
-              '<th class=\"matrix matrix-first matrix-tr-header\">' +
-              '    <div>' +
-              '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
-              '    </div>' +
-              '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"'+ counter +'\" type=\"hidden\">' +
-              '</th>';
-              cols += 'jQuery.parseJSON({$dynamic_rows})';
-              newRow.append(cols);
-              
-              if (counter === ".$max_rows.") {
-                $('#field_{$content_field_id}_addrow_btn').hide();
-              }
-              $('table#content_type_{$content_field_id}').append(newRow);
-              
-              counter++;
-          });
-
-          $('table#content_type_{$content_field_id}').on('click', '.delRow', function(event){
-            if (confirm('Are you sure you want to delete this?')) {
-              $(this).closest(\"tr\").remove();
-              counter -= 1;
-              if(counter <= ".$max_rows.") {
-                $('#field_{$content_field_id}_addrow_btn').show();
-              }
-              renumberRows('table#content_type_".$content_field_id." tr');
+            if ( ! $.isFunction($.fn.showNoRowExist) )
+            {
+                function showNoRowExist() 
+                {
+                    var row = '';
+                    row +=
+                    '<tr class=\"matrix matrix-first matrix-last matrix-norows even\">' +
+                    '   <td colspan=\"". ($total_cols = $total_cols + 1) ."\" class=\"matrix matrix-first matrix-firstcell matrix-last\">' +
+                    '  	    No rows exist yet. <a>Create the first one.</a>' +
+                    '   </td>' +
+                    '</tr>';
+                    $('table#content_type_{$content_field_id}').append(row);
+                }
             }
             
-            if (counter === 1) {
-              showNoRowExist();
+            if ( ! $.isFunction($.fn.renumberRows) ) 
+            {
+                function renumberRows(tableRow = '') 
+                {
+                    var spanOpen = '<div><span>';
+                    var spanClose = '</span><a class=\"delRow\" style=\"opacity: 1; display: inline;\" title=\"Options\"></a></div>';
+                    var theKey = '';
+                    
+                    $(tableRow).each(function(index, el){
+                        $(this).children('th').first().html(function(i, text) {
+                            if(index > 0){
+                                var value = index++;
+                                theKey = value;
+                                
+                                return spanOpen + value + spanClose + '<input name=\"content_type_{$content_field_id}[row_order][]\" value=\"'+ value +'\" type=\"hidden\">';
+                            }
+                        });
+                        $(this).children('td').find('input, select, textarea').each(function(i){
+                            $(this).attr('name', function(i){
+                                var str = $(this).attr('name').slice(0, -3);
+                                return str + '['+theKey+']'
+                            });
+                        })
+                        .end();                        
+                    });
+                } 
             }
-          });
+          
+            // -----------------------------------------------------------
+            
+            var counter = ". (($row_count >= 0) ? (($row_count === 1) ? 1 : $row_count + 1) : 1) .";
+            if(counter > 1){
+                $('table#content_type_".$content_field_id." .matrix-norows').remove();
+            }
+            if(counter === 1) {
+                showNoRowExist();
+            }
+            
+            /**
+             * Make table rows sortable 
+             */
+            $('table#content_type_".$content_field_id.".matrix tbody').sortable({
+                axis: 'y',
+                placeholder: \"ui-state-highlight\",
+                update: function(event, ui){
+                    renumberRows('table#content_type_".$content_field_id." tr');
+                }
+            });
+            
+            /**
+             * Add new row to table 
+             */
+            $('#field_{$content_field_id}_addrow_btn').on('click', function(){
+                var newRow = $('<tr class=\"matrix\" id=\"tbl_row_\"+ counter +\"\">');
+                var cols   = '';
+                $('table#content_type_".$content_field_id." .matrix-norows').remove();
+                
+                cols += 
+                '<th class=\"matrix matrix-first matrix-tr-header\">' +
+                '    <div>' +
+                '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
+                '    </div>' +
+                '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"'+ counter +'\" type=\"hidden\">' +
+                '</th>';
+                cols += 'jQuery.parseJSON({$dynamic_rows})';
+                newRow.append(cols);
+                
+                if (counter === ".$max_rows.") {
+                    $('#field_{$content_field_id}_addrow_btn').hide();
+                }
+                $('table#content_type_{$content_field_id}').append(newRow);
+                
+                // console.log(newRow);
+                
+                renumberRows('table#content_type_{$content_field_id} tr');
+                
+                counter++;
+            });
+    
+            /**
+             * Remove row from table
+             */
+            $('table#content_type_{$content_field_id}').on('click', '.delRow', function(event){
+                if (confirm('Are you sure you want to delete this?')) {
+                    $(this).closest(\"tr\").remove();
+                    counter -= 1;
+                    if(counter <= {$max_rows}) {
+                        $('#field_{$content_field_id}_addrow_btn').show();
+                    }
+                    renumberRows('table#content_type_{$content_field_id} tr');
+                }
+                
+                if (counter === 1) {
+                    showNoRowExist();
+                }
+            });
 		  
-		// -----------------------------------------------------------
-		// ckeditor config 
-		var grid_ckeditor_config = { 
-			toolbar : [
-				{ name: 'basicstyles', items : [ 'Undo','Redo','-','Bold','Italic','Underline','Strike' ] },
-				{ name: 'styles', items : [ 'Format' ] },
-				{ name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Blockquote','- ','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-				
-				{ name: 'tools', items : [ 'Maximize' ] },
-				'/',
-				{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-				{ name: 'insert', items : [ 'HorizontalRule', 'ShowBlocks', '-', 'Source' ] }
-			],
-			entities : true,
-			// height : '150px',
-		};
+            // -----------------------------------------------------------
+            // ckeditor config 
+            var grid_ckeditor_config = { 
+                toolbar : [
+                    { name: 'basicstyles', items : [ 'Undo','Redo','-','Bold','Italic','Underline','Strike' ] },
+                    { name: 'styles', items : [ 'Format' ] },
+                    { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Blockquote','- ','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
+                    
+                    { name: 'tools', items : [ 'Maximize' ] },
+                    '/',
+                    { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+                    { name: 'insert', items : [ 'HorizontalRule', 'ShowBlocks', '-', 'Source' ] }
+                ],
+                entities : true,
+                // height : '150px',
+            };
 
-		$('textarea.ckeditor_grid_textarea').each(function(index) {
-			grid_ckeditor_config.height = $(this).height();
-			CKEDITOR.replace($(this).attr('name'), grid_ckeditor_config); 
-		});
-      });";
+            $('textarea.ckeditor_grid_textarea').each(function(index) {
+                grid_ckeditor_config.height = $(this).height();
+                CKEDITOR.replace($(this).attr('name'), grid_ckeditor_config); 
+            });
+        });";
 
       $this->template->add_script($script);
         
@@ -357,20 +389,24 @@ class Grid_field extends Field_type
     
     // ------------------------------------------------------------------
    
-    private function format_field_type($type, $grid_col_id, $options, $row_data, $grid_col_data_id = '')
+    private function format_field_type($type, $grid_col_id, $options, $row_data, $grid_col_data_id = '', $row_order = '', $is_new_field = false)
     {
+        $options    = (is_serialized($options)) ? unserialize($options) : $options;
+        $row_order  = ($row_order >= 1) ? $row_order - 1 : 'x';
+        $field_name = ($is_new_field) ? 'new_field' : 'grid_col_data';
+        
         $field = '';
         switch($type) {
             case 1 : $field = '
                 <td style="width: auto;" class="matrix matrix-text">
-                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea ckeditor_grid_textarea" height="150" name="grid_col_data['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
+                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea ckeditor_grid_textarea" height="150" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
                     <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>
                 </td>';
             break;
 			
 			case 3 : $field = '
                 <td style="width: auto;" class="matrix matrix-text">
-                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="grid_col_data['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
+                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
                     <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>
                 </td>';
             break;
@@ -382,7 +418,7 @@ class Grid_field extends Field_type
                 }
                 $field = '
                 <td style="width: auto;" class="matrix matrix-text">
-                    <select name="grid_col_data['.$grid_col_data_id.']['.$grid_col_id.']">
+                    <select name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']">
                     '. $select_field .'  
                     </select>
                 </td>';

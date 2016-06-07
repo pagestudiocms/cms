@@ -5,7 +5,68 @@ require APPPATH."third_party/MX/Loader.php";
 
 class MY_Loader extends MX_Loader
 {
-    /*
+    /**
+     * Parses views outsite the views/layouts folder structure. By allowing
+     * you to specify a folder path and view file.
+     *
+     * @since   Version 1.2.0
+     * @param   $folder
+     * @param   $view
+     * @param   $vars
+     * @param   $return
+     * @return  object
+     */
+    public function ext_view($folder, $view, $vars = array(), $return = FALSE) 
+    {
+        $this->_ci_view_paths = array_merge($this->_ci_view_paths, [$folder . '/' => TRUE]);
+        
+        return $this->_ci_load([
+            '_ci_view' => $view,
+            '_ci_vars' => $this->_ci_object_to_array($vars),
+            '_ci_return' => $return
+        ]);
+    }
+    
+    // --------------------------------------------------------------------
+    
+    /**
+     * Method to traverse modules and load model files.
+     * You may also specify a folder path for the model file.
+     *
+     * @since   Version 1.2.0
+     * @param   string $model
+     * @param   string|array $path
+     * @param   string $object_name
+     * @param   string|array $connect Optionl connection string to the database
+     * @return  object
+     */
+    public function ext_model($model, $path = NULL, $object_name = NULL, $connect = FALSE)
+    {
+        if(is_null($path)) {
+            show_error('The model path for "'.$model.'" cannot be left to EMPTY. Error triggered in '.APPPATH.'core/MY_Loader.php line 45');
+        }
+        else 
+        {
+            ($_alias = $object_name) OR $_alias = basename($model);
+            
+            $path = (is_array($path) && isset($path['module'])) 
+                ? APPPATH . 'modules/' . $path['module'] .'/models/'
+                : $path . '/';
+            
+            Modules::load_file($model, $path);
+			
+			$model = ucfirst($model);
+			CI::$APP->$_alias = new $model();
+			
+			$this->_ci_models[] = $_alias;
+            
+            return CI::$APP->$_alias;
+        }
+    }
+    
+    // --------------------------------------------------------------------
+    
+    /**
      * Theme
      *
      * Includes and eval a php file located in the themes directory

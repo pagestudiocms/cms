@@ -14,6 +14,10 @@
                         'label' => 'Entries',
                         'url'   => 'content/entries',
                     ),
+					array(
+                        'label' => 'File Manager',
+                        'url'   => 'filemanager',
+                    ),
                 ),
         ),
         array(

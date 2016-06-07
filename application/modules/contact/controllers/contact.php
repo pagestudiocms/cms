@@ -17,19 +17,20 @@ class Contact extends Public_Controller
         $this->fromName   = $this->settings->site_name;
         $this->to         = $this->settings->notification_email;
         $this->subject    = 'Contact Form Submission';
-        $this->e_config = array(
-            'protocol'   => $this->settings->mail_protocol,
-            'smtp_host'  => $this->settings->mail_server,
-            'smtp_port'  => $this->settings->mail_outgoing_port,
-            'smtp_user'  => $this->settings->mail_login,
-            'smtp_pass'  => $this->settings->mail_password,
-            'mailtype'   => $this->settings->mail_send_as_html, 
-            'mail_authen_srvc' => $this->settings->mail_authen_srvc,
+        $this->e_config = [
+            'protocol'    => $this->settings->mail_protocol,
+            'smtp_host'   => $this->settings->mail_server,
+            'smtp_port'   => $this->settings->mail_outgoing_port,
+            'smtp_user'   => $this->settings->mail_login,
+            'smtp_pass'   => $this->settings->mail_password,
+            'smtp_crypto' => $this->settings->mail_authen_srvc,
+            'smtp_debug'  => 0,
+            'mailtype'    => 'html', 
             // 'charset'   => 'iso-8859-1'
-            'wrapchars'  => 76, 
-            'wordwrap'   => true,
-            'smtp_reply' => ''
-        );
+            // 'wrapchars'  => 76,
+            // 'wordwrap'   => true,
+            // 'smtp_reply' => ''
+        ];
     }
     
 	/**
@@ -47,9 +48,10 @@ class Contact extends Public_Controller
     public function ajax()
     {            
         // Only process ajax requests from this method
-        if(is_ajax()) {
+        if(is_ajax()) 
+		{
+			$result = []; // Stores the json result set
             $message = '';
-            include_once CMS_ROOT . APPPATH . 'modules/contact/helpers/contact_helper.php';
             
             foreach($this->input->post() as $key => $value) {
                 if ( ! in_array($key, $this->excluded)) {
@@ -64,80 +66,51 @@ class Contact extends Public_Controller
                     }
                 }
             }
+            $data = [
+                'subject' => $this->subject,
+                'paragraphs' => [
+                    ['paragraph' => $message],
+                ],
+                'company' => [
+                    'name' => $this->fromName, 
+                    'website' => site_url(),
+                ], 
+                'signature' => 'Cheers,<br>'.$this->fromName.' Team'
+            ];
+            $submit = $this->sendmail($data, ['view' => 'system_plain', 'folder' => ADMIN_THEME_PATH . 'email/views']);
             
-            $message = html_template($this->subject, $message);
-
-            $submit = $this->mailForm(
-                $this->from, 
-                $this->fromName,
-                $this->to, 
-                $this->subject,
-                $message,
-                $this->e_config
-            );
-            
-            echo ($submit) ? true : false;
-            
-        } else {
+			// $submit = true; // Uncomment for testing purposes only
+           
+			$result['errors'] = '';
+			$result['result'] = ($submit) ? 'success' : 'fail';
+			
+			echo json_encode($result);
+        } 
+		else 
+		{
             show_404();
         }
     }
     
-    // ------------------------------------------------------------------------
+    // --------------------------------------------------------------------
     
-    private function mailForm(
-        $from, 
-        $fromName,
-        $to, 
-        $subject,
-        $message,
-        $config
-    ) {
-        $this->load->library('SMTP');
-        $this->load->library('PHPMailer');
-        
-        $mail = new PHPMailer();
+    private function sendmail($data = null, $template = null)
+    {        
+        if( ! is_null($data) && is_array($data))
+        {            
+            $this->load->library('parser');
+            $this->load->library('email', $this->e_config);
+            
+            $body = $this->parser->parse($template, $data, TRUE, FALSE, TRUE);
 
-		// send via SMTP
-		$mail->IsSMTP(); 
-		
-		// SMTP server setup
-		$mail->Host = $config['smtp_host']; 
-		$mail->Port = $config['smtp_port'];
-		$mail->SMTPSecure = $config['mail_authen_srvc'];
-        
-        // 2 to enable SMTP debug information
-        if (defined('ENVIRONMENT')) {
-            if(ENVIRONMENT === 'production') {
-                $mail->SMTPDebug = false;
-                $mail->do_debug = 0;
-            } else {
-                // $mail->SMTPDebug   = 2; 
-                $mail->SMTPDebug = false;
-                $mail->do_debug = 0;
-            }
+            $result = $this->email
+                ->from($this->from)
+                ->reply_to($this->from)    // Optional, an account where a human being reads.
+                ->to($this->to)
+                ->subject($data['subject'])
+                ->message($body)
+                ->send();
+            return $result;
         }
-        
-        $mail->SMTPAuth = true;
-        $mail->Username = $config['smtp_user'];
-        $mail->Password = $config['smtp_pass']; 
-		
-		// phpMailer email configuration
-		$mail->From 		= $from;
-		$mail->FromName 	= $fromName;
-		$mail->AddAddress($to);
-		$mail->AddReplyTo($config['smtp_reply']);		
-		$mail->WordWrap 	= $config['wrapchars']; // set word wrap
-		$mail->IsHTML(true);		
-		$mail->Subject  	= $subject;
-		$mail->Body 		= $message;
-		
-		// Log error message if delivery failed. 
-		if ( $mail->Send() ) {
-			return 1;
-		} else {
-            log_message('error', $mail->ErrorInfo);
-			return 0;
-		}
     }
 }

@@ -25,19 +25,16 @@
  * Helper functions are a collection of functions that helps you with tasks. 
  * Unlike most other systems, in this CMS, Helper Functions are not written 
  * in an Object Oriented format. They are simple, procedural functions. 
- * Each helper function performs one specific task, and may be dependent of one or 
- * more other Helper Functions.
- * Helper functions are not native to this application alone. They can be reused in 
- * other php applications. 
+ * Each helper function performs one specific task, and may be dependent of 
+ * one or more other Helper Functions.
+ * Helper functions are not native to this application alone. They can be 
+ * reused in other php applications. 
  *
- * @version:    Version 0.2.0 
- * @modified:   03/12/2016
+ * @version:    Version 0.2.1
+ * @modified:   06/01/2016
  *
  * Table of Contents:
  * ------------------------------
- * - mime_file_type()
- * - datetime()                         Function with formated date
- * - remove_am_pm()                     Removes AM PM from a given string
  * - _pr()                              Simply wraps a print_r() in pre tags
  * - _vd()
  * - array_to_object()
@@ -58,8 +55,19 @@
  * - js_end()
  * - str_to_bool()
  * - is_inline_editable()
- * - 
+ * - dash_to_underscore()
+ * - underscore_to_dash()
+ * - remove_dash_and_underscore()
+ * - make_slug()
+ * - random_number()
+ * - random_readable_string()
+ * - hash_passwd()
+ * - strip_final_slash()
+ * - is_serialized()                     Checks if a given string is serialize or not
+ * - datetime()                          Return the current server date and time
+ * - var_die()                           Dumps information about a variable, and exit
  */
+ 
 /*
  * Print Recursive
  *
@@ -686,7 +694,7 @@ if ( ! function_exists('random_readable_string'))
         $conso = array("b","c","d","f","g","h","j","k","l","m","n","p","r",
             "s","t","v","w","x","y","z"
         );
-        $vocal = array("a","e","i","o","u");
+        $vowel = array("a","e","i","o","u");
         
         $string = "";
         srand (( double )microtime()*1000000);
@@ -695,7 +703,7 @@ if ( ! function_exists('random_readable_string'))
         for ($i = 1; $i <= $max; $i++)
         {
             $string .= $conso[rand(0,19)];
-            $string .= $vocal[rand(0,4)];
+            $string .= $vowel[rand(0,4)];
         }
         
         return $string;
@@ -737,5 +745,145 @@ if( ! function_exists('strip_final_slash'))
 	function strip_final_slash($string) 
 	{
 		return rtrim($string, '/');
+	}
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Tests if an input is valid PHP serialized string.
+ *
+ * Checks if a string is serialized using quick string manipulation
+ * to throw out obviously incorrect strings. Unserialize is then run
+ * on the string to perform the final verification.
+ *
+ * Valid serialized forms are the following:
+ * <ul>
+ * <li>boolean: <code>b:1;</code></li>
+ * <li>integer: <code>i:1;</code></li>
+ * <li>double: <code>d:0.2;</code></li>
+ * <li>string: <code>s:4:"test";</code></li>
+ * <li>array: <code>a:3:{i:0;i:1;i:1;i:2;i:2;i:3;}</code></li>
+ * <li>object: <code>O:8:"stdClass":0:{}</code></li>
+ * <li>null: <code>N;</code></li>
+ * </ul>
+ *
+ * @author		Chris Smith <code+php@chris.cs278.org>
+ * @copyright	Copyright (c) 2009 Chris Smith (http://www.cs278.org/)
+ * @license		http://sam.zoy.org/wtfpl/ WTFPL
+ * @param		string	$value	Value to test for serialized form
+ * @param		mixed	$result	Result of unserialize() of the $value
+ * @return		boolean			True if $value is serialized data, otherwise false
+ */
+if( ! function_exists('is_serialized')) 
+{
+    function is_serialized($value, &$result = null)
+    {
+        // Bit of a give away this one
+        if (!is_string($value))
+        {
+            return false;
+        }
+        // Serialized false, return true. unserialize() returns false on an
+        // invalid string or it could return false if the string is serialized
+        // false, eliminate that possibility.
+        if ($value === 'b:0;')
+        {
+            $result = false;
+            return true;
+        }
+        $length	= strlen($value);
+        $end	= '';
+        switch ($value[0])
+        {
+            case 's':
+                if ($value[$length - 2] !== '"')
+                {
+                    return false;
+                }
+            case 'b':
+            case 'i':
+            case 'd':
+                // This looks odd but it is quicker than isset()ing
+                $end .= ';';
+            case 'a':
+            case 'O':
+                $end .= '}';
+                if ($value[1] !== ':')
+                {
+                    return false;
+                }
+                switch ($value[2])
+                {
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    break;
+                    default:
+                        return false;
+                }
+            case 'N':
+                $end .= ';';
+                if ($value[$length - 1] !== $end[0])
+                {
+                    return false;
+                }
+            break;
+            default:
+                return false;
+        }
+        if (($result = @unserialize($value)) === false)
+        {
+            $result = null;
+            return false;
+        }
+        return true;
+    }
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Return the current server date and time
+ * 
+ * @param      $format Date format 
+ * @return     datetime Formated date and time 
+ */
+if( ! function_exists('datetime'))
+{
+    function datetime($format = 'Y-m-d H:i:s') 
+    {
+        return (new DateTime())->format($format);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+/**
+ * Dumps information about a variable, and exit
+ *
+ * @param        array|string $parap (Required) The param to be processed
+ * @return       void
+ */
+if( ! function_exists('var_die')) 
+{
+	function var_die($param) 
+    {
+		if(is_array($param)) {
+            foreach($param as $string) {
+                var_dump($string);
+            }
+        } 
+        else {
+            var_dump($param); 
+        }
+        die('Debugging is on');
 	}
 }

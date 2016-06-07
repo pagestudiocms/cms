@@ -37,6 +37,11 @@
             <input type="hidden" name="form_id" value="<?php echo $id; ?>" />
         <?php endif; ?>
     </div>
+	
+	<div class="js-contact-form-spinner" style="display:none;">
+		<i class="fa fa-spinner fa-pulse fa-3x fa-fw fa-spin"></i>
+		<span class="sr-only">Loading...</span>
+	</div><!-- end .form-spinner -->
 </form>
 
 <?php if($ajax_submit): js_start(); ?>
@@ -45,27 +50,33 @@
         $(".js-contact-form").find("input,textarea,select").jqBootstrapValidation({
             preventSubmit: true,
             submitError: function($form, event, errors) {
-                // console.log(errors);
+                console.log(errors);
             },
             submitSuccess: function($form, event) {
                 event.preventDefault();
+				$('.js-contact-form-spinner').show();
                 $.ajax({
-                    url: "<?php echo base_url() . ADMIN_PATH . '/contact/ajax/'; ?>",
-                    async: false,
+                    url: "<?php echo base_url() . 'contact/ajax/'; ?>",
                     cache: false,
                     type: 'POST',
                     data: $('.js-contact-form').serialize(),
-                    success: function(data){
-                        var message = data.replace('Invalid address: ','');
-                        if(message === '1') {
-                            $('.js-result').html('<p class="success">Thank you! Your message was successfully sent.</p>');
-                            $('.js-contact-form').find("input[type=text], input[type=email], textarea").val("");
-                        } else {
-                            $('.js-result').html('<p class="error">Something went wrong. We were unable to send your email.</p>');
-                        }
-                        // console.log(data);
-                    }
-                });
+					// contentType: "application/json; charset=utf-8",
+                })
+				.done(function( data ) {
+					$('.js-contact-form-spinner').hide();
+					var message = data.replace('Invalid address: ','');
+					var obj = jQuery.parseJSON( message );
+					if(obj.result === 'success') {
+						$('.js-result').html('<p class="success">Thank you! Your message was successfully sent.</p>');
+						$('.js-contact-form').find("input[type=text], input[type=email], textarea").val("");
+					} else {
+						$('.js-result').html('<p class="error">Something went wrong. We were unable to send your email.</p>');
+						if ( console && console.log ) {
+						  console.log( "Ajax contact form result: ", message.slice( 0, 100 ) );
+						  // console.log(obj.result);
+						}
+					}
+				});
             },
         });
     });
