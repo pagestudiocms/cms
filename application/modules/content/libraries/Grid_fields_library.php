@@ -96,11 +96,15 @@ class Grid_Fields_library
                 ->order_by("grid_col_data.row_order", 'asc')
                 ->get('grid_col_data');
                 
-            $grid_cols_data = $grid_rows  = $query->result();
+            $grid_cols_data = $query->result();
             $i          = 1;
             $needle     = 0;
+            
+            // Get the total tags each array should have
+            $total_fields = $this->db->select('id')->where('content_field_id', $content_field->id)->get('grid_cols')->result();
+            $total_fields = count($total_fields);
 
-            // Create a new array (of unique short_tags) for later comparison 
+            // Create a new array (of unique short_tags) for later comparison
             $row_short_tags = array_unique( array_map( function ($i) { 
                     return $i->short_tag; 
                 }, $grid_cols_data
@@ -114,7 +118,7 @@ class Grid_Fields_library
                     $data[$content_field->short_tag][$needle][$col_item->short_tag] = $col_item->row_data;
                 }
                 
-                if ($i < 3) { 
+                if ($i < $total_fields) {
                     $needle = $needle;
                 }
                 else {
