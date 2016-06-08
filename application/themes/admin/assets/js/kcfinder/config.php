@@ -101,4 +101,19 @@ $_CONFIG = array(
     //'_sessionPath' => "/my/path",
 );
 
+// Get folder path from the session if set
+if (isset($_SESSION['group_session']) && isset($_SESSION['user_session']))
+{
+    $User_sess   = $_SESSION['user_session'];
+    $Group_sess  = $_SESSION['group_session'];
+    
+    if(isset($Group_sess->upload_path)) 
+    {
+        $upload_path = (isset($User_sess->user_folder)) 
+                            ? $Group_sess->upload_path .'/'. $User_sess->user_folder .'/' 
+                            : $Group_sess->upload_path .'/';        
+        $_CONFIG['uploadURL'] = 'assets/cms/uploads/images/'. $upload_path . '/';
+        $_CONFIG['uploadDir'] = "../../../../../../assets/cms/uploads/images/" . $upload_path . '/';
+    }
+}
 ?>

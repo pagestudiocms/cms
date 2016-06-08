@@ -107,6 +107,7 @@ class Users_model extends DataMapper
         $User_class->group_id = $this->group_id;
         $User_class->last_login = $this->last_login;
         $User_class->email = $this->email;
+        // $User_class->user_folder = 'USR1';
 
         $this->groups->get();
 
@@ -115,6 +116,7 @@ class Users_model extends DataMapper
         $Group_class->namne = $this->groups->name;
         $Group_class->type = $this->groups->type;
         $Group_class->permissions = $this->groups->permissions;
+        // $Group_class->upload_path = 'members';
 
         // Used to allow admin login as user
         if ( ! empty($admin_id))

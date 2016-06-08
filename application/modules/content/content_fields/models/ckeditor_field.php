@@ -36,12 +36,16 @@ class Ckeditor_field extends Field_type
                 (($this->settings->editor_stylesheet) ? "contentsCss : ['" . site_url(APPPATH . 'themes/admin/assets/js/ckeditor/contents.css') . "', '" . site_url(ADMIN_PATH . '/content/entries/css/' . $this->Entry->id) . "?' + new Date().getTime()  ]," : "")
                  . "stylesSet : [],
                 height : '300px',
-                filebrowserBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=files') . "',
-                filebrowserImageBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=images') . "',
-                filebrowserFlashBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=flash') . "',
-                filebrowserUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=files') . "',
-                filebrowserImageUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=images') . "',
-                filebrowserFlashUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=flash') . "'
+                // filebrowserBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=files') . "',
+                // filebrowserImageBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=images') . "',
+                // filebrowserFlashBrowseUrl : '" . theme_url('/assets/js/kcfinder/browse.php?type=flash') . "',
+                // filebrowserUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=files') . "',
+                // filebrowserImageUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=images') . "',
+                // filebrowserFlashUploadUrl : '" . theme_url('/assets/js/kcfinder/upload.php?type=flash') . "'
+                
+                filebrowserBrowseUrl : '" . site_url('application/third_party/file_manager/dialog.php?type=2&editor=ckeditor&fldr=') ."', 
+                filebrowserUploadUrl : '" . site_url('application/third_party/file_manager/dialog.php?type=2&editor=ckeditor&fldr=') ."', 
+                filebrowserImageBrowseUrl : '" . site_url('application/third_party/file_manager/dialog.php?type=1&editor=ckeditor&fldr=') ."' 
             };
 
             $('textarea.ckeditor_textarea').each(function(index) {
