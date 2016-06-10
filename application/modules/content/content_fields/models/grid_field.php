@@ -247,6 +247,19 @@ class Grid_field extends Field_type
         
         // Add module level javascript to html head
         $script = "$(document).ready( function(){
+            if ( ! $.isFunction($.fn.is_json) )
+            {
+                function is_json(str) 
+                {
+                    try {
+                        JSON.parse(str);
+                    } catch (e) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+            
             if ( ! $.isFunction($.fn.showNoRowExist) )
             {
                 function showNoRowExist() 
@@ -342,19 +355,49 @@ class Grid_field extends Field_type
             });
     
             /**
-             * Remove row from table
+             * Remove row from table and save field IDs to an array 
              */
-            $('table#content_type_{$content_field_id}').on('click', '.delRow', function(event){
-                if (confirm('Are you sure you want to delete this?')) {
-                    $(this).closest(\"tr\").remove();
+            $('table#content_type_{$content_field_id}').on('click', '.delRow', function(e){
+                // if (confirm('Are you sure you want to delete this?')) {
+                    
+                    var array = new Array();
+                    var value = $('input[name^=deleted_fields]').val();
+                    var final = '';
+                    var isNewField = true;
+                    
+                    // Loop over each field in the table row and add the field 
+                    // name to a temporary array.
+                    $(this).closest('tr').children('td').find('input, select, textarea').each(function(i, field){
+                        var name = $(field).attr('name');
+                        if (name.indexOf('grid_col_data') >= 0) {
+                            array.push(name);
+                            isNewField = false;
+                        }
+                    });
+                    
+                    // Only add fields that already exists in the database to the deletable array
+                    if( ! isNewField){
+                        if(is_json(value)){
+                            value = JSON.parse(value);
+                        }
+                        
+                        final = JSON.stringify($.merge(array, value));
+                        $('input[name^=deleted_fields]').val(final);
+                        
+                        console.log(final);
+                    }
+                    
+                    $(this).closest('tr').remove(); // Remove the html table row
+                
                     counter -= 1;
-                    if(counter <= {$max_rows}) {
+                    if(counter <= {$max_rows}){
                         $('#field_{$content_field_id}_addrow_btn').show();
                     }
-                    renumberRows('table#content_type_{$content_field_id} tr');
-                }
                 
-                if (counter === 1) {
+                    renumberRows('table#content_type_{$content_field_id} tr');
+                // }
+                
+                if (counter === 1){
                     showNoRowExist();
                 }
             });

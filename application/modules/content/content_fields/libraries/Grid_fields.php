@@ -28,11 +28,11 @@
  * @todo        Add field validators such as: required, min/max chars, etc.
  * @todo        Add additional dynamic field types(i.e. dropdowns, ckedit) 
  *
- * @package		  PageStudio
+ * @package     PageStudio
  * @subpackage	Libraries
- * @category	  Module
- * @author		  Cosmo Mathieu <cosmo@cosmointeractive.co>
- * @link		    http://pagestudioapp.com/user_guide/
+ * @category	Module
+ * @author		Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @link		http://pagestudioapp.com/user_guide/
  */ 
 class Grid_fields 
 {
@@ -61,20 +61,23 @@ class Grid_fields
      */
     public function run()
     {
-		// var_die($this->post['data']);
-        if($this->post['data']){
+        if($this->post['data'])
+        {
             $this->gridData = $this->post['data']['grid_col_data'];
             $this->save($this->gridData); // Call the save method | true/false
             
             $this->gridData = $this->post['data']['new_field'];
             $this->save($this->gridData, TRUE); // Call the save method | true/false
+            
+            $this->deleted_fields = $this->post['data']['deleted_fields'];
+            $this->delete($this->deleted_fields); // Call the delete method | true/false
         }
     }
     
     // --------------------------------------------------------------------
     
     /**
-     * Method to update/insert/delete grid_cols data. 
+     * Method to update/insert grid_cols data. 
      *
      * Receives an array containing column names and row data from a form. 
      * Logic: In the data passed, if the id of the fields are not already in 
@@ -84,13 +87,13 @@ class Grid_fields
      * 
      * @access      private 
      * @param       array $gridData Array of post data
+     * @param       bool $insert Triggers the insert method (true/false)
      * @return      bool true/false
      */
     private function save($gridData, $insert = FALSE)
     {
         if( ! empty($gridData)) 
         {
-            // var_die($gridData);
             $count = 0;
             foreach($gridData as $id => $row_data) {
                 // This empty foreach loop is responsible for assigning values 
@@ -145,8 +148,8 @@ class Grid_fields
      */
     private function exists($id, $grid_col_id = '')
     {
-      $results = $this->CI->db->where('id', $id)->get('grid_col_data');
-      return ($results->result()) ? true : false;
+        $results = $this->CI->db->where('id', $id)->get('grid_col_data');
+        return ($results->result()) ? true : false;
     }
     
     // --------------------------------------------------------------------
@@ -159,8 +162,10 @@ class Grid_fields
      */
     private function insert($data)
     {
-      return $this->CI->db->insert($this->grid_col_data, $data);
+        return $this->CI->db->insert($this->grid_col_data, $data);
     }
+    
+    // --------------------------------------------------------------------
     
     /**
      * Method to udpdate grid_cols data
@@ -171,12 +176,28 @@ class Grid_fields
      */
     private function update($id, $data)
     {
-      return $this->CI->db->where('id', $id)->update('grid_col_data', $data); 
+        return $this->CI->db->where('id', $id)->update('grid_col_data', $data); 
     }
     
-    // Delete
-    private function delete()
+    // --------------------------------------------------------------------
+    
+    /**
+     * Method to delete grid_cols data
+     *
+     * @param       string $fields JSON string
+     * @return      bool true/false
+     */
+    private function delete($fields)
     {
-        
+        if( ! empty($fields))
+        {
+            $field_id = [];
+            $fields = json_decode($fields);
+            foreach($fields as $field){
+                $field_id[] = str_replace('[', '', strstr(strstr($field, ']', true), '['));
+            }
+            
+            return $this->CI->db->where_in('id', $field_id)->delete('grid_col_data');
+        }
     }
 }

@@ -53,6 +53,7 @@
                     <?php endif; ?>
 
                     <?php if ( ! empty($Fields)): ?>
+                        <input type="hidden" name="deleted_fields" class="js-deleted-fields" value="" /> <!-- for Grid fields -->
                         <?php echo $Fields; ?>
                     <?php endif; ?>
                 </div>
