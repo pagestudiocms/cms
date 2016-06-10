@@ -780,7 +780,7 @@ if( ! function_exists('is_serialized'))
     function is_serialized($value, &$result = null)
     {
         // Bit of a give away this one
-        if (!is_string($value))
+        if (!is_string($value) || empty($value))
         {
             return false;
         }
