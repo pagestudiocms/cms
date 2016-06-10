@@ -82,8 +82,8 @@ class Grid_Fields_library
         foreach($content_fields as $field) {
             if($field->content_field_type_id != '16') { // 16 is the Grid field type id
                 unset($content_fields[$needle]);
-                $needle++;
             }
+            $needle++;
         }
         
         // Fetch all child records per content type, and process each content type 
