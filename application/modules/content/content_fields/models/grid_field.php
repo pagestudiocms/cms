@@ -243,8 +243,6 @@ class Grid_field extends Field_type
         }
         $dynamic_rows = json_encode($dynamic_rows); 
         
-        // echo json_decode($dynamic_rows); die();
-        
         // Add module level javascript to html head
         $script = "$(document).ready( function(){
             if ( ! $.isFunction($.fn.is_json) )
@@ -347,8 +345,6 @@ class Grid_field extends Field_type
                 }
                 $('table#content_type_{$content_field_id}').append(newRow);
                 
-                // console.log(newRow);
-                
                 renumberRows('table#content_type_{$content_field_id} tr');
                 
                 counter++;
@@ -358,7 +354,7 @@ class Grid_field extends Field_type
              * Remove row from table and save field IDs to an array 
              */
             $('table#content_type_{$content_field_id}').on('click', '.delRow', function(e){
-                // if (confirm('Are you sure you want to delete this?')) {
+                if (confirm('Are you sure you want to delete this?')) {
                     
                     var array = new Array();
                     var value = $('input[name^=deleted_fields]').val();
@@ -375,7 +371,7 @@ class Grid_field extends Field_type
                         }
                     });
                     
-                    // Only add fields that already exists in the database to the deletable array
+                    // Only add fields that exists in the database to the deletable array
                     if( ! isNewField){
                         if(is_json(value)){
                             value = JSON.parse(value);
@@ -383,8 +379,6 @@ class Grid_field extends Field_type
                         
                         final = JSON.stringify($.merge(array, value));
                         $('input[name^=deleted_fields]').val(final);
-                        
-                        console.log(final);
                     }
                     
                     $(this).closest('tr').remove(); // Remove the html table row
@@ -395,34 +389,37 @@ class Grid_field extends Field_type
                     }
                 
                     renumberRows('table#content_type_{$content_field_id} tr');
-                // }
+                }
                 
                 if (counter === 1){
                     showNoRowExist();
                 }
             });
 		  
-            // -----------------------------------------------------------
             // ckeditor config 
             var grid_ckeditor_config = { 
                 toolbar : [
-                    { name: 'basicstyles', items : [ 'Undo','Redo','-','Bold','Italic','Underline','Strike' ] },
+                    { name: 'basicstyles', items : [ 'Undo','Redo'] },
                     { name: 'styles', items : [ 'Format' ] },
-                    { name: 'paragraph', items : [ 'NumberedList','BulletedList','-','Blockquote','- ','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock' ] },
-                    
-                    { name: 'tools', items : [ 'Maximize' ] },
-                    '/',
-                    { name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-                    { name: 'insert', items : [ 'HorizontalRule', 'ShowBlocks', '-', 'Source' ] }
+                    { name: 'paragraph', items : [ 'Bold','Italic','Underline','Strike','NumberedList','BulletedList','-','Blockquote','- ','JustifyLeft','JustifyCenter','JustifyRight' ] },
+                    // '/',
+                    { name: 'links', items : [ 'Link','Unlink','Anchor', 'imagebrowser' ] },
+                    { name: 'insert', items : [ 'HorizontalRule', 'ShowBlocks', '-', 'Source', '-', 'Maximize' ] }
                 ],
                 entities : true,
                 // height : '150px',
+                resize_enabled : false,
+                removePlugins : 'elementspath'
             };
 
             $('textarea.ckeditor_grid_textarea').each(function(index) {
-                grid_ckeditor_config.height = $(this).height();
-                CKEDITOR.replace($(this).attr('name'), grid_ckeditor_config); 
+                grid_ckeditor_config.height = $(this).attr('height');                
+                var textarea_id = $(this).attr('id');
+                if( ! CKEDITOR.instances[textarea_id]) {
+                    CKEDITOR.replace(textarea_id, grid_ckeditor_config);
+                }
             });
+            
         });";
 
       $this->template->add_script($script);
@@ -442,15 +439,15 @@ class Grid_field extends Field_type
         switch($type) {
             case 1 : $field = '
                 <td style="width: auto;" class="matrix matrix-text">
-                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea ckeditor_grid_textarea" height="150" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
-                    <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>
+                    <textarea id="'.$field_name.'_'.$grid_col_data_id.'_'.$grid_col_id.'" style="overflow: hidden; min-height: 14px;" class="matrix-textarea ckeditor_grid_textarea" height="100" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']" dir="ltr">'. $row_data .'</textarea>
+                    <div class="matrix-charsleft-container"><div class="matrix-charsleft"></div></div>
                 </td>';
             break;
 			
 			case 3 : $field = '
                 <td style="width: auto;" class="matrix matrix-text">
-                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']" dir="ltr">'. $row_data .'</textarea>
-                    <div class="matrix-charsleft-container"><div class="matrix-charsleft">'.$options.'</div></div>
+                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']" dir="ltr">'. $row_data .'</textarea>
+                    <div class="matrix-charsleft-container"><div class="matrix-charsleft"></div></div>
                 </td>';
             break;
             
