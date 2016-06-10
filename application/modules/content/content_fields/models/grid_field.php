@@ -395,31 +395,6 @@ class Grid_field extends Field_type
                     showNoRowExist();
                 }
             });
-		  
-            // ckeditor config 
-            var grid_ckeditor_config = { 
-                toolbar : [
-                    { name: 'basicstyles', items : [ 'Undo','Redo'] },
-                    { name: 'styles', items : [ 'Format' ] },
-                    { name: 'paragraph', items : [ 'Bold','Italic','Underline','Strike','NumberedList','BulletedList','-','Blockquote','- ','JustifyLeft','JustifyCenter','JustifyRight' ] },
-                    // '/',
-                    { name: 'links', items : [ 'Link','Unlink','Anchor', 'imagebrowser' ] },
-                    { name: 'insert', items : [ 'HorizontalRule', 'ShowBlocks', '-', 'Source', '-', 'Maximize' ] }
-                ],
-                entities : true,
-                // height : '150px',
-                resize_enabled : false,
-                removePlugins : 'elementspath'
-            };
-
-            $('textarea.ckeditor_grid_textarea').each(function(index) {
-                grid_ckeditor_config.height = $(this).attr('height');                
-                var textarea_id = $(this).attr('id');
-                if( ! CKEDITOR.instances[textarea_id]) {
-                    CKEDITOR.replace(textarea_id, grid_ckeditor_config);
-                }
-            });
-            
         });";
 
       $this->template->add_script($script);
@@ -434,35 +409,43 @@ class Grid_field extends Field_type
         $options    = (is_serialized($options)) ? unserialize($options) : $options;
         $row_order  = ($row_order >= 1) ? $row_order - 1 : 'x';
         $field_name = ($is_new_field) ? 'new_field' : 'grid_col_data';
+        $field      = '';
         
-        $field = '';
-        switch($type) {
-            case 1 : $field = '
-                <td style="width: auto;" class="matrix matrix-text">
-                    <textarea id="'.$field_name.'_'.$grid_col_data_id.'_'.$grid_col_id.'" style="overflow: hidden; min-height: 14px;" class="matrix-textarea ckeditor_grid_textarea" height="100" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']" dir="ltr">'. $row_data .'</textarea>
-                    <div class="matrix-charsleft-container"><div class="matrix-charsleft"></div></div>
-                </td>';
-            break;
-			
-			case 3 : $field = '
-                <td style="width: auto;" class="matrix matrix-text">
-                    <textarea style="overflow: hidden; min-height: 14px;" class="matrix-textarea" name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']" dir="ltr">'. $row_data .'</textarea>
-                    <div class="matrix-charsleft-container"><div class="matrix-charsleft"></div></div>
-                </td>';
-            break;
+        $data['field_name'] = $field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']';
+        $data['field_id']   = $field_name.'_'.$grid_col_data_id.'_'.$grid_col_id;
+        $data['field_css']  = '';
+        $data['content']    = $row_data;
+        $data['options']    = $options;
+        
+        switch($type) 
+        {
+            // CKEditor field type
+            case 1 : 
+                $this->template->add_javascript('/application/modules/content/content_fields/assets/js/ckeditor_grid_textarea_fields.js');
+                $field = $this->load->view('grid/ckeditor', $data, TRUE);
+                break;
             
-            case 4 : 
-                $select_field = '';
-                foreach(explode("\r\n", $options) as $key => $option) {
-                    $select_field .= '<option value="'.$option.'" '.(($row_data === $option) ? 'SELECTED' : '').'>'. $option .'</option>';
-                }
-                $field = '
-                <td style="width: auto;" class="matrix matrix-text">
-                    <select name="'.$field_name.'['.$grid_col_data_id.']['.$grid_col_id.']['.$row_order.']">
-                    '. $select_field .'  
-                    </select>
-                </td>';
-            break;
+            // Dropdown field type
+            case 4 :
+                $field = $this->load->view('grid/dropdown', $data, TRUE);
+                break;
+			
+            // Textarea field type
+			case 6 :
+                $field = $this->load->view('grid/textarea', $data, TRUE);
+                break;
+                
+            // Image upload field type
+            case 8 :
+                $this->template->add_javascript('/application/modules/content/content_fields/assets/js/image.js');
+                $field = $this->load->view('grid/image', $data, TRUE);
+                break;
+                
+            // File upload field type
+            case 9 :
+                $this->template->add_javascript('/application/modules/content/content_fields/assets/js/file.js');
+                $field = $this->load->view('grid/file', $data, TRUE);
+                break;
         }
         
         return $field;

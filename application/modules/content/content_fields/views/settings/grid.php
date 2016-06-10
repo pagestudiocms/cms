@@ -16,7 +16,7 @@
                     <label for="type">Field Type</label>
                     <?php echo form_dropdown(
                         'grid_cols[field_'.$field_count.'][content_field_type_id]', 
-                        array('' => '', '4' => 'Dropdown', '8'  => 'Image', '1' => 'Rich Text', '3' => 'Text Field', '6' => 'Textarea',), 
+                        array('' => '', '4' => 'Dropdown', '9'  => 'File', '8'  => 'Image', '1' => 'Rich Text', '3' => 'Text Field', '6' => 'Textarea',), 
                         set_value('grid_cols[field_'.$field_count.'][content_field_type_id]', 
                             ( ! empty($field->content_field_type_id)) ? $field->content_field_type_id : ''
                         ), 
@@ -83,7 +83,7 @@
             <label for="type">Field Type</label>
             <?php echo form_dropdown(
                 'grid_cols[field_1][content_field_type_id]', 
-                array('' => '', '4' => 'Dropdown', '8'  => 'Image', '1' => 'Rich Text', '3' => 'Text Field', '6' => 'Textarea',), 
+                array('' => '', '4' => 'Dropdown', '9'  => 'File', '8'  => 'Image', '1' => 'Rich Text', '3' => 'Text Field', '6' => 'Textarea',), 
                 set_value('grid_cols[field_1][content_field_type_id]', 
                     ( ! empty($Field->grid_cols['content_field_type_id'])) ? $Field->grid_cols['content_field_type_id'] : ''
                 ), 
