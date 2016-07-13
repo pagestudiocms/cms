@@ -183,12 +183,22 @@ class Users extends Public_Controller
                 redirect(ADMIN_PATH);
             }
         }
+        
+        // Check if we should redirect to a particular page upon loggin out
+        if ($this->session->userdata('logout_redirect_to'))
+        {
+            $redirect_to = $this->session->userdata('logout_redirect_to');
+        } 
+        else 
+        {
+            $redirect_to = '/';
+        }
 
         // Delete all session data
         $this->session->sess_destroy();
         $this->users_model->destroy_remember_me();
-        // redirect('/');
-        redirect(ADMIN_PATH);
+
+        redirect($redirect_to);
     }
     
     // ------------------------------------------------------------------------
