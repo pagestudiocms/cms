@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="content">
-        <?php echo form_open(null, 'id="user_edit_form"'); ?>
+        <?php echo form_open_multipart(null, 'id="user_edit_form"'); ?>
 
         <?php if ($edit_mode): ?>
             <div class="tabs">
@@ -19,6 +19,21 @@
 
             <div id="edit-user-tab">
                 <div class="form">
+                    <div class="field_spacing">
+                        <?php echo form_label('Profile Image:', 'photo'); ?>
+                        <?php echo form_upload(['id' => 'photo', 'class' => 'hidden_file', 'name' => 'photo', 'value' => set_value('photo', (isset($User->photo)) ? $User->photo : '')],'', 'style="display: none;"'); ?>
+
+                        <div href="javascript:void(0);" style="display: block; margin-top: 10px;margin-bottom: 10px;">
+                            <img id="photo_preview" src="<?php echo (isset($User->photo)) ? site_url() . $User->photo : ADMIN_NO_IMAGE;?>" alt="Profile Avatar" width="100" height="100" />
+                        </div>
+
+                        <a class="remove_file" href="javascript:void(0);">Remove File</a> |
+                        <a class="choose_file" href="javascript:void(0);">Add File</a>
+                        
+                        <input type="hidden" name="original_photo" id="photo_hidden" value="<?php echo set_value('original_photo', (isset($User->photo)) ? $User->photo : ''); ?>" />
+                        <input type="hidden" name="photo_upload_action" id="photo_upload_action" />
+                    </div>                    
+                    
                     <div class="field_spacing">
                         <?php echo form_label('<span class="required">*</span> Group:', 'groups'); ?>
                         <?php echo form_dropdown('group_id', option_array_value($Groups, 'id', 'name', array(''=>'')), set_value('group_id', (isset($User->group_id)) ? $User->group_id : $this->settings->users_module->default_group), 'id="groups" class="long"'); ?>
@@ -121,6 +136,33 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $( ".tabs" ).tabs();
+        
+        // Generate image thumbnail preview 
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();            
+                reader.onload = function (e) {
+                    $('#photo_preview').attr('src', e.target.result);
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        $("#photo").change(function(){
+            readURL(this);
+        });
+        
+        $('.remove_file').on('click', function(e){
+            $('input#photo').val('');
+            $('input#photo_upload_action').val('delete');
+            $('#photo_preview').attr('src', '<?php echo site_url() . ADMIN_NO_IMAGE; ?>');
+        });
+        
+        $('.choose_file').on('click', function(e){
+            $('input#photo').click();
+            $('input#photo_upload_action').val('upload');
+        });
     });
 </script>
 <?php js_end(); ?>

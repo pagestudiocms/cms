@@ -76,7 +76,7 @@ class Users extends Admin_Controller
         $data['states'] = unserialize(STATES);
         $data['edit_mode'] = $edit_mode = FALSE;
         $user_id = $this->uri->segment(4);
-
+        
         // Edit Mode 
         if ($user_id)
         {
@@ -122,7 +122,7 @@ class Users extends Admin_Controller
             $this->form_validation->set_rules('password', 'Password', 'trim|required');
             $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'trim|required|matches[password]');
         }
-
+        
         // Process Form
         if ($this->form_validation->run() == TRUE)
         {
@@ -130,7 +130,7 @@ class Users extends Admin_Controller
             {
                 unset($_POST['password']);
             }
-
+            
             $User->from_array($this->input->post());
 
             if ($this->input->post('password'))
@@ -143,12 +143,35 @@ class Users extends Admin_Controller
             {
                 $User->created_date = date('Y-m-d H:i:s');
             }
+            
+            // Upload profile photo 
+            $photo_upload_action = $this->input->post('photo_upload_action');
+            $original_photo = ( ! empty($this->input->post('original_photo'))) ? $this->input->post('original_photo') : NULL;            
+            $upload_path    = ltrim(USER_DATA . 'avatars/', '/');
+            $user_photo     = $this->do_upload($upload_path, 'photo');
+            $User->photo    = $upload_path . $user_photo;
+            
+            if(file_exists($original_photo) && $photo_upload_action == 'delete') {
+                if (file_exists($original_photo)) {
+                    unlink($original_photo);
+                }
+                $User->photo = NULL;
+            }
+            if(file_exists($original_photo) && $user_photo !== 0) {
+                if (file_exists($original_photo)) {
+                    unlink($original_photo);
+                }
+            }
 
+            if($photo_upload_action == 'delete' || $user_photo !== 0){
+                $_SESSION['user_session']->photo = $User->photo;
+            }
+            
             $User->save(); 
 
             $this->session->set_flashdata('message', '<p class="success">User saved.</p>');
 
-            redirect(ADMIN_PATH . '/users'); 
+            // redirect(ADMIN_PATH . '/users'); 
         }
 
         // Get Groups From DB
@@ -270,6 +293,58 @@ class Users extends Admin_Controller
         else
         {
             return TRUE;
+        }
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    /**
+     * Upload photo
+     *
+     * Allows you to easily upload a file or an image.
+     *
+     * @author     Cosmo Mathieu <cosmo@cosmointeractive.co>
+     * @access     private
+     * @return     bool
+     */
+    protected function do_upload($upload_path, $userfile)
+    {        
+        $this->load->library('upload', [
+            'upload_path' => $upload_path,
+            'allowed_types' => "gif|jpg|png|jpeg|pdf",
+            'overwrite' => FALSE,
+            'encrypt_name' => TRUE,
+            'max_size' => "2048000", // Can be set to particular file size , here it is 2 MB(2048 Kb)
+            'max_height' => "768",
+            'max_width' => "1024",
+        ]);
+        
+        if ( ! file_exists($upload_path)) {
+            mkdir($upload_path, 0775, true);
+        }
+        
+        if($this->upload->do_upload($userfile))
+        {
+            $upload_data = $this->upload->data(); //Returns the data relating to the file uploaded.
+            $file_name = $upload_data['file_name'];
+            
+            // Resize the image 
+            $this->load->library('image_lib', [
+                'image_library' => 'gd2',
+                'source_image' => $upload_path . $file_name,
+                'maintain_ratio' => TRUE,
+                'width' => 200,
+                'height' => 200,
+            ]); 
+
+            $this->image_lib->resize();
+            
+            return $file_name;
+        }
+        else
+        {
+            // die($this->upload->display_errors());
+            return 0;
         }
     }
     

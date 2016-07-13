@@ -107,6 +107,7 @@ class Users_model extends DataMapper
         $User_class->group_id = $this->group_id;
         $User_class->last_login = $this->last_login;
         $User_class->email = $this->email;
+        $User_class->photo = $this->photo;
         // $User_class->user_folder = 'USR1';
 
         $this->groups->get();

@@ -52,25 +52,36 @@
 
 		<nav class="cd-nav">
 			<ul class="cd-top-nav">
-				<li><a class="settings-icon" onClick="window.name = 'ee_admin'" target="ee_cms" href="<?php echo site_url(); ?>"><i class="fa fa-eye"></i>&nbsp;<span>Visit Site</span></a></li>
+				<li><a class="settings-icon" target="_blank" href="<?php echo site_url(); ?>"><i class="fa fa-eye"></i>&nbsp;<span>Visit Site</span></a></li>
 				<li><a class="settings-icon" href="<?php echo site_url(ADMIN_PATH .'/settings/general-settings'); ?>" title="Settings"><i class="fa fa-cog">&nbsp;</i><span>Settings</span></a></li>
-				<li class="has-children account">
-					<a href="#0">
-						<!-- <img src="<?php echo theme_url('assets/img/cd-avatar.png'); ?>" alt="Profile Avatar"> -->
-						<?php echo $this->secure->get_user_session()->first_name; ?>
-					</a>
-
-					<ul>
-						<li><a href="<?php echo site_url(ADMIN_PATH . '/users/edit') .'/'. $this->secure->get_user_session()->id;?>">Edit Account</a></li>
-						<li><a href="<?php echo site_url('users/logout'); ?>" title="Logout">Logout</a></li>
-					</ul>
-				</li>
 			</ul>
 		</nav>
 	</header> <!-- .cd-main-header -->
 
 	<main class="cd-main-content">
-		<nav class="cd-side-nav">            
+        <!-- /menu profile quick info -->
+		<nav class="cd-side-nav">
+            <!-- menu profile quick info -->            
+            <ul class="profile-dropdown">
+              <li>
+                <a href="javascript:void(0)" class="js-accordion-trigger">
+                <div class="profile clearfix">
+                  <div class="profile_pic">
+                    <img src="<?php echo (isset($this->secure->get_user_session()->photo)) ? site_url() . $this->secure->get_user_session()->photo : site_url() . ADMIN_NO_IMAGE;?>" alt="..." class="img-circle profile_img">
+                  </div>
+                  <div class="profile_info">
+                    <span>Welcome,</span>
+                    <h2><?php echo $this->secure->get_user_session()->first_name; ?></h2>
+                  </div>
+                </div>
+                </a>
+                <ul class="submenu">
+                    <li><a href="<?php echo site_url(ADMIN_PATH . '/users/edit') .'/'. $this->secure->get_user_session()->id;?>">Edit Account</a></li>
+                    <li><a href="<?php echo site_url('users/logout'); ?>" title="Logout">Logout</a></li>
+                </ul>
+              </li>              
+            </ul>
+
             <?php echo theme_partial('main-navigation'); ?>
 		</nav>
 
