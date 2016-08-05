@@ -1,11 +1,11 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 /**
- * PageStudio
+ * PageStudio CMS
  *
  * @author      Cosmo Mathieu
  * @copyright   Copyright (c) 2015
  * @license     MIT License
- * @link        http://pagestudioapp.com
+ * @link        http://pagestudiocms.com
  */
  
 // -------------------------------------------------------------------
