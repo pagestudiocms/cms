@@ -17,6 +17,10 @@ A modern and updated web browser
 #Documentation
 http://pagestudiocms.com/docs/
 
+# To Do List 
+- [ ] Update the document
+- [x] Upgrade to version 1.3
+
 ##License for PageStudio
 
 Copyright (c) 2014-2015 CosmoInteractive, LLC
