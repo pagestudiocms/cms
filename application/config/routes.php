@@ -52,21 +52,23 @@ if ( ! config_item('installed'))
     exit;
 }
 
-$route['default_controller'] = "content/pages";
-$route['404_override'] = 'content/pages';
+$route['default_controller']                    = "content/pages";
+$route['404_override']                          = 'content/pages';
 
-$route[ADMIN_PATH] = "dashboard/admin/dashboard";
-$route[ADMIN_PATH . '/([a-zA-Z_-]+)/(:any)'] = "$1/admin/$2";
-$route[ADMIN_PATH . '/([a-zA-Z_-]+)'] = "$1/admin/$1";
-$route['([a-zA-Z_-]+)/admin/([a-zA-Z_-]+)'] = "";
+$route[ADMIN_PATH]                              = "dashboard/admin/dashboard";
+$route[ADMIN_PATH . '/([a-zA-Z_-]+)/(:any)']    = "$1/admin/$2";
+$route[ADMIN_PATH . '/([a-zA-Z_-]+)']           = "$1/admin/$1";
+$route['([a-zA-Z_-]+)/admin/([a-zA-Z_-]+)']     = "";
 
 // Special Case Routes
-$route[ADMIN_PATH . '/users/login'] = "users/login";
-$route[ADMIN_PATH . '/users/forgot-password'] = "users/forgot-password";
+$route[ADMIN_PATH . '/users/login']             = "users/login";
+$route[ADMIN_PATH . '/users/forgot-password']   = "users/forgot-password";
 
 // This routing option forces http://mywebsite.com/contact to map to the 
 // 'content' module and the 'pages' object.
-$route['contact'] = "content/pages"; 
+$route['contact']                               = "content/pages"; 
+
+$route['sitemap.xml']                           = 'sitemap/xml';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

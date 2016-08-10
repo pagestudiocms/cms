@@ -1,6 +1,23 @@
-<?php
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * PageStudio
+ *
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on CMS Canvas, a CodeIgniter based application, 
+ * http://cmscanvas.com/. It has been greatly altered to work for the 
+ * purposes of our development team. Additional resources and concepts have 
+ * been borrowed from PyroCMS http://pyrocms.com, for further improvement
+ * and reliability. 
+ *
+ * @package     PageStudio
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, Cosmo Interactive, LLC
+ * @license     MIT License
+ * @link        http://pagestudiocms.com
+ */
 
-if (!defined('BASEPATH')) exit('No direct script access allowed');
+// ------------------------------------------------------------------------
 
 /**
  * A class for generating XML sitemaps
@@ -8,6 +25,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  * @author Oliver Smith <chemicaloli@gmail.com>
  * @author Philipp Dörner <pd@signalkraft.com>
  * @author Sadaoui "SAFAD" Abderrahim <SAFAD.Line@gmail.com>
+ * @author Cosmo Mathieu <cosmo@cosmointeractive.co>
  * @version 0.8
  * @access public
  * @package sitemaps
@@ -447,6 +465,24 @@ class Sitemaps
         {
             $this->error_msg[] = $msg;
             log_message('error', $msg);
+        }
+    }
+    
+    // --------------------------------------------------------------------
+    
+    /**
+     * Method to set xml item keys 
+     *  
+     * @author  Cosmo Mathieu <cosmo@cosmointeractive.co>
+     * @since   Version 1.3 
+     * @param   array $keys 
+     * @return  void
+     */
+    public function set_item_keys($keys = [])
+    {
+        if( ! empty($keys) && is_array($keys))
+        {
+            $this->item_keys = $keys;
         }
     }
 
