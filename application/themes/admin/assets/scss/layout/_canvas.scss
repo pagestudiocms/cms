@@ -17,6 +17,10 @@
 		padding: $header-height-S 5% 3em;
     padding: 10px;
 	}
+  
+  @media (max-width: $mobile) {
+    padding-top: 90px;
+  }
 
 	@include MQ(M) {
 

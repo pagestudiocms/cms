@@ -32,6 +32,11 @@ jQuery(document).ready(function(){
 	sidebarTrigger.on('click', function(event){
 		event.preventDefault();
 		$([sidebar, sidebarTrigger]).toggleClass('nav-is-visible');
+    if($('.cd-side-nav').hasClass('nav-is-visible')){
+      $('.cd-main-header .breadcrumb').addClass('hide');
+    } else {
+      $('.cd-main-header .breadcrumb').removeClass('hide');
+    }
 	});
 
 	//click on item and show submenu

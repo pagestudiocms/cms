@@ -1,3 +1,15 @@
+.cd-main-header {
+  .breadcrumb {
+    @media (max-width: $mobile) {
+      position: absolute; 
+      top: 44px;
+      left: 0;
+      &.hide {
+        display: none;
+      }
+    }
+  }
+}
 .breadcrumb {
   $base-border-color: gainsboro !default;
   $base-border-radius: 3px !default;
