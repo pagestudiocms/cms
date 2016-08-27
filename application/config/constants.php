@@ -44,7 +44,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 | Defines the version number for cms canvas
 |
 */
-define('CC_VERSION', '1.2.0');
+define('CC_VERSION', '1.3.0');
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +63,14 @@ define('CMS_ROOT', dirname(BASEPATH) . '/');
 |
 */
 define('ADMIN_PATH', 'sitemin');
+
+/*
+|--------------------------------------------------------------------------
+| System Path
+|--------------------------------------------------------------------------
+|
+*/
+define('SYSTEM_PATH', CMS_ROOT . 'system/');
 
 /*
 |--------------------------------------------------------------------------
@@ -277,20 +285,22 @@ define('STATES', serialize($states));
 |
 */
 $admin_access_options = array(
-    ADMIN_PATH . '/content/entries'      => 'Content / Entries',
-    ADMIN_PATH . '/calendar'             => 'Calendar',
-    ADMIN_PATH . '/calendar/entries'     => 'Calendar / Entries',
-    ADMIN_PATH . '/navigations'          => 'Content / Navigations',
-    ADMIN_PATH . '/galleries'            => 'Content / Galleries',
-    ADMIN_PATH . '/users'                => 'Users',
-    ADMIN_PATH . '/users/groups'         => 'User Groups',
-    ADMIN_PATH . '/content/types'        => 'Tools / Content Types',
-    ADMIN_PATH . '/content/snippets'     => 'Tools / Code Snippets',
-    ADMIN_PATH . '/categories'           => 'Tools / Categories',
-    ADMIN_PATH . '/settings/theme-editor' => 'Tools / Theme Editor',
-    ADMIN_PATH . '/settings/general-settings' => 'General Settings',
-    ADMIN_PATH . '/settings/clear-cache' => 'Settings / Clear Cache',
-    ADMIN_PATH . '/settings/server-info' => 'Settings / Server Info',
+    ADMIN_PATH . '/addons/admin-modules'        => 'Addons / Modules',
+    ADMIN_PATH . '/addons/admin-plugins'        => 'Addons / Plugins',
+    ADMIN_PATH . '/content/entries'             => 'Content / Entries',
+    ADMIN_PATH . '/calendar'                    => 'Calendar',
+    ADMIN_PATH . '/calendar/entries'            => 'Calendar / Entries',
+    ADMIN_PATH . '/galleries'                   => 'Content / Galleries',
+    ADMIN_PATH . '/navigations'                 => 'Content / Navigations',
+    ADMIN_PATH . '/categories'                  => 'Tools / Categories',
+    ADMIN_PATH . '/content/snippets'            => 'Tools / Code Snippets',
+    ADMIN_PATH . '/content/types'               => 'Tools / Content Types',
+    ADMIN_PATH . '/settings/theme-editor'       => 'Tools / Theme Editor',
+    ADMIN_PATH . '/settings/clear-cache'        => 'Settings / Clear Cache',
+    ADMIN_PATH . '/settings/general-settings'   => 'Settings / General',
+    ADMIN_PATH . '/settings/server-info'        => 'Settings / Server Info',
+    ADMIN_PATH . '/users'                       => 'Users',
+    ADMIN_PATH . '/users/groups'                => 'User Groups',
 );
 
 define('ADMIN_ACCESS_OPTIONS', serialize($admin_access_options));

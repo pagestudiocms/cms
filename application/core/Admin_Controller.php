@@ -1,8 +1,27 @@
-<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * PageStudio
+ *
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on the on the CMS Canvas, the CodeIgniter 
+ * application, http://cmscanvas.com/. It has been greatly altered to 
+ * work for the purposes of our development team. Additional resources 
+ * and concepts have been borrowed from PyroCMS http://pyrocms.com, 
+ * for further improvement and reliability. 
+ *
+ * @package     PageStudio
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, CosmoInteractive, LLC
+ * @license     MIT License
+ * @link        http://pagestudiocms.com
+ */
+ 
+// ------------------------------------------------------------------------
 
 class Admin_Controller extends MY_Controller
 {
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
@@ -13,9 +32,14 @@ class Admin_Controller extends MY_Controller
             ->group_types(array(ADMINISTRATOR))
             ->unauthenticated_redirect(ADMIN_PATH . '/users/login')
             ->require_auth();
+                
+        // -------------------------------------
+		// Build Admin Navigation
+		// -------------------------------------       
+        $this->template->set('admin_menu_items', get_admin_module_menu_items());
 
         // Load jQuery by default
-        $this->template->add_package(array('jquery', 'jquerytools', 'admin_jqueryui'));
+        $this->template->add_package(['jquery', 'jquerytools', 'admin_jqueryui']);
 	}
 
     public function _remap($method, $params = array())

@@ -201,10 +201,12 @@ if ( ! function_exists('admin_primary_nav'))
 {
     function admin_primary_nav($nav, $atts = array(), $depth = 1)
     {
+        if(empty($nav)) return;
+        
         $menu_id    = (is_array($atts) && isset($atts['menu_id'])) ? ' id="' . $atts['menu_id'] . '" ' : '';
         $menu_class = (is_array($atts) && isset($atts['menu_class'])) ? ' class="' . $atts['menu_class'] . '" ' : '';
         $list_item  = '<ul'. $menu_id . $menu_class .'>';
-
+        
         foreach($nav as $item)
         {
             $item['url'] = trim($item['url'], '/');

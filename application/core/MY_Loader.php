@@ -42,6 +42,10 @@ class MY_Loader extends MX_Loader
      */
     public function ext_model($model, $path = NULL, $object_name = NULL, $connect = FALSE)
     {
+        /** Hack! Load our core model if not already  */
+        require_once SYSTEM_PATH ."core/Model.php";
+        require_once APPPATH ."core/MY_Model.php";
+        
         if(is_null($path)) {
             show_error('The model path for "'.$model.'" cannot be left to EMPTY. Error triggered in '.APPPATH.'core/MY_Loader.php line 45');
         }
