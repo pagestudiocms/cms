@@ -620,6 +620,9 @@ class Entries extends Admin_Controller {
         {
             return show_404();
         }
+        
+        // Need this to resolve a nasty "Content Encoding Error". See https://github.com/cosmointeractive/pagestudiocms/issues/39
+        ob_start('ob_gzhandler'); 
 
         if ($this->input->post('image_path'))
         {
