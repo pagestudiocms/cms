@@ -9,6 +9,11 @@
     <div class="content">
 
         <div class="form">
+            <div>
+                <span>
+                    <label><input type="checkbox" onClick="$('input[name*=\'cache\']').attr('checked', this.checked);" CHECKED /> ALL</label>
+                </span>
+            </div> 
             <?php echo form_open(null, 'id="cache_form"'); ?>
                 <div>
                     <span>
