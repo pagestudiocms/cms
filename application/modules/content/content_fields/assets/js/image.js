@@ -1,31 +1,35 @@
 $(document).ready( function() {
 
-    $('.choose_image').click( function() {
-        var link = $(this);
+  $('.choose_image').click( function() {
+    var link = $(this);
+    var filemanager_path = '/application/third_party/file_manager/dialog.php?type=1&popup=1&field_id=image_placeholder';
+    var w = 880;
+    var h = 570;
+    var l = Math.floor((screen.width-w)/2);
+    var t = Math.floor((screen.height-h)/2);
+    var win = window.open(
+      filemanager_path, 
+      'ResponsiveFilemanager', 
+      "scrollbars=1,width=" + w + ",height=" + h + ",top=" + t + ",left=" + l
+    );
 
-        window.KCFinder = {
-            callBack: function(url) {
-                window.KCFinder = null;
-                $.post(ADMIN_URL + '/content/entries/create-thumb', {'image_path': url}, function(image_path) {
-                    link.parent().find('.image_thumb').attr('src', image_path);
-                    link.parent().find('.hidden_file').val(url);
-                });
-            }
-        };
-        var left = (screen.width/2)-(800/2);
-        var top = (screen.height/2)-(600/2);
-        window.open(THEME_URL + '/assets/js/kcfinder/browse.php?type=images',
-            'kcfinder_image', 'status=0, toolbar=0, location=0, menubar=0, ' +
-            'directories=0, resizable=1, scrollbars=0, width=800, height=600, top=' + top + ', left=' + left
-        );
+    $("#image_placeholder").on('load', function(){
+      var image_src = $("#image_placeholder").attr('src');
+
+      $.post(ADMIN_URL + '/content/entries/create-thumb', {'image_path': image_src}, function(image_path) {
+        link.parent().find('.image_thumb').attr('src', image_path);
+        link.parent().find('.hidden_file').val(image_src);
+      });
     });
+    
+  });
 
-    $('.remove_image').click( function() {
-        var link = $(this);
-        $.post(ADMIN_URL + '/content/entries/create-thumb', {'image_path': ' '}, function(image_path) {
-            link.parent().find('.image_thumb').attr('src', image_path);
-        });
-        $(this).parent().find('.hidden_file').attr('value', '');
+  $('.remove_image').click( function() {
+    var link = $(this);
+    $.post(ADMIN_URL + '/content/entries/create-thumb', {'image_path': ' '}, function(image_path) {
+      link.parent().find('.image_thumb').attr('src', image_path);
     });
-
+    $(this).parent().find('.hidden_file').attr('value', '');
+  });
+  
 });

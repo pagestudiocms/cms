@@ -878,7 +878,8 @@ var encodeURL, show_animation, hide_animation, apply, apply_none, apply_img, app
             }, "*");
             else {
                 var s = e("#" + t, n.document);
-                s.val(c).trigger("change"), "function" == typeof n.responsive_filemanager_callback && n.responsive_filemanager_callback(t), _()
+                // s.val(c).trigger("change"), "function" == typeof n.responsive_filemanager_callback && n.responsive_filemanager_callback(t), _()
+                s.attr('src', c).trigger("change"), "function" == typeof n.responsive_filemanager_callback && n.responsive_filemanager_callback(t), _()
             }
         else c = c + "?" + (new Date).getTime(), apply_any(c)
     }, apply_video = function(a, t) {

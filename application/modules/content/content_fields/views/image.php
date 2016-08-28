@@ -2,6 +2,7 @@
     <a class="choose_image" href="javascript:void(0);" style="display: block; margin-bottom: 5px;">
         <img class="image_thumb" src="<?php echo image_thumb(set_value('field_id_' . $Field->id, $content['src']), 150, 150, FALSE, array('no_image_image' => ADMIN_NO_IMAGE)); ?>" />
     </a>
+    <img id="image_placeholder" style="display: none;" src="" />
 
     <a class="remove_image" href="javascript:void(0);">Remove Image</a><br />
     <a class="choose_image" href="javascript:void(0);">Add Image</a>
