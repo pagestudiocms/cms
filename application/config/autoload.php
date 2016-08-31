@@ -37,7 +37,7 @@
 |
 */
 
-$autoload['packages'] = array(APPPATH.'third_party', APPPATH.'third_party/DevelBar');
+$autoload['packages'] = array(APPPATH.'third_party');
 
 
 /*
