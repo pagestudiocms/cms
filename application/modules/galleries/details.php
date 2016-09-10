@@ -1,5 +1,5 @@
 <?php 
-namespace Modules\Content;
+namespace Modules\Galleries;
 use \Module as Module;
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
@@ -16,17 +16,17 @@ class Details extends Module
     public static function info()
     {
         return [
-            'name'          => 'Content',
-            'slug'          => 'content',
-            'description'   => 'This is by far the largest and most feature rich module of them all. <br />The content module is made up of entries, content types, content fields, categories, and code snippets.',
+            'name'          => 'Galleries',
+            'slug'          => 'galleries',
+            'description'   => 'The Galleries add-on allows you to add simple image galleries to pages on your site.',
             'version'       => '1.0',
             'addon_uri'     => 'http://pagestudiocms.com',
             'license'       => 'GPL2',
             'license_uri'   => '',
             'author'        => 'Cosmo Mathieu',
             'author_uri'    => 'http://pagestudiocms.com',
-            'plugable'      => 1,
-            'is_core'       => 1,
+            'plugable'      => 0,
+            'is_core'       => 0,
         ];
     }
     
@@ -39,43 +39,9 @@ class Details extends Module
     public static function admin_menu()
     {
         return [[
-            'label' => 'Content',
-            'no_url' => 'Content',
-            'url' => '',
-            "menu_order" => 29,
-            'class' => 'cd-label',
-        ], [
-            'label' => 'Entries',
-            'url'   => 'content/entries',
-            "menu_order" => 29.1,
-        ], [
-            'label' => 'Tools',
-            'url'   => 'content/types',
-            "menu_order" => 149.1,
-            'class' => 'has-children',
-            'sub'   => [
-                [
-                    'label' => 'Content Types',
-                    'url'   => 'content/types',
-                ],
-                [
-                    'label'  => 'Content Fields',
-                    'url'    => 'content/fields',
-                    'hidden' => TRUE, // Used for selected parents for this section
-                ],
-                [
-                    'label' => 'Code Snippets',
-                    'url'   => 'content/snippets',
-                ],
-                [
-                    'label' => 'Categories',
-                    'url'   => 'content/categories/groups',
-                ],
-                [
-                    'label' => 'Theme Editor',
-                    'url'   => 'settings/theme-editor',
-                ],
-            ],
+            'label' => 'Galleries',
+            'url'   => 'galleries',
+            "menu_order" => 109,
         ]];
     }
     
@@ -114,7 +80,7 @@ class Details extends Module
             'module_version' => $version,
             'module_options' => '',
             'has_backend' => 1,
-            'has_plugin' => 0,
+            'has_plugin' => $plugable,
             'has_widget' => 0,
             'is_core' => $is_core,
             'is_enabled' => 1,
@@ -132,6 +98,12 @@ class Details extends Module
 	{
 		// This is a core module, lets keep it around.
 		return false;
+        // $info = $this->info();
+        
+        // if ( ! $this->db->delete('modules', ['module_slug' => $info['slug']])) {
+            // return false;
+        // }
+		// return true;
 	}
     
 	public function upgrade($old_version)

@@ -16,6 +16,14 @@ abstract class Module {
 	 * @var string
 	 */
 	public $version;
+    
+    /**
+     * Protected static property 
+     * 
+     * @access      private
+     * @var         $_instance Store instance of the object
+     */
+    protected static $_instance = null;
 
 	/**
 	 * Info
@@ -117,7 +125,7 @@ abstract class Module {
 		isset($ci) OR $ci =& get_instance();
 		return $ci->{$var};
 	}
-
+    
 	/**
 	 * Installs the modules tables in the database.
 	 *

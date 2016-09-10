@@ -47,6 +47,20 @@ class Addons_model extends MY_Model
     }
     
     /**
+     * Allows to perform a where clause
+     * 
+     * @param array $clause 
+     * @return void
+     */
+    public function get_modules_by($clause = null)
+    {
+        if( ! is_null($clause))
+        {
+            return $this->get_many_by($clause);
+        }
+    }
+    
+    /**
      * Returns the state of a given module 
      * 
      * @param [type] $module 
@@ -59,5 +73,30 @@ class Addons_model extends MY_Model
                         ->row();
                         
         return ( ! empty($result)) ? true : false;
+    }
+    
+    /**
+     * Enables a module 
+     * 
+     * @param int $id 
+     * @return void
+     */
+    public function enable_module($id)
+    {
+        $result = $this->db->where(['id' => $id])->update($this->_table, ['is_enabled' => 1]);
+        return $result;
+    }
+    
+    /**
+     * Disables a module 
+     * 
+     * @param int $id 
+     * @return void
+     */
+    public function disable_module($slug)
+    {
+        $result = $this->db->where(['module_slug' => $slug])->update($this->_table, ['is_enabled' => 0]);
+        
+        return $result;
     }
 }

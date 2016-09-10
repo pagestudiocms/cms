@@ -1,31 +1,31 @@
 <?php 
-namespace Modules\Addons;
+namespace Modules\Settings;
 use \Module as Module;
 
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 
 /**
- * Addons Module
+ * Content Module
  * 
  * @link        http://pagestudiocms.com
  * @author      PageStudioCMS Dev Team
  * @package     Modules
  */
 class Details extends Module
-{    
+{
     public static function info()
     {
         return [
-            'name'          => 'Addons',
-            'slug'          => 'addons',
+            'name'          => 'Settings',
+            'slug'          => 'settings',
             'description'   => '',
-            'version'       => '1.0.0',
+            'version'       => '1.0',
             'addon_uri'     => 'http://pagestudiocms.com',
             'license'       => 'GPL2',
             'license_uri'   => '',
             'author'        => 'Cosmo Mathieu',
             'author_uri'    => 'http://pagestudiocms.com',
-            'plugable'      => 1,
+            'plugable'      => 0,
             'is_core'       => 1,
         ];
     }
@@ -39,25 +39,28 @@ class Details extends Module
     public static function admin_menu()
     {
         return [[
-            'label' => 'Addons',
-            'no_url' => 'addons',
+            'label' => 'System',
+            'no_url' => 'System',
             'url' => '',
-            "menu_order" => 188,
+            "menu_order" => 189,
             'class' => 'cd-label',
-        ],
-        [
-            'label' => 'Addons',
-            'url'   => 'addons/admin-modules',
-            "menu_order" => 188.1,
+        ], [
+            'label' => 'System',
+            'url'   => 'settings/general-settings',
+            "menu_order" => 239,
             'class' => 'has-children',
             'sub'   => array(
                 array(
-                    'label' => 'Modules',
-                    'url'   => 'addons/admin-modules',
+                    'label' => 'Clear Cache',
+                    'url'   => 'settings/clear-cache',
                 ),
                 array(
-                    'label' => 'Plugins',
-                    'url'   => 'addons/admin-plugins',
+                    'label' => 'General Settings',
+                    'url'   => 'settings/general-settings',
+                ),
+                array(
+                    'label' => 'Server Info',
+                    'url'   => 'settings/server-info',
                 ),
             ),
         ]];
@@ -76,11 +79,10 @@ class Details extends Module
         
         return self::$_instance;
     }
-
     
     public function enable()
     {
-
+        
     }
     
     public function disable()
@@ -90,42 +92,23 @@ class Details extends Module
     
     public function install()
 	{
-		$this->dbforge->drop_table('modules');
-		$tables = array(
-			'modules' => array(
-				'id' => array('type' => 'INT', 'constraint' => 11, 'auto_increment' => true, 'primary' => true),
-				'module_slug' => array('type' => 'VARCHAR', 'constraint' => 50, 'unique' => true),
-				'module_name' => array('type' => 'VARCHAR', 'constraint' => 50),
-				'module_version' => array('type' => 'VARCHAR', 'constraint' => 12),
-				'module_description' => array('type' => 'TEXT', 'constraint' => 100),
-				'module_options' => array('type' => 'TEXT'),
-				'has_backend' => array('type' => 'INT', 'constraint' => 1),
-				'has_plugin' => array('type' => 'INT', 'constraint' => 1),
-				'has_widget' => array('type' => 'INT', 'constraint' => 1),
-				'is_core' => array('type' => 'INT', 'constraint' => 1),
-				'is_enabled' => array('type' => 'INT', 'constraint' => 1),
-				'is_required' => array('type' => 'INT', 'constraint' => 1),
-			),
-		);
-		if ( ! $this->install_tables($tables)) {
-			return false;
-		}
-        
-        // Add data to table 
+        extract($this->info());
+		// Add data to table 
         $data = [
-            'module_slug' => 'addons',
-            'module_name' => 'Addons',
-            'module_description' => 'Select the theme for the control panel.',
-            'module_version' => '1.0',
+            'module_slug' => $slug,
+            'module_name' => $name,
+            'module_description' => $description,
+            'module_version' => $version,
             'module_options' => '',
             'has_backend' => 1,
-            'has_plugin' => 0,
+            'has_plugin' => $plugable,
             'has_widget' => 0,
-            'is_core' => 1,
+            'is_core' => $is_core,
             'is_enabled' => 1,
             'is_required' => 1,
             // 'menu_order' => 0,
 		];
+        
         if ( ! $this->db->insert('modules', $data)) {
             return false;
         }
@@ -136,6 +119,12 @@ class Details extends Module
 	{
 		// This is a core module, lets keep it around.
 		return false;
+        // $info = $this->info();
+        
+        // if ( ! $this->db->delete('modules', ['module_slug' => $info['slug']])) {
+            // return false;
+        // }
+		// return true;
 	}
     
 	public function upgrade($old_version)

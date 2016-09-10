@@ -24,74 +24,121 @@ class Admin_modules extends Admin_Controller
         $data['breadcrumb'] = set_crumbs([current_url() => 'Modules']);
         $data['modules'] = [];
         
-        $folders = scandir(APPPATH . 'modules');
+        $addons_model = $this->load->model('addons_model')->table('modules');
+        $folders      = scandir(APPPATH . 'modules');
         
-        // var_dump($folders);
         foreach($folders as $folder)
         {
             if(file_exists(APPPATH . "modules/{$folder}/details.php"))
             {
-                $data['modules'][] = $this->get_module_details(APPPATH . "modules/{$folder}/details.php", 0);
+                $Module = '\\Modules\\'. ucfirst($folder). '\\Details';
+                $Module_info = $Module::info();
+                
+                $Module_info['is_enabled'] = $addons_model->is_enabled($folder);
+                $data['modules'][] = array_to_object($Module_info);
             }
         }
         
-        $addons_model = $this->load->model('addons_model');
-        $module_list  = $addons_model->table('modules')->get_modules();
-        $data['modules_exists'] = ( ! empty($module_list)) ? true : false;
-        $data['modules'] = $module_list;
+        $data['modules_exists'] = ( ! empty($data['modules'])) ? true : false;
 
-        $this->template->view('admin/modules/index', array_to_object($data));
+        $this->template->view('admin/modules/index', array_to_object($data, true));
 	}   
     
     // ---------------------------------------------------------------
     
     /**
-     * Doc block parser
+     * Method to enable a module
      * 
-     * @access  Private
-     * @param   string $file 
-     * @return  string
+     * @return void
      */
-    private function get_module_details($file) 
+    public function enable()
     {
-        // We don't need to write to the file, so just open for reading.
-        $fp = fopen( $file, 'r' );
-
-        // Pull only the first 8kiB of the file in.
-        $file_data = fread( $fp, 8192 );
-
-        // PHP will close file handle, but we are good citizens.
-        fclose( $fp );
-
-        // Make sure we catch CR-only line endings.
-        $file_data = str_replace( "\r", "\n", $file_data );
+        // Init
+        $module_id    = $this->uri->segment(5);
+        $addons_model = $this->load->model('addons_model');
+        $status       = $addons_model->table('modules')->enable_module($module_id);
         
-        $description = [];
-        
-        // split at each line
-        foreach(preg_split("/(\r?\n)/", $file_data) as $line)
+        // Set a success/error message
+        if($status)
         {
-            if( ! empty($line))
-            {
-                // if starts with an asterisk
-                if( preg_match('/^(?=\s+?\*[^\/])(.+)/', $line, $matches) ) 
-                {
-                    $info = $matches[1];
-                    
-                    // If we find a leading asterisk, parse the value after as 
-                    // the array key, and the value after that as the value
-                    if(preg_match('~/*(.*?):~', $info, $output))
-                    {
-                        $param_name = trim(str_replace('*', '', $output[1]));
-                        // remove leading asterisk, colon, and wrapping whitespace
-                        $description[$param_name] = trim(str_replace(
-                            '* :', '', str_replace($param_name, '', $info)
-                        ));
-                    }
-                }
-            }
+            $this->session->set_flashdata('message', '<p class="success">Module activated.</p>');
+        } 
+        else 
+        {
+            $this->session->set_flashdata('message', '<p class="error">Something went wrong, the module was not activated.</p>');
         }
+
+        redirect(ADMIN_PATH . "/addons/admin-modules");
+    }
+    
+    // ---------------------------------------------------------------
+    
+    /**
+     * Method to disable a module
+     * 
+     * @return void
+     */
+    public function disable()
+    {
+        // Init
+        $module_slug    = $this->uri->segment(5);
+        $addons_model = $this->load->model('addons_model');
+        $status       = $addons_model->table('modules')->disable_module($module_slug);
         
-        return $description;
+        // Set a success/error message
+        if($status)
+        {
+            $this->session->set_flashdata('message', '<p class="success">Module successfully deactivated.</p>');
+        } 
+        else 
+        {
+            $this->session->set_flashdata('message', '<p class="error">Something went wrong, the module was not deactivated.</p>');
+        }
+
+        redirect(ADMIN_PATH . "/addons/admin-modules");
+    }
+    
+    // ---------------------------------------------------------------
+    
+    public function install()
+    {
+        // Init
+        $module_slug = $this->uri->segment(5);
+        $module      = '\\Modules\\'. ucfirst($module_slug). '\\Details';
+        $status      = $module::run()->install();
+        
+        // Set a success/error message
+        if($status)
+        {
+            $this->session->set_flashdata('message', '<p class="success">Module successfully activated.</p>');
+        } 
+        else 
+        {
+            $this->session->set_flashdata('message', '<p class="error">Something went wrong, the module was not activated.</p>');
+        }
+
+        redirect(ADMIN_PATH . "/addons/admin-modules");
+    }
+    
+    // ---------------------------------------------------------------
+    
+    public function uninstall()
+    {
+        // Init
+        $module_slug = $this->uri->segment(5);
+        $module      = '\\Modules\\'. ucfirst($module_slug). '\\Details';
+        $status      = $module::run()->uninstall();
+        
+        // Set a success/error message
+        if($status)
+        {
+            $this->session->set_flashdata('message', '<p class="success">Module successfully deactivated.</p>');
+        } 
+        else 
+        {
+            $this->session->set_flashdata('message', '<p class="error">Something went wrong, the module was not deactivated.</p>');
+        }
+
+        redirect(ADMIN_PATH . "/addons/admin-modules");
     }
 }

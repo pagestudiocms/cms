@@ -29,88 +29,27 @@ if ( ! function_exists('get_admin_module_menue_items'))
 {
     function get_admin_module_menu_items()
     {
+        // Default menu items
         $admin_menu_items = array(
-            array(
-                'label' => 'Dashboard',
-                'url'   => '/',
-                "menu_order" => 1,
-                'id'    => 'dashboard',
-                'sub'   => array(),
-            ),
-            array(
-                'label' => 'File Manager',
-                'url'   => 'filemanager',
-                "menu_order" => 69,
-            ),
-            array(
-                'label' => 'Calendar',
-                'url'   => 'calendar/entries',
-                "menu_order" => 89,
-            ),
-            array(
-                'label' => 'Galleries',
-                'url'   => 'galleries',
-                "menu_order" => 109,
-            ),
-            array(
-                'label' => 'Navigations',
-                'url'   => 'navigations',
-                "menu_order" => 129,
-            ),
             array(
                 'label' => 'Design',
                 'no_url' => 'Design',
                 "menu_order" => 149,
                 'url' => '',
                 'class' => 'cd-label',
-            ),        
-            array(
-                'label' => 'System',
-                'no_url' => 'System',
-                'url' => '',
-                "menu_order" => 189,
-                'class' => 'cd-label',
-            ), 
-            array(
-                'label' => 'Users',
-                'url'   => 'users',
-                "menu_order" => 209,
-                'class' => 'has-children',
-                'sub'   => array(
-                    array(
-                        'label' => 'Users',
-                        'url'   => 'users',
-                    ),
-                    array(
-                        'label' => 'User Groups',
-                        'url'   => 'users/groups',
-                    ),
-                ),
-            ),
-            array(
-                'label' => 'System',
-                'url'   => 'settings/general-settings',
-                "menu_order" => 239,
-                'class' => 'has-children',
-                'sub'   => array(
-                    array(
-                        'label' => 'Clear Cache',
-                        'url'   => 'settings/clear-cache',
-                    ),
-                    array(
-                        'label' => 'General Settings',
-                        'url'   => 'settings/general-settings',
-                    ),
-                    array(
-                        'label' => 'Server Info',
-                        'url'   => 'settings/server-info',
-                    ),
-                ),
             ),
         );
         
+        // TODO: Get a list of all activated modules from the database 
+        // $active_modules = ci()->load->model('addons_model')->table('modules')->get_modules();
+        $active_modules = ci()->load->model('addons_model')->table('modules')
+            ->get_modules_by([
+                'is_enabled' => 1,
+                'has_backend' => 1
+            ]);
+        
         // Scan the modules directory
-        $folders = scandir(APPPATH . 'modules');        
+        $folders = scandir(APPPATH . 'modules');
         
         foreach($folders as $folder)
         {
@@ -120,7 +59,10 @@ if ( ! function_exists('get_admin_module_menue_items'))
                 $Details = '\\Modules\\'. ucfirst($folder). '\\Details';
                 $addon_admin_menu = $Details::admin_menu();
                 if( ! empty($addon_admin_menu) && is_array($addon_admin_menu)){
-                    $admin_menu_items = array_merge($admin_menu_items, $addon_admin_menu);
+                    // Only include modules with backend in the admin menu
+                    if(module_has_cp($active_modules, $folder)) {
+                        $admin_menu_items = array_merge($admin_menu_items, $addon_admin_menu);
+                    }
                 }
                 $addon_admin_menu = [];
             }
@@ -136,5 +78,30 @@ if ( ! function_exists('get_admin_module_menue_items'))
         });
         
         return $admin_menu_items;
+    }
+}
+
+/**
+ * Helps determine wherther or not a module has backend interface. 
+ * 
+ * Checks to see if a module's slug was found in an array of modules. This is 
+ * a helper method to [get_admin_module_menu_items] 
+ * 
+ * @return  bool
+ */
+if ( ! function_exists('module_has_cp'))
+{
+    function module_has_cp($modules, $module_slug)
+    {
+        $count = 0;
+        foreach($modules as $key => $module){
+            if ($module->module_slug === $module_slug) {
+                return true;
+            }
+            if(count($modules) === $count) {
+                return;
+            }
+            $count++;
+        }
     }
 }
