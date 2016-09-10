@@ -398,6 +398,44 @@ INSERT INTO `groups` (`id`, `name`, `type`, `permissions`, `required`, `modifiab
 -- Table structure for table `navigations`
 --
 
+DROP TABLE IF EXISTS `modules`;
+CREATE TABLE IF NOT EXISTS `modules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_slug` varchar(50) NOT NULL,
+  `module_name` varchar(50) NOT NULL,
+  `module_version` varchar(12) NOT NULL,
+  `module_description` text NOT NULL,
+  `module_options` text NOT NULL,
+  `has_backend` int(1) NOT NULL,
+  `has_plugin` int(1) NOT NULL,
+  `has_widget` int(1) NOT NULL,
+  `is_core` int(1) NOT NULL,
+  `is_enabled` int(1) NOT NULL,
+  `is_required` int(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `module_slug` (`module_slug`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `modules`
+--
+
+INSERT INTO `modules` (`id`, `module_slug`, `module_name`, `module_version`, `module_description`, `module_options`, `has_backend`, `has_plugin`, `has_widget`, `is_core`, `is_enabled`, `is_required`) VALUES
+(1, 'addons', 'Addons', '1.0', 'The module description.', '', 1, 0, 0, 1, 1, 1),
+(2, 'content', 'Content', '1.0', 'This is by far the largest and most feature rich module of them all. The content module is made up of entries, content types, content fields, categories, and code snippets.', '', 1, 0, 0, 1, 1, 1),
+(3, 'dashboard', 'Dashboard', '1.0', 'The dashboard module is used to show Google Analytics on the dashboard of of your admin panel.', '', 1, 0, 0, 0, 1, 1),
+(4, 'filemanager', 'Filemanager', '1.0', '', '', 1, 0, 0, 1, 1, 1),
+(5, 'settings', 'Settings', '1.0', '', '', 1, 0, 0, 0, 1, 1),
+(6, 'users', 'Users', '1.0', 'Manage user accounts and user attributes such as group permissions, etc.', '', 1, 0, 0, 0, 1, 1),
+(7, 'navigations', 'Navigations', '1.1', 'The Navigations add-on is navigation made simple. Build any kind of navigation you like, without limitation.', '', 1, 0, 0, 0, 1, 1),
+(8, 'galleries', 'Galleries', '1.1', 'The Galleries add-on allows you to add simple image galleries to pages on your site.', '', 1, 0, 0, 0, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `navigations`
+--
+
 DROP TABLE IF EXISTS `navigations`;
 CREATE TABLE IF NOT EXISTS `navigations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
