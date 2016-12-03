@@ -1,19 +1,67 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
 /**
- * CMS Canvas
+ * PageStudio
  *
- * @author      Mark Price
- * @copyright   Copyright (c) 2012
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on CMS Canvas, a CodeIgniter based application, 
+ * http://cmscanvas.com/. It has been greatly altered to work for the 
+ * purposes of our development team. Additional resources and concepts have 
+ * been borrowed from PyroCMS http://pyrocms.com, for further improvement
+ * and reliability. 
+ *
+ * @package     PageStudio
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, Cosmo Interactive, LLC
  * @license     MIT License
- * @link        http://cmscanvas.com
+ * @link        http://pagestudiocms.com
  */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Cache library
+ *
+ * Provides the ability to cache database results as well as anything passed 
+ * to it for later retrieval. Items are stored in a file locally on the server. 
+ *
+ * @package		PageStudio
+ * @subpackage	codeigniter
+ * @category	Library
+ * @author      Mark Price
+ * @author		Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @link		http://pagestudiocms.com/docs/
+ * @license     MIT License
+ * @since       Version 1.0.0
+ */
 class Cache 
 {
-    // Cache Directories
-    private $cms_cache = 'assets/cms/cache/';
+    /**
+     * Cache Directories
+     * @var     string
+     */
+    private $cache_path          = 'assets/cms/cache/';
+    
+    /**
+     * The base path the the cache directory 
+     * @var     string
+     */
+    private $cache_basepath     = CMS_ROOT;
+    
+    /**
+     * The cache file extension
+     * @var     string
+     */
+    private $cache_ext          = 'cache';
+    
+    /**
+     * Variables names in this array cannot have their values overridden
+     * @var     array 
+     */
+    private $no_override        = [];
+    
 
-    function __construct() 
+    function __construct()
     {
         $this->CI = get_instance();
         $this->CI->load->helper('file');
@@ -21,7 +69,7 @@ class Cache
 
     // ------------------------------------------------------------------------
 
-    /*
+    /**
      * Model
      *
      * Executes and caches returned data from a model method
@@ -31,8 +79,8 @@ class Cache
      * @param array
      * @return mixed
      */
-    function model($model, $method, $arguments = array(), $dir='')
-    {               
+    public function model($model, $method, $arguments = array(), $dir='')
+    {
         $this->CI->load->add_package_path(APPPATH.'modules/content/');
         $this->CI->load->model($model);      
 
@@ -74,7 +122,7 @@ class Cache
 
     // ------------------------------------------------------------------------
 
-    /*
+    /**
      * Get
      *
      * Unserializes data from cache file
@@ -82,14 +130,16 @@ class Cache
      * @param string
      * @return bool
      */
-    function get($id, $dir)
+    public function get($id, $dir)
     {
-        $cache_dir = $this->cms_cache . trim($dir, '/') . '/';
+        $cache_dir = $this->cache_path . trim($dir, '/') . '/';
+        
+        $this->cache_basepath .  $cache_dir . $id . '.'. $this->cache_ext;
 
         // Read cached file if it exists
-        if (file_exists(CMS_ROOT . $cache_dir . $id . '.cache'))
+        if (file_exists($this->cache_basepath . $cache_dir . $id . '.'. $this->cache_ext))
         {
-            $content = read_file(CMS_ROOT . $cache_dir . $id . '.cache');
+            $content = read_file($this->cache_basepath . $cache_dir . $id . '.'. $this->cache_ext);
 
             return @unserialize($content);
         }
@@ -99,7 +149,7 @@ class Cache
 
     // ------------------------------------------------------------------------
 
-    /*
+    /**
      * Save
      *
      * Serializes and writes data to cache file
@@ -109,21 +159,22 @@ class Cache
      * @param string
      * @return bool
      */
-    function save($id, $dir, $data)
+    public function save($id, $dir, $data)
     {
-        $cache_dir = $this->cms_cache . trim($dir, '/') . '/';
+        $cache_dir = $this->cache_path . trim($dir, '/') . '/';
 
         // Check if the cache directory exists
         // If not create it
-        if ( ! file_exists(CMS_ROOT . $cache_dir))
+        if ( ! file_exists($this->cache_basepath . $cache_dir))
         {
-            @mkdir(CMS_ROOT . $cache_dir);
+            @mkdir($this->cache_basepath . $cache_dir);
         }
-
         // Write data to cache file
-        if ( ! write_file(CMS_ROOT . $cache_dir . $id . '.cache', @serialize($data)))
+        if ( ! write_file($this->cache_basepath . $cache_dir . $id . '.'. $this->cache_ext, @serialize($data)))
         {
-            $this->CI->session->set_flashdata('message', '<p class="error">Error compiling: ' . $cache_dir . ' is not writable.</p>');
+            $message = 'Error compiling: ' . $cache_dir . ' is not writable.';
+            log_message('error', $message);
+            $this->CI->session->set_flashdata('message', '<p class="error">'. $message .'</p>');
             return FALSE;
         }
 
@@ -132,24 +183,51 @@ class Cache
 
     // ------------------------------------------------------------------------
 
-    /*
+    /**
      * Delete All
      *
      * This function will  delete caches files in a specified directory
      *
-     * @param string
-     * @return void
+     * @param   string
+     * @return  void
      */
-    function delete_all($dir = '')
+    public function delete_all($dir = '')
     {
         $this->CI->load->helper('file');
 
-        if ( file_exists(CMS_ROOT . $this->cms_cache . $dir) ) 
+        if ( file_exists($this->cache_basepath . $this->cache_path . $dir) ) 
         {
-            foreach (glob(CMS_ROOT . $this->cms_cache . $dir . '/*') as $file)
+            foreach (glob($this->cache_basepath . $this->cache_path . $dir . '/*') as $file)
             {
                 @unlink($file);
             }
         }
     }
+    
+    // ------------------------------------------------------------------------
+
+    /**
+     * Method to define or override object default variables
+     * 
+     * @param   array $config  
+     * @return  void
+     */
+    public function config($config = [])
+    {
+        if(is_array($config))
+        {
+            foreach($config as $key => $item)
+            {
+                if( ! in_array($item, $this->no_override))
+                {
+                    if($key == 'cache_ext') {
+                        $this->$key =  str_replace('.', '', $item);
+                    } else {
+                        $this->$key = $item;
+                    }
+                }
+            }
+        }
+    }
+
 }
