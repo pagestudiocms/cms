@@ -97,20 +97,4 @@ class Template_plugin extends Plugin
     {
         return xml_output();
     }
-    
-    // --------------------------------------------------------------------
-    
-    /**
-     * Returns the URI segment to the caller
-     *
-     * @since      1.2.0
-     * @access     public 
-     * @param      int $part 
-     * @return     int
-     */
-    public function segment($part)
-    {
-        $CI =& get_instance();
-        return $CI->uri->segment($part);
-    }
 }

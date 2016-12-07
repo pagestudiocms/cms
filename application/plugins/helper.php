@@ -1,13 +1,30 @@
-<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
 /**
- * CMS Canvas
+ * PageStudio
  *
- * @author      Mark Price
- * @copyright   Copyright (c) 2012
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on CMS Canvas, a CodeIgniter based application, 
+ * http://cmscanvas.com/. It has been greatly altered to work for the 
+ * purposes of our development team. Additional resources and concepts have 
+ * been borrowed from PyroCMS http://pyrocms.com, for further improvement
+ * and reliability. 
+ *
+ * @package     PageStudio
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, Cosmo Interactive, LLC
  * @license     MIT License
- * @link        http://cmscanvas.com
+ * @link        http://pagestudiocms.com
  */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Helper Plugin Class
+ *
+ * @author      Mark Price
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ */
 class Helper_plugin extends Plugin
 {
     public function date()
@@ -20,21 +37,6 @@ class Helper_plugin extends Plugin
         {
             return date($this->attribute('format', 'm/d/Y'));
         }
-    }
-
-    public function site_url()
-    {
-        return site_url($this->attribute('path', ''));
-    }
-
-    public function base_url()
-    {
-        return base_url($this->attribute('path', ''));
-    }
-
-    public function current_url()
-    {
-        return current_url();
     }
 
     /**
@@ -80,12 +82,6 @@ class Helper_plugin extends Plugin
         // -----------------------------------------
         
         return image_thumb($image, $this->attribute('width', 0), $this->attribute('height', 0), $this->attribute('crop', FALSE));
-    }
-
-    public function uri_segment()
-    {
-        $CI =& get_instance();
-        return $CI->uri->segment($this->attribute('segment'));
     }
 
     /**
@@ -134,5 +130,14 @@ class Helper_plugin extends Plugin
         $content = str_replace('}}', '&#125;&#125;', $content);
         return $content;
     }
+    
+    public function config()
+    {
+        $atts = $this->attributes(); // the tag parameters
+        
+        $CI =& get_instance();
+        $CI->config->load($atts['file']);
+        
+        return $CI->config->item($atts['item']);
+    }
 }
-
