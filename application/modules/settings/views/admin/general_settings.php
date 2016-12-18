@@ -57,6 +57,15 @@
                     </div>
                     <?php if ($this->Group_session->type == SUPER_ADMIN): ?>
                     <div>
+                        <?php echo form_label('<span class="required">*</span> Enable Logging:', 'enable_logging'); ?>
+                        <span>
+                            <label><?php echo form_radio(array('name' => 'enable_logging', 'value' => '1', 'checked' => set_radio('enable_logging', '1', ( ! empty($Settings->enable_logging->value)) ? TRUE : FALSE))); ?> Yes</label>
+                            <label><?php echo form_radio(array('name' => 'enable_logging', 'value' => '0', 'checked' => set_radio('enable_logging', '0', (empty($Settings->enable_logging->value)) ? TRUE : FALSE))); ?> No</label>
+                        </span>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($this->Group_session->type == SUPER_ADMIN): ?>
+                    <div>
                         <?php echo form_label('<span class="required">*</span> Enable Profiler:', 'enable_profiler'); ?>
                         <span>
                             <label><?php echo form_radio(array('name' => 'enable_profiler', 'value' => '1', 'checked' => set_radio('enable_profiler', '1', ( ! empty($Settings->enable_profiler->value)) ? TRUE : FALSE))); ?> Yes</label>
