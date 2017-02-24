@@ -1,10 +1,41 @@
-<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+<?php  defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ * PageStudio
+ *
+ * A web application for managing website content. For use with PHP 5.4+
+ * 
+ * This application is based on CMS Canvas, a CodeIgniter based application, 
+ * http://cmscanvas.com/. It has been greatly altered to work for the 
+ * purposes of our development team. Additional resources and concepts have 
+ * been borrowed from PyroCMS http://pyrocms.com, for further improvement
+ * and reliability. 
+ *
+ * @package     PageStudio
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ * @copyright   Copyright (c) 2015, Cosmo Interactive, LLC
+ * @license     MIT License
+ * @link        http://pagestudiocms.com
+ */
 
+// ------------------------------------------------------------------------
+
+/**
+ * Contact module 
+ * 
+ * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
+ */
 class Contact extends Public_Controller 
 {
+    /**
+     * @var     array 
+     */
     private $e_config = [];
 	
-	// List of form fields to exclude in mailing list
+    /**
+	 * List of form fields to exclude from the email body message
+	 *
+     * @var     array
+     */
     private $excluded = [
         'form_id', 'spam_check'
     ];
@@ -33,9 +64,11 @@ class Contact extends Public_Controller
         ];
     }
     
+    // --------------------------------------------------------------------
+    
 	/**
-	 * This method should never be called as long as the custom 
-	 * route exits to map /contact to content/pages 
+	 * This method should never be called as long as the custom route exits 
+	 * to map /contact to content/pages 
 	 *
 	 * @access 	public 
 	 * @return  void
@@ -45,19 +78,29 @@ class Contact extends Public_Controller
         show_404();
     }
     
+    // --------------------------------------------------------------------
+    
+    /**
+     * Ajax handler method 
+     * 
+	 * @access 	public 
+     * @return  void
+     */
     public function ajax()
-    {            
+    {
         // Only process ajax requests from this method
         if(is_ajax()) 
 		{
-			$result = []; // Stores the json result set
-            $message = '';
+            $this->load->library('service_result');
+            $result     = $this->service_result;
+            $message    = '';
+            $result->start_timer('send_email');
             
+            // Loop over form field values and store them in the [$message] viariable
             foreach($this->input->post() as $key => $value) {
                 if ( ! in_array($key, $this->excluded)) {
                     if (is_array($value)) {
                         $message .= ucwords(str_replace('_', ' ', $key)) . ' : ' . "<br>\r\n";
-
                         foreach ($value as $arr_val) {
                             $message .= "\t" . $arr_val . "<br>\r\n";
                         }
@@ -66,6 +109,8 @@ class Contact extends Public_Controller
                     }
                 }
             }
+            
+            // Build the email body and attempt to send 
             $data = [
                 'subject' => $this->subject,
                 'paragraphs' => [
@@ -79,12 +124,18 @@ class Contact extends Public_Controller
             ];
             $submit = $this->sendmail($data, ['view' => 'system_plain', 'folder' => ADMIN_THEME_PATH . 'email/views']);
             
-			// $submit = true; // Uncomment for testing purposes only
-           
-			$result['errors'] = '';
-			$result['result'] = ($submit) ? 'success' : 'fail';
-			
-			echo json_encode($result);
+            // Prepare json response data and print to screen 
+			$result->status     = ($submit) ? 'success' : 'error';
+            $result->message    = ($submit) ? 'The query executed successfully.' : $result->message;
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                'status' => $result->status, 
+                'message' => $result->message, 
+                'result' => $result->result,
+                'time' => $result->stop_timer('send_email'),
+            ]);
+            exit;
         } 
 		else 
 		{
@@ -94,8 +145,16 @@ class Contact extends Public_Controller
     
     // --------------------------------------------------------------------
     
+    /**
+     * Method to send email via smtp using pre-defined settings 
+     * 
+     * @access  private
+     * @param   array $data 
+     * @param   string $template 
+     * @return  bool
+     */
     private function sendmail($data = null, $template = null)
-    {        
+    {
         if( ! is_null($data) && is_array($data))
         {            
             $this->load->library('parser');

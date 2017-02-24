@@ -207,6 +207,8 @@ class Users extends Public_Controller
     {
         // Init
         $data = array();
+        
+        $enable_logging = $this->settings->enable_logging;
 
         // Form Validation
         $this->form_validation->set_rules('email', 'Email', 'trim|valid_email|required|callback_email_exists');
@@ -219,7 +221,7 @@ class Users extends Public_Controller
             $User = $this->input->post('user');
 
             // Generate and send email            
-            $this->_sendmail(
+            $send = $this->_sendmail(
                 $this->settings->mail_reply_email, // From  
                 $this->settings->site_name, // From name 
                 $User->email, // To 
@@ -232,8 +234,23 @@ class Users extends Public_Controller
 
             $this->load->model('users_model');
             $User->save();
-
-            $this->session->set_flashdata('message', '<p class="success">An email containing your new password has been sent to your email address.</p>');
+            
+            if($send)
+            {
+                $this->session->set_flashdata('message', '<p class="success">An email containing your new password has been sent to your email address.</p>');
+                if ($enable_logging) {
+                    $error_message = 'Password send success: A password was generated for account ['. $User->email .'] and the email was successfully sent.';
+                    log_message('debug', $error_message);
+                }
+            }
+            else 
+            {
+                $this->session->set_flashdata('message', '<p class="error">Cannot send generated password.</p>');
+                if ($enable_logging) {
+                    $error_message = 'Password send failure: A password was generated for account ['. $User->email .'] but the email failed to send.';
+                    log_message('error', $error_message);
+                }
+            }
 
             if ($this->uri->segment(1) == ADMIN_PATH)
             {
@@ -316,10 +333,15 @@ class Users extends Public_Controller
     {
         $this->load->model('users_model');
         $User = $this->users_model->where("email = '$email'")->get();
+        $enable_logging = $this->settings->enable_logging;
 
         if ( ! $User->exists())
         {
             $this->form_validation->set_message('email_exists', "The email address $email was not found.");
+            if ($enable_logging) {
+                $error_message = "Email address not found: User email [{$email}] was trying to reset their password.";
+                log_message('error', $error_message);
+            }
             return FALSE;
         }
         else
