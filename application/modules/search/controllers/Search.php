@@ -14,7 +14,7 @@
  * @author      Cosmo Mathieu <cosmo@cosmointeractive.co>
  * @copyright   Copyright (c) 2015, CosmoInteractive, LLC
  * @license     MIT License
- * @link        http://pagestudioapp.com
+ * @link        http://pagestudiocms.com
  */
 
 // ------------------------------------------------------------------------
@@ -121,6 +121,13 @@ class Search extends Public_Controller
         // Loops through the content_type table and gets the ID's where 
         // searchable is set to true, and returns an array containing the ID's
         $searchFields = $this->db->select('id')->where('is_searchable','y')->get('content_fields');
+        
+        if (empty($searchFields->result())) {
+            return [
+                'terms' => NULL, 
+                'results' => [], 
+            ];
+        }
 
         // Build query partial
         foreach($searchFields->result() as $key => $field) {
@@ -210,6 +217,7 @@ class Search extends Public_Controller
         }
 
         $slug = trim($this->uri->uri_string(), '/');
+        $slug = 'site-search';
 
         if ( ! $slug)
         {
@@ -292,18 +300,18 @@ class Search extends Public_Controller
             // List search results 
             if( ! empty($search)) {
                 $data['search_term'] = $search['terms'];
-                $data['_content'] .= '<h2>Search Results</h2>';
+                $data['search_result'] = '<h2>Search Results</h2>';
                 if( isset($search['results']) && ! empty($search['results']) ) {            
                     foreach($search['results'] as $item) {
-                        $data['_content'] .= '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
-                        $data['_content'] .= ( ! empty($item->meta_description)) ? ellipsize( $item->meta_description, 100 ) . '<hr>' : '...<hr>';
+                        $data['search_result'] .= '<a href="' . $item->slug . '">' . $item->title . '</a><br>';
+                        $data['search_result'] .= ( ! empty($item->meta_description)) ? ellipsize( $item->meta_description, 100 ) . '<hr>' : '...<hr>';
                     }
                 } else {
-                    $data['_content'] = '<h2>Search Results </h2>
+                    $data['search_result'] = '<h2>Search Results </h2>
                         <p>Your search for <strong><em>'. $search['terms'] .'</em></strong> did not return any results.</p>';
                 }
             } else {
-                $data['_content'] = '<h2>Search Results </h2> 
+                $data['search_result'] = '<h2>Search Results </h2> 
                     <p>Please enter something in the search field to begin your search.</p><br />';
             }
 
@@ -344,9 +352,6 @@ class Search extends Public_Controller
 
             // Output Content Type
             $this->template->view('pages', $data);
-        }
-        elseif($this->uri->segment(1) === 'search' && $this->uri->segment(2) === 'page') {
-            echo 'Pagination found.';
         }
         else
         {
