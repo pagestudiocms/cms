@@ -225,8 +225,8 @@ class Grid_field extends Field_type
         </table>
         <a class="matrix-btn matrix-add" id="field_'.$content_field_id.'_addrow_btn" title="Add row"></a>';
         
-        // Build a single html table row for the javascript methods 
-        // to append to tables when the add new row button is clicked.
+        // Build a single html table row for the javascript methods to append 
+        // to tables when the add new row button is clicked.
         $dynamic_rows = '';
         $count = 0;
         foreach($grid_headers as $key => $col ) {
@@ -260,23 +260,24 @@ class Grid_field extends Field_type
             
             if ( ! $.isFunction($.fn.showNoRowExist) )
             {
-                function showNoRowExist() 
-                {
+                function showNoRowExist(){
                     var row = '';
-                    row +=
-                    '<tr class=\"matrix matrix-first matrix-last matrix-norows even\">' +
-                    '   <td colspan=\"". ($total_cols = $total_cols + 1) ."\" class=\"matrix matrix-first matrix-firstcell matrix-last\">' +
-                    '  	    No rows exist yet. <a>Create the first one.</a>' +
-                    '   </td>' +
-                    '</tr>';
-                    $('table#content_type_{$content_field_id}').append(row);
+                    var rows = $('#content_type_{$content_field_id} > tbody > tr').length;
+                    if(rows === 0) {                        
+                        row +=
+                        '<tr class=\"matrix matrix-first matrix-last matrix-norows even\">' +
+                        '   <td colspan=\"". ($total_cols = $total_cols + 1) ."\" class=\"matrix matrix-first matrix-firstcell matrix-last\">' +
+                        '  	    No rows exist yet. <a id=\"createFirstRow_{$content_field_id}\">Create the first one.</a>' +
+                        '   </td>' +
+                        '</tr>';
+                        $('table#content_type_{$content_field_id}').append(row);
+                    }
                 }
             }
             
             if ( ! $.isFunction($.fn.renumberRows) ) 
             {
-                function renumberRows(tableRow = '') 
-                {
+                function renumberRows(tableRow = ''){
                     var spanOpen = '<div><span>';
                     var spanClose = '</span><a class=\"delRow\" style=\"opacity: 1; display: inline;\" title=\"Options\"></a></div>';
                     var theKey = '';
@@ -300,11 +301,39 @@ class Grid_field extends Field_type
                     });
                 } 
             }
+            
+            if ( ! $.isFunction($.fn.createNewTableRow) )
+            {
+                function createNewTableRow(){
+                    var newRow = $('<tr class=\"matrix\" id=\"tbl_row_\"+ counter +\"\">');
+                    var cols   = '';
+                    $('table#content_type_".$content_field_id." .matrix-norows').remove();
+                    
+                    cols += 
+                    '<th class=\"matrix matrix-first matrix-tr-header\">' +
+                    '    <div>' +
+                    '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
+                    '    </div>' +
+                    '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"'+ counter +'\" type=\"hidden\">' +
+                    '</th>';
+                    cols += 'jQuery.parseJSON({$dynamic_rows})';
+                    newRow.append(cols);
+                    
+                    if (counter === ".$max_rows.") {
+                        $('#field_{$content_field_id}_addrow_btn').hide();
+                    }
+                    $('table#content_type_{$content_field_id}').append(newRow);
+                    
+                    renumberRows('table#content_type_{$content_field_id} tr');
+                    
+                    counter++;
+                }
+            }
           
             // -----------------------------------------------------------
             
             var counter = ". (($row_count >= 0) ? (($row_count === 1) ? 1 : $row_count + 1) : 1) .";
-            if(counter > 1){
+            if(counter > 1) {
                 $('table#content_type_".$content_field_id." .matrix-norows').remove();
             }
             if(counter === 1) {
@@ -323,31 +352,13 @@ class Grid_field extends Field_type
             });
             
             /**
-             * Add new row to table 
+             * Add new row to table event listeners 
              */
-            $('#field_{$content_field_id}_addrow_btn').on('click', function(){
-                var newRow = $('<tr class=\"matrix\" id=\"tbl_row_\"+ counter +\"\">');
-                var cols   = '';
-                $('table#content_type_".$content_field_id." .matrix-norows').remove();
-                
-                cols += 
-                '<th class=\"matrix matrix-first matrix-tr-header\">' +
-                '    <div>' +
-                '        <span>'+ counter +'</span><a class=\"delRow\" style=\"display: inline; opacity: 1;\" title=\"Options\"></a>' +
-                '    </div>' +
-                '    <input name=\"content_type_".$content_field_id."[row_order][]\" value=\"'+ counter +'\" type=\"hidden\">' +
-                '</th>';
-                cols += 'jQuery.parseJSON({$dynamic_rows})';
-                newRow.append(cols);
-                
-                if (counter === ".$max_rows.") {
-                    $('#field_{$content_field_id}_addrow_btn').hide();
-                }
-                $('table#content_type_{$content_field_id}').append(newRow);
-                
-                renumberRows('table#content_type_{$content_field_id} tr');
-                
-                counter++;
+            $('#field_{$content_field_id}_addrow_btn').on('click', function(){                
+                createNewTableRow();
+            });
+            $('#createFirstRow_{$content_field_id}').on('click', function(){
+                createNewTableRow();
             });
     
             /**
@@ -355,7 +366,6 @@ class Grid_field extends Field_type
              */
             $('table#content_type_{$content_field_id}').on('click', '.delRow', function(e){
                 if (confirm('Are you sure you want to delete this?')) {
-                    
                     var array = new Array();
                     var value = $('input[name^=deleted_fields]').val();
                     var final = '';
@@ -389,9 +399,6 @@ class Grid_field extends Field_type
                     }
                 
                     renumberRows('table#content_type_{$content_field_id} tr');
-                }
-                
-                if (counter === 1){
                     showNoRowExist();
                 }
             });

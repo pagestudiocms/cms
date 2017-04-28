@@ -588,7 +588,7 @@ INSERT INTO `settings` (`id`, `slug`, `value`, `module`) VALUES
 (29, 'blog_comments_notify', '0', NULL),
 (30, 'themes_path', 'themes', NULL),
 (31, 'theme_name', 'default', NULL),
-(32 'modules_path', '', NULL),
+(32, 'modules_path', '', NULL),
 (33, 'modules_status', '', NULL),
 (34, 'portal_online', '1', NULL),
 (35, 'portal_login_on', '1', NULL),

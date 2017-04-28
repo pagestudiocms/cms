@@ -45,39 +45,48 @@
 </form>
 
 <?php if($ajax_submit): js_start(); ?>
+<script type="text/javascript" src="<?php echo site_url() . 'application/modules/contact/assets/js/jquery.validate.min.js'; ?>"></script>
 <script type="text/javascript">
     $( document ).ready( function() {
-        $(".js-contact-form").find("input,textarea,select").jqBootstrapValidation({
-            preventSubmit: true,
-            submitError: function($form, event, errors) {
-                console.log(errors);
-            },
-            submitSuccess: function($form, event) {
-                event.preventDefault();
-				$('.js-contact-form-spinner').show();
+        var $validator = $(".js-contact-form").validate({
+            submitHandler: function(form){
+                $('.js-contact-form-spinner').show();
                 $.ajax({
-                    url: "<?php echo base_url() . 'contact/ajax/'; ?>",
-                    cache: false,
                     type: 'POST',
-                    data: $('.js-contact-form').serialize(),
-					// contentType: "application/json; charset=utf-8",
-                })
-				.done(function( data ) {
-					$('.js-contact-form-spinner').hide();
-					var message = data.replace('Invalid address: ','');
-					var obj = jQuery.parseJSON( message );
-					if(obj.result === 'success') {
-						$('.js-result').html('<p class="success">Thank you! Your message was successfully sent.</p>');
-						$('.js-contact-form').find("input[type=text], input[type=email], textarea").val("");
-					} else {
-						$('.js-result').html('<p class="error">Something went wrong. We were unable to send your email.</p>');
-						if ( console && console.log ) {
-						  console.log( "Ajax contact form result: ", message.slice( 0, 100 ) );
-						  // console.log(obj.result);
-						}
-					}
-				});
+                    url: "<?php echo base_url() . 'contact/ajax/'; ?>",
+                    data: $(form).serialize(),
+                    dataType: 'JSON',
+                    success: function(response){
+                        $('.js-contact-form-spinner').hide();
+                        if(response.length !== '') {
+                            console.log('The email sending process completed in ' + response.time);
+                            if(response.status == 'success') {
+                                $('.js-result').html('<p class="success">Thank you! Your message was successfully sent.</p>');
+                                $('.js-contact-form').find("input[type=text], input[type=email], textarea").val("");
+                            } else {
+                                $('.js-result').html('<p class="error">Something went wrong. We were unable to send your email.</p>');
+                                console.log(response.status, response.message);
+                            }
+                        }
+                    }
+                });
             },
+            errorClass: 'required help-inline',
+            validClass: 'success',
+            errorPlacement: function(error, element) { }, // Hide error label
+            highlight: function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            // all fields are required
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                }
+            }
         });
     });
 </script>

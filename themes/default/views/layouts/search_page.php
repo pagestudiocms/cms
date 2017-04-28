@@ -23,7 +23,7 @@
 
                 <div class="row">
                     <div class="columns thirteen offset-by-three alpha">
-                        {{ content }}
+                        {{ search_result }}
                     </div>
                 </div>
                 
