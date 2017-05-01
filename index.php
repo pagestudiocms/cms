@@ -39,7 +39,7 @@ if ( ! function_exists('domains_determine_uri'))
  */
 date_default_timezone_set('America/New_York');
  
- /*
+  /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
  *---------------------------------------------------------------
@@ -51,7 +51,7 @@ date_default_timezone_set('America/New_York');
  * This can be set to anything, but default usage is:
  *
  *     development
- *     testing
+ *     staging
  *     production
  *
  * NOTE: If you change these, also change the error_reporting() code below
@@ -62,21 +62,21 @@ switch( domains_determine_uri( $domains['environment'] ) )
 {
 	case 'dev':
 	case 'local':
-		define('ENVIRONMENT', 'development');
-			$system_path = 'system';
-			$application_folder = 'application';
+        $CI_ENV = 'development';
+        $system_path = 'system';
+        $application_folder = 'application';
         break;
-	case 'stage':
 	case 'staging':
-		define('ENVIRONMENT', 'staging');
-			$system_path = 'system';
-			$application_folder = 'application';
+        $CI_ENV = 'staging';
+        $system_path = 'system';
+        $application_folder = 'application';
         break;		
 	default:
-		define('ENVIRONMENT', 'production');
-			$system_path = 'system';
-			$application_folder = 'application';
+        $CI_ENV = 'production';
+        $system_path = 'system';
+        $application_folder = 'application';
 }
+define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : $CI_ENV);
 
 /*
  *---------------------------------------------------------------
@@ -86,23 +86,21 @@ switch( domains_determine_uri( $domains['environment'] ) )
  * Different environments will require different levels of error reporting.
  * By default development will show errors but testing and live will hide them.
  */
-
-if (defined('ENVIRONMENT'))
+switch (ENVIRONMENT)
 {
-	switch (ENVIRONMENT)
-	{
-		case 'development':
-			error_reporting(E_ALL);
-		break;
-	
-		case 'testing':
-		case 'production':
-			error_reporting(0);
-		break;
-
-		default:
-			exit('The application environment is not set correctly.');
-	}
+	case 'development':
+		error_reporting(-1);
+		ini_set('display_errors', 1);
+	break;
+	case 'staging':
+	case 'production':
+		ini_set('display_errors', 0);
+		error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
+	break;
+	default:
+		header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+		echo 'The application environment is not set correctly.';
+		exit(1); // EXIT_ERROR
 }
 
 /*
