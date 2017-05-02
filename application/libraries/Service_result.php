@@ -50,9 +50,10 @@ class Service_result
     public $result = 0;
     
     /**
-     * @var array 
+     * Holds the errors generated in the Service object
+     * @var Array
      */
-    private $timers = [];
+    public $errors = [];
     
     /**
      *
@@ -67,19 +68,29 @@ class Service_result
     public $onErrorEvent;
     
     /**
-     * Holds the errors generated in the Service object
-     * @var Array
+     * @var string
      */
-    private $errors = [];
+    public $start = 0;
     
-    public function show_errors()
-    {
-        var_dump($this->errors);
-    }
+    /**
+     * @var string
+     */
+    public $end = 0;
     
-    public function show_results()
+    /**
+     * @var string
+     */
+    public $duration = 0;
+    
+    /**
+     * @var array 
+     */
+    private $timers = [];
+    
+    
+    public function __construct()
     {
-        
+        $this->start = microtime(true);
     }
     
     /**
@@ -104,5 +115,29 @@ class Service_result
     {
         $end = microtime(true);
         return  sprintf("%01.3f", ($end - $this->timers[$title]));
+    }
+    
+    /**
+     * Metod to display errors 
+     * 
+     * @return  void
+     */
+    public function show_errors()
+    {
+        echo json_encode($this->errors);
+    }
+    
+    /**
+     * Display the service result to the page in json format
+     * 
+     * @return  void
+     */
+    public function show_results($obj = null)
+    {
+        header("Content-Type: application/json");
+        
+        $this->end = microtime(true);
+        $this->duration = $this->end - $this->start;
+        exit( json_encode($this));
     }
 }
